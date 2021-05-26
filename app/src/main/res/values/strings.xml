@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Life Time Tracker</string>
+    <string name="default_item_text">This is the Way</string>
 </resources>
