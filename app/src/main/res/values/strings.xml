@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">Life Time Tracker</string>
     <string name="default_item_text">This is the Way</string>
-    <string name="add_item_text">Add (+)</string>
+    <string name="fab_content_description">fab</string>
 </resources>

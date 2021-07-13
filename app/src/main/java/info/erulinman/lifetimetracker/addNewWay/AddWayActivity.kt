@@ -2,37 +2,35 @@ package info.erulinman.lifetimetracker.addNewWay
 
 import android.app.Activity
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.widget.Button
-import android.widget.EditText
-import info.erulinman.lifetimetracker.R
+
+import androidx.appcompat.app.AppCompatActivity
+
+import info.erulinman.lifetimetracker.databinding.ActivityAddWayBinding
+
 
 const val WAY_NAME = "name"
-const val TAG = "CHECKING"
 
 class AddWayActivity : AppCompatActivity() {
-    private lateinit var addWayName: EditText
+    private lateinit var binding: ActivityAddWayBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_add_way)
-
-        findViewById<Button>(R.id.save_button).setOnClickListener {
-            Log.d(TAG, "setOnClickListener init")
+        binding = ActivityAddWayBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
+        binding.saveButton.setOnClickListener {
             addWay()
         }
-        addWayName = findViewById(R.id.editTextWayName)
     }
 
     private fun addWay() {
         val resultIntent = Intent()
 
-        if (addWayName.text.isNullOrEmpty()) {
+        if (binding.editTextWayName.text.isNullOrEmpty()) {
             setResult(Activity.RESULT_CANCELED, resultIntent)
         } else {
-            val name = addWayName.text.toString()
+            val name = binding.editTextWayName.text.toString()
             resultIntent.putExtra(WAY_NAME, name)
             setResult(Activity.RESULT_OK, resultIntent)
         }

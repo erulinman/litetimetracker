@@ -34,19 +34,16 @@ class DataSource() {
         return null
     }
 
-    fun getWayList(): LiveData<List<Way>> {
-        return wayLiveData
-    }
+    fun getWayList(): LiveData<List<Way>> = wayLiveData
 
     companion object {
         private var INSTANCE: DataSource? = null
 
-        fun getDataSource(): DataSource {
-            return synchronized(DataSource::class) {
+        fun getDataSource(): DataSource =
+            synchronized(DataSource::class) {
                 val newInstance = INSTANCE ?: DataSource()
                 INSTANCE = newInstance
                 newInstance
             }
-        }
     }
 }
