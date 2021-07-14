@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 
 import androidx.appcompat.app.AppCompatActivity
+import info.erulinman.lifetimetracker.R
 
 import info.erulinman.lifetimetracker.databinding.ActivityAddWayBinding
 
@@ -17,10 +18,12 @@ class AddWayActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAddWayBinding.inflate(layoutInflater)
-        val view = binding.root
-        setContentView(view)
-        binding.saveButton.setOnClickListener {
-            addWay()
+        setContentView(binding.root)
+
+
+        binding.bottomAppBarLayout.fab.apply {
+            setOnClickListener { addWay() }
+            setImageResource(R.drawable.ic_save_24)
         }
     }
 

@@ -8,20 +8,16 @@ import android.util.Log
 
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.view.menu.MenuView
 import androidx.core.view.isVisible
 import androidx.recyclerview.selection.SelectionPredicates
 import androidx.recyclerview.selection.SelectionTracker
-import androidx.recyclerview.selection.StableIdKeyProvider
 import androidx.recyclerview.selection.StorageStrategy
-import com.google.android.material.bottomappbar.BottomAppBar
 import info.erulinman.lifetimetracker.R
 
 import info.erulinman.lifetimetracker.addNewWay.AddWayActivity
 import info.erulinman.lifetimetracker.addNewWay.WAY_NAME
 import info.erulinman.lifetimetracker.data.Way
 import info.erulinman.lifetimetracker.databinding.ActivityMainBinding
-import info.erulinman.lifetimetracker.databinding.SelectionModeBottomAppBarBinding
 import info.erulinman.lifetimetracker.wayDetail.WayDetailActivity
 
 
@@ -36,6 +32,7 @@ class WayListActivity : AppCompatActivity() {
 
     private var tracker: SelectionTracker<Long>? = null
     private lateinit var binding: ActivityMainBinding
+    private lateinit var fabOnClick: () -> Unit
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,7 +40,6 @@ class WayListActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val wayAdapter = WayAdapter { way -> adapterOnClick(way) }
-
         binding.recyclerView.adapter = wayAdapter
 
         wayListViewModel.wayLiveData.observe(this, {
@@ -52,14 +48,16 @@ class WayListActivity : AppCompatActivity() {
             }
         })
 
-        binding.fab.setOnClickListener {
-            fabOnClick()
+        fabOnClick = ::addNewWay
+        binding.bottomAppBarLayout.fab.apply {
+            setOnClickListener { fabOnClick() }
+            setImageResource(R.drawable.baseline_add_24)
         }
 
         tracker = SelectionTracker.Builder(
             "WayListActivity selection tracker",
             binding.recyclerView,
-            StableIdKeyProvider(binding.recyclerView),
+            WayItemKeyProvider(wayAdapter),
             ItemDetailsLookup(binding.recyclerView),
             StorageStrategy.createLongStorage()
         ).withSelectionPredicate(
@@ -72,7 +70,6 @@ class WayListActivity : AppCompatActivity() {
             object : SelectionTracker.SelectionObserver<Long>() {
                 override fun onSelectionChanged() {
                     showTheNumberOfSelectedItems()
-                    setSelectionMode()
                 }
 
                 override fun onSelectionRestored() {
@@ -82,32 +79,24 @@ class WayListActivity : AppCompatActivity() {
         )
 
         /*
-        * Disable deselecting on touching empty recyclerview area
+        * Disable deselecting on touching recyclerview`s empty area
         *
         * I think this is a bad decision
         * TODO: searching SelectionTracker.SelectionPredicate
-        */
-        binding.recyclerView.setOnTouchListener { v, event ->
-                Log.d(TAG, "recyclerView.setOnTouchListener")
-                true
-            }
+        }*/
     }
 
-    private fun setSelectionMode() {
-        val selectionBottomAppBar = findViewById<BottomAppBar>(R.id.selectionBottomAppBar)
-        setSupportActionBar(selectionBottomAppBar)
-    }
     private fun showTheNumberOfSelectedItems() {
         val nItems: Int? = tracker?.selection?.size()
-        val output = "Selected: "
+        val counterText = "Selected: "
         if (nItems != null && nItems > 0) {
-            binding.appNameOnBar.isVisible = false
-            binding.counter.isVisible = true
-            binding.counter.text = output + nItems
+            binding.bottomAppBarLayout.appBarTitle.text = counterText + nItems
+            binding.bottomAppBarLayout.fab.setImageResource(R.drawable.baseline_delete_forever_24)
+            fabOnClick = ::deleteSelectedWays
         } else {
-            binding.counter.text = output + "0"
-            binding.counter.isVisible = false
-            binding.appNameOnBar.isVisible = true
+            binding.bottomAppBarLayout.appBarTitle.setText(R.string.app_name)
+            binding.bottomAppBarLayout.fab.setImageResource(R.drawable.baseline_add_24)
+            fabOnClick = ::addNewWay
         }
     }
 
@@ -117,13 +106,19 @@ class WayListActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private val fabOnClick = {
+    private fun deleteSelectedWays() {
+        Log.d(TAG, "deleteSelectedWays pressed")
+        tracker?.selection?.let {
+            wayListViewModel.deleteSelectedWays(it.toList())
+        }
+    }
+
+    private fun addNewWay() {
         val intent = Intent(this, AddWayActivity()::class.java)
         startActivityForResult(intent, newWayActivityRequestCode)
     }
 
     override fun onBackPressed() {
-        Log.d(TAG, "Activity.onBackPressed()")
         if (tracker?.hasSelection() == true) {
             tracker?.clearSelection()
         } else {
@@ -136,7 +131,7 @@ class WayListActivity : AppCompatActivity() {
         if (requestCode == newWayActivityRequestCode && resultCode == Activity.RESULT_OK) {
             data?.let {
                 val name = data.getStringExtra(WAY_NAME)
-                wayListViewModel.insertWay(name)
+                wayListViewModel.addNewWay(name)
             }
         }
     }

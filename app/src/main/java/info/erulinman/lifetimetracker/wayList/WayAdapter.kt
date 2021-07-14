@@ -16,15 +16,15 @@ import androidx.recyclerview.widget.RecyclerView
 
 import info.erulinman.lifetimetracker.data.Way
 import info.erulinman.lifetimetracker.R
-import info.erulinman.lifetimetracker.databinding.WayItemBinding
+
 
 class WayAdapter(private val onClick: (Way) -> Unit) :
     ListAdapter<Way, WayAdapter.WayViewHolder>(WayDiffCallback) {
     private var tracker: SelectionTracker<Long>? = null
 
-    class WayViewHolder(itemView: View, val onClick: (Way) -> Unit) :
+    inner class WayViewHolder(itemView: View, val onClick: (Way) -> Unit) :
         RecyclerView.ViewHolder(itemView) {
-        val wayTextView: TextView = itemView.findViewById(R.id.way_detail_text)
+        private val wayTextView: TextView = itemView.findViewById(R.id.way_detail_text)
         private val tickPointImage: ImageView = itemView.findViewById(R.id.tickPointImage)
         private var currentWay: Way? = null
 
@@ -44,23 +44,23 @@ class WayAdapter(private val onClick: (Way) -> Unit) :
         }
 
         fun getItemDetails(): ItemDetailsLookup.ItemDetails<Long> {
-            Log.d(TAG, "WayAdapter.WayViewHolder.getItemDetails()")
             return object : ItemDetailsLookup.ItemDetails<Long>() {
                 override fun getPosition(): Int = bindingAdapterPosition
-                override fun getSelectionKey(): Long? = itemId
+                override fun getSelectionKey(): Long? =
+                    (getItem(position) as Way).id
             }
         }
     }
 
-    init {
+    /*init {
         setHasStableIds(true)
-    }
+    }*/
 
     fun setTracker(tracker: SelectionTracker<Long>?) {
         this.tracker = tracker
     }
 
-    override fun getItemId(position: Int): Long = position.toLong()
+    //override fun getItemId(position: Int): Long = position.toLong()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WayViewHolder {
         Log.d(TAG, "WayAdapter.onCreateViewHolder()")
@@ -70,9 +70,9 @@ class WayAdapter(private val onClick: (Way) -> Unit) :
     }
 
     override fun onBindViewHolder(holder: WayViewHolder, position: Int) {
-        Log.d(TAG, "WayAdapter.onBindViewHolder()")
         tracker?.let {
-            holder.bind(getItem(position), it.isSelected(position.toLong()))
+            val item = getItem(position)
+            holder.bind(item, it.isSelected(item.id))
         }
     }
 }

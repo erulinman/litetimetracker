@@ -3,11 +3,11 @@ package info.erulinman.lifetimetracker.data
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 
-class DataSource() {
+class Database() {
     private val initialWayList = wayList()
     private val wayLiveData = MutableLiveData(initialWayList)
 
-    fun addWay(way: Way) {
+    fun add(way: Way) {
         val currentList = wayLiveData.value
         if (currentList == null) {
             wayLiveData.postValue(listOf(way))
@@ -18,13 +18,17 @@ class DataSource() {
         }
     }
 
-    fun removeWay(way: Way) {
+    fun delete(ways: List<Way>) {
         val currentList = wayLiveData.value
         if (currentList != null) {
             val updatedList = currentList.toMutableList()
-            updatedList.remove(way)
+            updatedList.removeAll(ways)
             wayLiveData.postValue(updatedList)
         }
+    }
+
+    fun delete(way: Way) {
+        TODO()
     }
 
     fun getWayForId(id: Long): Way? {
@@ -37,11 +41,11 @@ class DataSource() {
     fun getWayList(): LiveData<List<Way>> = wayLiveData
 
     companion object {
-        private var INSTANCE: DataSource? = null
+        private var INSTANCE: Database? = null
 
-        fun getDataSource(): DataSource =
-            synchronized(DataSource::class) {
-                val newInstance = INSTANCE ?: DataSource()
+        fun getDataSource(): Database =
+            synchronized(Database::class) {
+                val newInstance = INSTANCE ?: Database()
                 INSTANCE = newInstance
                 newInstance
             }
