@@ -20,7 +20,7 @@ class AddWayActivity : AppCompatActivity() {
         binding = ActivityAddWayBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
+        binding.bottomAppBarLayout.appBarTitle.text = "Choose your way..."
         binding.bottomAppBarLayout.fab.apply {
             setOnClickListener { addWay() }
             setImageResource(R.drawable.ic_save_24)
