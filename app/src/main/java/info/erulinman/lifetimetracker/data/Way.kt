@@ -1,6 +1,10 @@
 package info.erulinman.lifetimetracker.data
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "ways")
 data class Way(
-    val id: Long,
-    val name: String
+    @PrimaryKey val name: String,
+    val description: String? = ""
 )
