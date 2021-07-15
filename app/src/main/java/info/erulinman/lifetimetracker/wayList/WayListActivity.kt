@@ -8,7 +8,6 @@ import android.util.Log
 
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isVisible
 import androidx.recyclerview.selection.SelectionPredicates
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.selection.StorageStrategy
@@ -18,10 +17,9 @@ import info.erulinman.lifetimetracker.addNewWay.AddWayActivity
 import info.erulinman.lifetimetracker.addNewWay.WAY_NAME
 import info.erulinman.lifetimetracker.data.Way
 import info.erulinman.lifetimetracker.databinding.ActivityMainBinding
+import info.erulinman.lifetimetracker.utilities.DEBUG_TAG
 import info.erulinman.lifetimetracker.wayDetail.WayDetailActivity
 
-
-const val TAG = "CHECKING"
 const val WAY_ID = "way id"
 
 class WayListActivity : AppCompatActivity() {
@@ -107,7 +105,7 @@ class WayListActivity : AppCompatActivity() {
     }
 
     private fun deleteSelectedWays() {
-        Log.d(TAG, "deleteSelectedWays pressed")
+        Log.d(DEBUG_TAG, "deleteSelectedWays pressed")
         tracker?.selection?.let {
             wayListViewModel.deleteSelectedWays(it.toList())
         }

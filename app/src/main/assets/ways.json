@@ -1,0 +1,17 @@
+[
+  {
+    "wayId": 1,
+    "name": "Work",
+    "description": "Android application programming"
+  },
+  {
+    "wayId": 2,
+    "name": "Civ 6",
+    "description": "Gaming in civilisation 6"
+  },
+  {
+    "wayId": 3,
+    "name": "Workout",
+    "description": "increase my power"
+  }
+]

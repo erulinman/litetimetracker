@@ -5,6 +5,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "ways")
 data class Way(
-    @PrimaryKey val name: String,
-    val description: String? = ""
+    @PrimaryKey val wayId: Long,
+    val name: String,
+    val description: String
 )
