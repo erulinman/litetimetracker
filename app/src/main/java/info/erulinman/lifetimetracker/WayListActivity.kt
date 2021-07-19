@@ -22,7 +22,6 @@ import info.erulinman.lifetimetracker.selection.WayItemKeyProvider
 import info.erulinman.lifetimetracker.utilities.DEBUG_TAG
 import info.erulinman.lifetimetracker.utilities.WAY_ID
 import info.erulinman.lifetimetracker.viewmodels.WayListViewModel
-import info.erulinman.lifetimetracker.wayDetail.WayDetailActivity
 import info.erulinman.lifetimetracker.viewmodels.WayListViewModelFactory
 
 class WayListActivity : AppCompatActivity() {

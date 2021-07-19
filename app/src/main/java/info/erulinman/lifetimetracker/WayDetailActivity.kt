@@ -1,11 +1,10 @@
-package info.erulinman.lifetimetracker.wayDetail
+package info.erulinman.lifetimetracker
 
 import android.os.Bundle
 import android.widget.Toast
 
 import androidx.appcompat.app.AppCompatActivity
 
-import info.erulinman.lifetimetracker.R
 import info.erulinman.lifetimetracker.databinding.ActivityWayDetailBinding
 import info.erulinman.lifetimetracker.utilities.WAY_ID
 

@@ -1,4 +1,4 @@
-package info.erulinman.lifetimetracker.addNewWay
+package info.erulinman.lifetimetracker
 
 import android.app.Activity
 import android.content.Intent
