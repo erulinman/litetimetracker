@@ -7,5 +7,5 @@ import androidx.room.PrimaryKey
 data class Way(
     @PrimaryKey val wayId: Long,
     val name: String,
-    val description: String
+    val description: String?
 )

@@ -1,5 +1,4 @@
-package info.erulinman.lifetimetracker.wayList
-
+package info.erulinman.lifetimetracker
 
 import android.app.Activity
 import android.content.Intent
@@ -11,21 +10,25 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.selection.SelectionPredicates
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.selection.StorageStrategy
-import info.erulinman.lifetimetracker.R
 
+import info.erulinman.lifetimetracker.adapters.WayAdapter
 import info.erulinman.lifetimetracker.addNewWay.AddWayActivity
-import info.erulinman.lifetimetracker.addNewWay.WAY_NAME
+import info.erulinman.lifetimetracker.addNewWay.NEW_WAY_NAME
+import info.erulinman.lifetimetracker.addNewWay.NEW_WAY_DESCRIPTION
 import info.erulinman.lifetimetracker.data.Way
 import info.erulinman.lifetimetracker.databinding.ActivityMainBinding
+import info.erulinman.lifetimetracker.selection.WayItemDetailsLookup
+import info.erulinman.lifetimetracker.selection.WayItemKeyProvider
 import info.erulinman.lifetimetracker.utilities.DEBUG_TAG
+import info.erulinman.lifetimetracker.utilities.WAY_ID
+import info.erulinman.lifetimetracker.viewmodels.WayListViewModel
 import info.erulinman.lifetimetracker.wayDetail.WayDetailActivity
-
-const val WAY_ID = "way id"
+import info.erulinman.lifetimetracker.viewmodels.WayListViewModelFactory
 
 class WayListActivity : AppCompatActivity() {
     private val newWayActivityRequestCode = 1
     private val wayListViewModel by viewModels<WayListViewModel> {
-        WayListViewModelFactory()
+        WayListViewModelFactory((application as MainApplication).repository)
     }
 
     private var tracker: SelectionTracker<Long>? = null
@@ -40,10 +43,8 @@ class WayListActivity : AppCompatActivity() {
         val wayAdapter = WayAdapter { way -> adapterOnClick(way) }
         binding.recyclerView.adapter = wayAdapter
 
-        wayListViewModel.wayLiveData.observe(this, {
-            it?.let {
-                wayAdapter.submitList(it as MutableList<Way>)
-            }
+        wayListViewModel.liveDataWays.observe(this, {
+            it?.let { wayAdapter.submitList(it) }
         })
 
         fabOnClick = ::addNewWay
@@ -56,7 +57,7 @@ class WayListActivity : AppCompatActivity() {
             "WayListActivity selection tracker",
             binding.recyclerView,
             WayItemKeyProvider(wayAdapter),
-            ItemDetailsLookup(binding.recyclerView),
+            WayItemDetailsLookup(binding.recyclerView),
             StorageStrategy.createLongStorage()
         ).withSelectionPredicate(
             SelectionPredicates.createSelectAnything()
@@ -128,8 +129,9 @@ class WayListActivity : AppCompatActivity() {
 
         if (requestCode == newWayActivityRequestCode && resultCode == Activity.RESULT_OK) {
             data?.let {
-                val name = data.getStringExtra(WAY_NAME)
-                wayListViewModel.addNewWay(name)
+                val name: String = data.getStringExtra(NEW_WAY_NAME) ?: return
+                    val description = data.getStringExtra(NEW_WAY_DESCRIPTION)
+                    wayListViewModel.insertNewWay(name, description)
             }
         }
     }

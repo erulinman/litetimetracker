@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -15,6 +16,14 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        /*javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += ["room.schemaLocation":
+                                      "$projectDir/schemas".toString()]
+            }
+        }*/
+
     }
 
     buildTypes {
@@ -38,8 +47,9 @@ android {
 }
 
 dependencies {
-    implementation "androidx.room:room-runtime:$room_version"
-    annotationProcessor "androidx.room:room-compiler:$room_version"
+    // Room
+    implementation "androidx.room:room-ktx:$rootProject.roomVersion"
+    kapt           "androidx.room:room-compiler:$rootProject.roomVersion"
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
@@ -54,8 +64,8 @@ dependencies {
     implementation "androidx.work:work-runtime-ktx:$rootProject.workVersion"
     implementation "com.google.code.gson:gson:$rootProject.gsonVersion"
     // RecyclerView
-    implementation 'androidx.recyclerview:recyclerview:1.2.1'
-    implementation 'androidx.recyclerview:recyclerview-selection:1.1.0'
+    implementation "androidx.recyclerview:recyclerview:$rootProject.recyclerView"
+    implementation "androidx.recyclerview:recyclerview-selection:$rootProject.rwSelection"
 
     // Test
     testImplementation 'junit:junit:4.+'

@@ -9,8 +9,8 @@ import info.erulinman.lifetimetracker.R
 
 import info.erulinman.lifetimetracker.databinding.ActivityAddWayBinding
 
-
-const val WAY_NAME = "name"
+const val NEW_WAY_NAME = "new wat name"
+const val NEW_WAY_DESCRIPTION = "new wat description"
 
 class AddWayActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddWayBinding
@@ -30,11 +30,13 @@ class AddWayActivity : AppCompatActivity() {
     private fun addWay() {
         val resultIntent = Intent()
 
-        if (binding.editTextWayName.text.isNullOrEmpty()) {
+        if (binding.newWayName.text.isNullOrEmpty()) {
             setResult(Activity.RESULT_CANCELED, resultIntent)
         } else {
-            val name = binding.editTextWayName.text.toString()
-            resultIntent.putExtra(WAY_NAME, name)
+            val name = binding.newWayName.text.toString()
+            val description: String? = binding.newWayDescription.text?.toString()
+            resultIntent.putExtra(NEW_WAY_NAME, name)
+            resultIntent.putExtra(NEW_WAY_DESCRIPTION, description)
             setResult(Activity.RESULT_OK, resultIntent)
         }
         finish()

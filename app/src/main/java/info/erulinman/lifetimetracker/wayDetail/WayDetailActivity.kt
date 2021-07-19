@@ -1,15 +1,13 @@
 package info.erulinman.lifetimetracker.wayDetail
 
 import android.os.Bundle
-import android.util.Log
+import android.widget.Toast
 
 import androidx.appcompat.app.AppCompatActivity
+
 import info.erulinman.lifetimetracker.R
-
 import info.erulinman.lifetimetracker.databinding.ActivityWayDetailBinding
-import info.erulinman.lifetimetracker.wayList.WAY_ID
-import info.erulinman.lifetimetracker.wayList.TAG
-
+import info.erulinman.lifetimetracker.utilities.WAY_ID
 
 class WayDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityWayDetailBinding
@@ -29,6 +27,10 @@ class WayDetailActivity : AppCompatActivity() {
     }
 
     private fun startNewTime() {
-        Log.d(TAG, "ActivityWayDetail.fab was clicked")
+        Toast.makeText(
+            this,
+            "Start timer!",
+            Toast.LENGTH_SHORT
+        ).show()
     }
 }

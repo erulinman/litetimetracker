@@ -1,4 +1,4 @@
-package info.erulinman.lifetimetracker.wayList
+package info.erulinman.lifetimetracker.adapters
 
 import android.util.Log
 import android.view.LayoutInflater
@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 import info.erulinman.lifetimetracker.data.Way
 import info.erulinman.lifetimetracker.R
+import info.erulinman.lifetimetracker.utilities.DEBUG_TAG
 
 
 class WayAdapter(private val onClick: (Way) -> Unit) :
@@ -47,7 +48,7 @@ class WayAdapter(private val onClick: (Way) -> Unit) :
             return object : ItemDetailsLookup.ItemDetails<Long>() {
                 override fun getPosition(): Int = bindingAdapterPosition
                 override fun getSelectionKey(): Long? =
-                    (getItem(position) as Way).id
+                    (getItem(position) as Way).wayId
             }
         }
     }
@@ -63,7 +64,7 @@ class WayAdapter(private val onClick: (Way) -> Unit) :
     //override fun getItemId(position: Int): Long = position.toLong()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WayViewHolder {
-        Log.d(TAG, "WayAdapter.onCreateViewHolder()")
+        Log.d(DEBUG_TAG, "WayAdapter.onCreateViewHolder()")
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.way_item, parent, false)
         return WayViewHolder(view, onClick)
@@ -72,7 +73,7 @@ class WayAdapter(private val onClick: (Way) -> Unit) :
     override fun onBindViewHolder(holder: WayViewHolder, position: Int) {
         tracker?.let {
             val item = getItem(position)
-            holder.bind(item, it.isSelected(item.id))
+            holder.bind(item, it.isSelected(item.wayId))
         }
     }
 }
@@ -83,6 +84,6 @@ object WayDiffCallback: DiffUtil.ItemCallback<Way>() {
     }
 
     override fun areContentsTheSame(oldItem: Way, newItem: Way): Boolean {
-        return oldItem.id == newItem.id
+        return oldItem.wayId == newItem.wayId
     }
 }

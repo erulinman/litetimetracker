@@ -7,19 +7,32 @@
     tools:context=".addNewWay.AddWayActivity">
 
     <EditText
-        android:id="@+id/editTextWayName"
-        android:layout_width="wrap_content"
+        android:id="@+id/newWayName"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="188dp"
+        android:layout_marginVertical="15dp"
+        android:layout_marginHorizontal="15dp"
         android:ems="10"
+        android:hint="Name"
         android:inputType="textPersonName"
-        android:text="New Way"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <EditText
+        android:id="@+id/newWayDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="15dp"
+        android:ems="10"
+        android:hint="Description"
+        android:inputType="textShortMessage"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/newWayName"/>
+
     <include
         android:id="@+id/bottomAppBarLayout"
-        layout="@layout/bottom_app_bar"/>
+        layout="@layout/bottom_app_bar" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
