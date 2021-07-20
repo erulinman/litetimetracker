@@ -12,9 +12,6 @@ import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.selection.StorageStrategy
 
 import info.erulinman.lifetimetracker.adapters.WayAdapter
-import info.erulinman.lifetimetracker.addNewWay.AddWayActivity
-import info.erulinman.lifetimetracker.addNewWay.NEW_WAY_NAME
-import info.erulinman.lifetimetracker.addNewWay.NEW_WAY_DESCRIPTION
 import info.erulinman.lifetimetracker.data.Way
 import info.erulinman.lifetimetracker.databinding.ActivityMainBinding
 import info.erulinman.lifetimetracker.selection.WayItemDetailsLookup
