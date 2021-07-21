@@ -10,9 +10,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.LifeTimeTracker">
-        <activity android:name=".AddWayActivity" />
-        <activity android:name=".WayDetailActivity" />
-        <activity android:name=".WayListActivity">
+        <activity android:name=".ui.AddWayActivity" />
+        <activity android:name=".ui.PresetActivity" />
+        <activity android:name=".ui.WayListActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

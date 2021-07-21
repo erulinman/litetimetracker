@@ -1,9 +1,7 @@
 package info.erulinman.lifetimetracker.data;
 
-import kotlinx.coroutines.flow.Flow
-
 class WayRepository(private val wayDao: WayDao) {
-    fun getAll(): Flow<List<Way>> = wayDao.getAll()
+    fun getAll() = wayDao.getAll()
 
     fun getMaxWayId() : Long? = wayDao.getMaxWayId()
 

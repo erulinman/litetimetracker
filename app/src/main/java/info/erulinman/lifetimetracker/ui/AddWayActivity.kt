@@ -1,15 +1,15 @@
-package info.erulinman.lifetimetracker
+package info.erulinman.lifetimetracker.ui
 
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 
 import androidx.appcompat.app.AppCompatActivity
+import info.erulinman.lifetimetracker.R
 
 import info.erulinman.lifetimetracker.databinding.ActivityAddWayBinding
-
-const val NEW_WAY_NAME = "new wat name"
-const val NEW_WAY_DESCRIPTION = "new wat description"
+import info.erulinman.lifetimetracker.utilities.NEW_WAY_DESCRIPTION
+import info.erulinman.lifetimetracker.utilities.NEW_WAY_NAME
 
 class AddWayActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddWayBinding

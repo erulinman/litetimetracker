@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Life Time Tracker</string>
-    <string name="default_item_text">This is the Way</string>
+    <string name="list_item_way_name">Way</string>
     <string name="fab_content_description">fab</string>
+    <string name="list_item_preset_time">25:00</string>
+    <string name="list_item_preset_name">WORK</string>
 </resources>
