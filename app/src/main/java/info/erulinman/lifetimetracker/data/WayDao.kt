@@ -9,11 +9,11 @@ interface WayDao {
     @Query("SELECT * FROM ways ORDER BY name")
     fun getAll(): Flow<List<Way>>
 
-    @Query("SELECT MAX(wayId) FROM ways")
+    @Query("SELECT MAX(id) FROM ways")
     fun getMaxWayId(): Long?
 
-    @Query("SELECT * FROM ways WHERE wayId = :wayId")
-    fun getWay(wayId: Long): Way
+    @Query("SELECT * FROM ways WHERE id = :id")
+    fun getWay(id: Long): Way
 
     @Delete
     suspend fun delete(ways: List<Way>)

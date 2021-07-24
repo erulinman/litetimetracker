@@ -28,7 +28,6 @@ class WayListActivity : AppCompatActivity() {
     private val wayListViewModel by viewModels<WayListViewModel> {
         WayListViewModelFactory((application as MainApplication).wayListRepository)
     }
-
     private var tracker: SelectionTracker<Long>? = null
     private lateinit var binding: ActivityWayListBinding
     private lateinit var fabOnClick: () -> Unit
@@ -97,21 +96,15 @@ class WayListActivity : AppCompatActivity() {
         }
     }
 
-    private fun adapterOnClick(way: Way) {
-        val intent = Intent(this, PresetActivity()::class.java)
-        intent.putExtra(WAY_ID, way.name)
-        startActivity(intent)
+    private fun addNewWay() {
+        val intent = Intent(this, AddWayActivity()::class.java)
+        startActivityForResult(intent, newWayActivityRequestCode)
     }
 
     private fun deleteSelectedWays() {
         tracker?.selection?.let {
             wayListViewModel.deleteSelectedWays(it.toList())
         }
-    }
-
-    private fun addNewWay() {
-        val intent = Intent(this, AddWayActivity()::class.java)
-        startActivityForResult(intent, newWayActivityRequestCode)
     }
 
     override fun onBackPressed() {
@@ -121,6 +114,13 @@ class WayListActivity : AppCompatActivity() {
             super.onBackPressed()
         }
     }
+
+    private fun adapterOnClick(way: Way) {
+        val intent = Intent(this, PresetActivity()::class.java)
+        intent.putExtra(WAY_ID, way.name)
+        startActivity(intent)
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -136,14 +136,12 @@ class WayListActivity : AppCompatActivity() {
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
 
-        if(savedInstanceState != null)
-            tracker?.onRestoreInstanceState(savedInstanceState)
+        tracker?.onRestoreInstanceState(savedInstanceState)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
 
-        if (outState != null)
-            tracker?.onSaveInstanceState(outState)
+        tracker?.onSaveInstanceState(outState)
     }
 }

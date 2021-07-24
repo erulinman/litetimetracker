@@ -48,24 +48,28 @@ android {
 
 dependencies {
     // Room
-    implementation "androidx.room:room-ktx:$rootProject.roomVersion"
-    kapt           "androidx.room:room-compiler:$rootProject.roomVersion"
+    implementation 'androidx.room:room-ktx:2.3.0'
+    kapt           'androidx.room:room-compiler:2.3.0'
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
-    implementation "com.android.support:appcompat-v7:$rootProject.appcompatVersion"
-    implementation "com.google.android.material:material:$rootProject.materialVersion"
+    //implementation "com.android.support:appcompat-v7:1.2.0"
+    implementation 'com.google.android.material:material:1.3.0'
 
-    implementation "androidx.core:core-ktx:$rootProject.coreVersion"
-    implementation "androidx.activity:activity-ktx:$rootProject.activityVersion"
-    implementation "androidx.appcompat:appcompat:$rootProject.appcompatVersion"
-    implementation "androidx.constraintlayout:constraintlayout:$rootProject.constraintVersion"
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$rootProject.liveDataVersion"
-    implementation "androidx.work:work-runtime-ktx:$rootProject.workVersion"
-    implementation "com.google.code.gson:gson:$rootProject.gsonVersion"
+    implementation 'androidx.core:core-ktx:1.3.2'
+    implementation 'androidx.activity:activity-ktx:1.1.0'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation "androidx.constraintlayout:constraintlayout:2.0.4"
+
+    // Fragments
+    implementation 'androidx.fragment:fragment-ktx:1.3.6'
+
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.2.0'
+    implementation 'androidx.work:work-runtime-ktx:2.4.0'
+    implementation 'com.google.code.gson:gson:2.8.2'
     // RecyclerView
-    implementation "androidx.recyclerview:recyclerview:$rootProject.recyclerView"
-    implementation "androidx.recyclerview:recyclerview-selection:$rootProject.rwSelection"
+    implementation 'androidx.recyclerview:recyclerview:1.2.1'
+    implementation 'androidx.recyclerview:recyclerview-selection:1.1.0'
 
     // Test
     testImplementation 'junit:junit:4.+'

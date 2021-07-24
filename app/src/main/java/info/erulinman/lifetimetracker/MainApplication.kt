@@ -14,5 +14,5 @@ class MainApplication: Application() {
 
     private val database by lazy { AppDatabase.getInstance(this, applicationScope) }
     val wayListRepository by lazy { WayRepository(database.wayDao()) }
-    val pomodoroPresetRepository by lazy { PresetRepository(database.pomodoroPresetDao()) }
+    val presetRepository by lazy { PresetRepository(database.pomodoroPresetDao()) }
 }

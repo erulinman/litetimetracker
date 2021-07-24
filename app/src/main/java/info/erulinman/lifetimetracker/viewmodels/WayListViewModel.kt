@@ -17,7 +17,7 @@ class WayListViewModel(private val wayRepository: WayRepository) : ViewModel() {
     fun deleteSelectedWays(idList: List<Long>) = viewModelScope.launch {
         val listForDelete = mutableListOf<Way>()
         liveDataWays.value?.forEach {
-            if (idList.contains(it.wayId))
+            if (idList.contains(it.id))
                 listForDelete.add(it)
         }
         wayRepository.delete(listForDelete.toList())

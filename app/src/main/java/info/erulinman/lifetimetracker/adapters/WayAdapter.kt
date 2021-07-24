@@ -18,8 +18,6 @@ class WayAdapter(private val onClick: (Way) -> Unit) :
     private var tracker: SelectionTracker<Long>? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WayViewHolder {
-        /*val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.list_item_way, parent, false)*/
         val view = ListItemWayBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
@@ -31,7 +29,7 @@ class WayAdapter(private val onClick: (Way) -> Unit) :
     override fun onBindViewHolder(holder: WayViewHolder, position: Int) {
         tracker?.let {
             val item = getItem(position)
-            holder.bind(item, it.isSelected(item.wayId))
+            holder.bind(item, it.isSelected(item.id))
         }
     }
 
@@ -61,8 +59,9 @@ class WayAdapter(private val onClick: (Way) -> Unit) :
         fun getItemDetails(): ItemDetailsLookup.ItemDetails<Long> =
             object : ItemDetailsLookup.ItemDetails<Long>() {
                 override fun getPosition(): Int = bindingAdapterPosition
+
                 override fun getSelectionKey(): Long? =
-                    (getItem(position) as Way).wayId
+                    (getItem(position) as Way).id
             }
     }
 }
@@ -73,6 +72,6 @@ object WayDiffCallback: DiffUtil.ItemCallback<Way>() {
     }
 
     override fun areContentsTheSame(oldItem: Way, newItem: Way): Boolean {
-        return oldItem.wayId == newItem.wayId
+        return oldItem.id == newItem.id
     }
 }
