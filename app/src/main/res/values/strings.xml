@@ -4,4 +4,6 @@
     <string name="fab_content_description">fab</string>
     <string name="list_item_preset_time">25:00</string>
     <string name="list_item_preset_name">WORK</string>
+    <string name="order_confirmation">message ok</string>
+    <string name="ok">ok</string>
 </resources>

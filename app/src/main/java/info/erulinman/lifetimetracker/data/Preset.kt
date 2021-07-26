@@ -7,6 +7,5 @@ import androidx.room.PrimaryKey
 data class Preset(
     @PrimaryKey val id: Long,
     val name: String,
-    val time: String,
-    //val presets: List<Template>
+    val time: Long = 0
 )

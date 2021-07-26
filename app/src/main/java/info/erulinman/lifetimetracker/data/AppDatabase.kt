@@ -1,6 +1,7 @@
 package info.erulinman.lifetimetracker.data
 
 import android.content.Context
+import android.util.Log
 
 import androidx.room.Database
 import androidx.room.Room
@@ -12,6 +13,7 @@ import com.google.gson.reflect.TypeToken
 import com.google.gson.stream.JsonReader
 
 import info.erulinman.lifetimetracker.utilities.DATABASE_NAME
+import info.erulinman.lifetimetracker.utilities.DEBUG_TAG
 import info.erulinman.lifetimetracker.utilities.POMODORO_PRESET_FILENAME
 import info.erulinman.lifetimetracker.utilities.WAY_DATA_FILENAME
 
@@ -21,7 +23,7 @@ import kotlinx.coroutines.*
 abstract class AppDatabase : RoomDatabase() {
     abstract fun wayDao(): WayDao
 
-    abstract fun pomodoroPresetDao(): PresetDao
+    abstract fun presetDao(): PresetDao
 
     companion object {
         private var INSTANCE: AppDatabase? = null
@@ -50,21 +52,8 @@ abstract class AppDatabase : RoomDatabase() {
 
                         scope.launch(Dispatchers.IO) {
                             INSTANCE?.let { database ->
+                                Log.d(DEBUG_TAG, "way list: $wayList")
                                 prepopulateWays(wayList, database.wayDao())
-                            }
-                        }
-                    }
-                }
-
-                context.applicationContext.assets.open(POMODORO_PRESET_FILENAME).use {
-                    JsonReader(it.reader()).use { jsonReader ->
-                        val pomodoroPresetType = object : TypeToken<List<Preset>>() {}.type
-                        val presetList: List<Preset> =
-                            Gson().fromJson(jsonReader, pomodoroPresetType)
-
-                        scope.launch(Dispatchers.IO) {
-                            INSTANCE?.let { database ->
-                                prepopulatePomodoroPresets(presetList, database.pomodoroPresetDao())
                             }
                         }
                     }
@@ -76,13 +65,6 @@ abstract class AppDatabase : RoomDatabase() {
                 watDao: WayDao
             ) {
                 watDao.insertAll(wayList)
-            }
-
-            private suspend fun prepopulatePomodoroPresets(
-                presetList: List<Preset>,
-                presetDao: PresetDao
-            ) {
-                presetDao.insertAll(presetList)
             }
         }
     }

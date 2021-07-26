@@ -41,12 +41,9 @@ class PresetActivity : AppCompatActivity() {
         val presetAdapter = PresetAdapter { adapterOnClick() }
         val addPresetAdapter = AddPresetAdapter { addNewPreset() }
         val concatAdapter = ConcatAdapter(presetAdapter, addPresetAdapter)
+
         binding.recyclerView.adapter = concatAdapter
-
-
-        presetViewModel.liveDataPomodoroPresets.observe(this, {
-            it?.let { presetAdapter.submitList(it) }
-        })
+        submitUi(presetAdapter)
 
         fabOnClick = ::startNewTime
         binding.fab.apply {
@@ -62,7 +59,6 @@ class PresetActivity : AppCompatActivity() {
             PresetItemDetailsLookup(binding.recyclerView),
             StorageStrategy.createLongStorage()
         ).withSelectionPredicate(
-            //SelectionPredicates.createSelectAnything()
             PresetSelectionPredicate()
         ).build()
 
@@ -81,6 +77,12 @@ class PresetActivity : AppCompatActivity() {
         )
     }
 
+    private fun submitUi(adapter: PresetAdapter) {
+        presetViewModel.liveDataPomodoroPresets.observe(this, {
+            it?.let { adapter.submitList(it) }
+        })
+    }
+
     private fun showTheNumberOfSelectedItems() {
         val nItems: Int? = tracker?.selection?.size()
         val counterText = "Selected: "
@@ -96,11 +98,8 @@ class PresetActivity : AppCompatActivity() {
     }
 
     private fun addNewPreset() {
-        Toast.makeText(
-            this,
-            "Added new preset",
-            Toast.LENGTH_SHORT
-        ).show()
+        val presetFragment = PresetFragment()
+        presetFragment.show(supportFragmentManager, PresetFragment.TAG)
     }
 
     private fun startNewTime() {

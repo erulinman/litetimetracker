@@ -37,14 +37,11 @@ class WayListActivity : AppCompatActivity() {
         binding = ActivityWayListBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val wayAdapter = WayAdapter { way -> adapterOnClick(way) }
+        val wayAdapter = WayAdapter { way -> itemOnClick(way) }
+
         binding.recyclerView.adapter = wayAdapter
+        submitUi(wayAdapter)
 
-        wayListViewModel.liveDataWays.observe(this, {
-            it?.let { wayAdapter.submitList(it) }
-        })
-
-        fabOnClick = ::addNewWay
         binding.bottomAppBarLayout.fab.apply {
             setOnClickListener { fabOnClick() }
             setImageResource(R.drawable.baseline_add_24)
@@ -61,7 +58,18 @@ class WayListActivity : AppCompatActivity() {
         ).build()
 
         wayAdapter.setTracker(tracker)
+        setTrackerObserver()
 
+
+        /*
+        * Disable deselecting on touching recyclerview`s empty area
+        *
+        * I think this is a bad decision
+        * TODO: searching SelectionTracker.SelectionPredicate
+        }*/
+    }
+
+    private fun setTrackerObserver() {
         tracker?.addObserver(
             object : SelectionTracker.SelectionObserver<Long>() {
                 override fun onSelectionChanged() {
@@ -73,13 +81,12 @@ class WayListActivity : AppCompatActivity() {
                 }
             }
         )
+    }
 
-        /*
-        * Disable deselecting on touching recyclerview`s empty area
-        *
-        * I think this is a bad decision
-        * TODO: searching SelectionTracker.SelectionPredicate
-        }*/
+    private fun submitUi(adapter: WayAdapter) {
+        wayListViewModel.liveDataWays.observe(this, {
+            it?.let { adapter.submitList(it) }
+        })
     }
 
     private fun showTheNumberOfSelectedItems() {
@@ -115,7 +122,7 @@ class WayListActivity : AppCompatActivity() {
         }
     }
 
-    private fun adapterOnClick(way: Way) {
+    private fun itemOnClick(way: Way) {
         val intent = Intent(this, PresetActivity()::class.java)
         intent.putExtra(WAY_ID, way.name)
         startActivity(intent)
