@@ -104,7 +104,7 @@ class WayListActivity : AppCompatActivity() {
     }
 
     private fun addNewWay() {
-        val intent = Intent(this, AddWayActivity()::class.java)
+        val intent = Intent(this, AddWayActivity::class.java)
         startActivityForResult(intent, newWayActivityRequestCode)
     }
 
@@ -123,7 +123,7 @@ class WayListActivity : AppCompatActivity() {
     }
 
     private fun itemOnClick(way: Way) {
-        val intent = Intent(this, PresetActivity()::class.java)
+        val intent = Intent(this, PresetActivity::class.java)
         intent.putExtra(WAY_ID, way.name)
         startActivity(intent)
     }

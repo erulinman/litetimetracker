@@ -53,7 +53,7 @@ class PresetAdapter(private val onClick: () -> Unit) :
 
         fun bind(preset: Preset, isSelected: Boolean = false) {
             binding.presetName.text = preset.name
-            binding.presetTime.text = preset.time
+            binding.presetTime.text = preset.time.toString()
             binding.tickPointImage.isVisible = isSelected
         }
 
