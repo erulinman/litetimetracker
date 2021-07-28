@@ -11,7 +11,7 @@ import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.selection.StorageStrategy
 
 import info.erulinman.lifetimetracker.adapters.WayAdapter
-import info.erulinman.lifetimetracker.data.Way
+import info.erulinman.lifetimetracker.data.entity.Way
 import info.erulinman.lifetimetracker.databinding.ActivityWayListBinding
 import info.erulinman.lifetimetracker.MainApplication
 import info.erulinman.lifetimetracker.R
@@ -20,13 +20,14 @@ import info.erulinman.lifetimetracker.selection.WayItemKeyProvider
 import info.erulinman.lifetimetracker.utilities.NEW_WAY_DESCRIPTION
 import info.erulinman.lifetimetracker.utilities.NEW_WAY_NAME
 import info.erulinman.lifetimetracker.utilities.WAY_ID
+import info.erulinman.lifetimetracker.utilities.WAY_NAME
 import info.erulinman.lifetimetracker.viewmodels.WayListViewModel
 import info.erulinman.lifetimetracker.viewmodels.WayListViewModelFactory
 
 class WayListActivity : AppCompatActivity() {
     private val newWayActivityRequestCode = 1
     private val wayListViewModel by viewModels<WayListViewModel> {
-        WayListViewModelFactory((application as MainApplication).wayListRepository)
+        WayListViewModelFactory((application as MainApplication).databaseRepository)
     }
     private var tracker: SelectionTracker<Long>? = null
     private lateinit var binding: ActivityWayListBinding
@@ -37,12 +38,14 @@ class WayListActivity : AppCompatActivity() {
         binding = ActivityWayListBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val wayAdapter = WayAdapter { way -> itemOnClick(way) }
+        val wayAdapter = WayAdapter { way -> adapterOnClick(way) }
 
         binding.recyclerView.adapter = wayAdapter
         submitUi(wayAdapter)
 
+
         binding.bottomAppBarLayout.fab.apply {
+            fabOnClick = ::addNewWay
             setOnClickListener { fabOnClick() }
             setImageResource(R.drawable.baseline_add_24)
         }
@@ -122,9 +125,10 @@ class WayListActivity : AppCompatActivity() {
         }
     }
 
-    private fun itemOnClick(way: Way) {
+    private fun adapterOnClick(way: Way) {
         val intent = Intent(this, PresetActivity::class.java)
-        intent.putExtra(WAY_ID, way.name)
+        intent.putExtra(WAY_ID, way.id)
+        intent.putExtra(WAY_NAME, way.name)
         startActivity(intent)
     }
 

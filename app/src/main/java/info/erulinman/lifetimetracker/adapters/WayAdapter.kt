@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
 import info.erulinman.lifetimetracker.databinding.ListItemWayBinding
-import info.erulinman.lifetimetracker.data.Way
+import info.erulinman.lifetimetracker.data.entity.Way
 
 class WayAdapter(private val onClick: (Way) -> Unit) :
     ListAdapter<Way, WayAdapter.WayViewHolder>(WayDiffCallback) {

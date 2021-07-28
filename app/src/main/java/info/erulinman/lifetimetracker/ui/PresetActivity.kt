@@ -19,19 +19,20 @@ import info.erulinman.lifetimetracker.selection.PresetItemDetailsLookup
 import info.erulinman.lifetimetracker.selection.PresetItemKeyProvider
 import info.erulinman.lifetimetracker.selection.PresetSelectionPredicate
 import info.erulinman.lifetimetracker.utilities.WAY_ID
+import info.erulinman.lifetimetracker.utilities.WAY_NAME
 import info.erulinman.lifetimetracker.viewmodels.PresetViewModel
 import info.erulinman.lifetimetracker.viewmodels.PresetViewModelFactory
 
 class PresetActivity : AppCompatActivity() {
     private val presetViewModel by viewModels<PresetViewModel> {
         PresetViewModelFactory(
-            (application as MainApplication).presetRepository
+            (application as MainApplication).databaseRepository,
+            intent.getLongExtra(WAY_ID, -1)
         )
     }
     private var tracker: SelectionTracker<Long>? = null
     private lateinit var binding: ActivityPresetBinding
     private lateinit var fabOnClick: () -> Unit
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,7 +51,7 @@ class PresetActivity : AppCompatActivity() {
             setOnClickListener { fabOnClick() }
             setImageResource(R.drawable.ic_play_24)
         }
-        binding.appBarTitle.text = intent.getStringExtra(WAY_ID)
+        binding.appBarTitle.text = intent.getStringExtra(WAY_NAME)
 
         tracker = SelectionTracker.Builder(
             "PresetActivity selection tracker",
@@ -78,7 +79,7 @@ class PresetActivity : AppCompatActivity() {
     }
 
     private fun submitUi(adapter: PresetAdapter) {
-        presetViewModel.liveDataPomodoroPresets.observe(this, {
+        presetViewModel.liveDataPresets.observe(this, {
             it?.let { adapter.submitList(it) }
         })
     }

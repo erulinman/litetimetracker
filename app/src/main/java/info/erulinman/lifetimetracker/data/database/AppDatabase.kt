@@ -1,4 +1,4 @@
-package info.erulinman.lifetimetracker.data
+package info.erulinman.lifetimetracker.data.database
 
 import android.content.Context
 import android.util.Log
@@ -11,10 +11,13 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.google.gson.stream.JsonReader
+import info.erulinman.lifetimetracker.data.dao.PresetDao
+import info.erulinman.lifetimetracker.data.dao.WayDao
+import info.erulinman.lifetimetracker.data.entity.Preset
+import info.erulinman.lifetimetracker.data.entity.Way
 
 import info.erulinman.lifetimetracker.utilities.DATABASE_NAME
 import info.erulinman.lifetimetracker.utilities.DEBUG_TAG
-import info.erulinman.lifetimetracker.utilities.POMODORO_PRESET_FILENAME
 import info.erulinman.lifetimetracker.utilities.WAY_DATA_FILENAME
 
 import kotlinx.coroutines.*

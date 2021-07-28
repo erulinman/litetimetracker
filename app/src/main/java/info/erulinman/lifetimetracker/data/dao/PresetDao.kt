@@ -1,13 +1,15 @@
-package info.erulinman.lifetimetracker.data
+package info.erulinman.lifetimetracker.data.dao
 
 import androidx.room.*
+
+import info.erulinman.lifetimetracker.data.entity.Preset
 
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface PresetDao {
-    @Query("SELECT * FROM presets ORDER BY id")
-    fun getAll(): Flow<List<Preset>>
+    @Query("SELECT * FROM pomodoro_presets WHERE wayId = :wayId ORDER BY id")
+    fun getPresetForWayId(wayId: Long): Flow<List<Preset>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(preset: Preset)

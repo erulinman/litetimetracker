@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
-import info.erulinman.lifetimetracker.data.Preset
+import info.erulinman.lifetimetracker.data.entity.Preset
 import info.erulinman.lifetimetracker.databinding.ListItemPresetBinding
 import info.erulinman.lifetimetracker.utilities.DEBUG_TAG
 

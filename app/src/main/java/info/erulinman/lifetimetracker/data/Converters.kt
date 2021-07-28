@@ -3,6 +3,7 @@ package info.erulinman.lifetimetracker.data
 import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import info.erulinman.lifetimetracker.data.entity.Preset
 
 class Converters {
     @TypeConverter
