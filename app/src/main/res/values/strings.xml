@@ -6,4 +6,6 @@
     <string name="list_item_preset_name">WORK</string>
     <string name="order_confirmation">message ok</string>
     <string name="ok">ok</string>
+    <string name="timer_text">00:00</string>
+    <string name="preset_name_on_timer">work</string>
 </resources>

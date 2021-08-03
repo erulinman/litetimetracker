@@ -12,6 +12,8 @@ class DatabaseRepository(private val database: AppDatabase) {
 
     fun getMaxWayId() = database.wayDao().getMaxWayId()
 
+    fun getMaxPresetId() = database.presetDao().getMaxPresetId()
+
     suspend fun insertWays(way: Way) =
         database.wayDao().insert(way)
 

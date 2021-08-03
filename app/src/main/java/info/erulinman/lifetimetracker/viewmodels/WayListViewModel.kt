@@ -14,6 +14,13 @@ import kotlinx.coroutines.launch
 class WayListViewModel(private val repository: DatabaseRepository) : ViewModel() {
     val liveDataWays = repository.loadWays().asLiveData()
 
+    fun addNewWay(name: String, description: String?) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val newId = repository.getMaxWayId()?.let { it + 1 } ?: 1
+            repository.insertWays(Way(newId, name, description))
+        }
+    }
+
     fun deleteSelectedWays(idList: List<Long>) = viewModelScope.launch {
         val listForDelete = mutableListOf<Way>()
         liveDataWays.value?.forEach {
@@ -21,12 +28,5 @@ class WayListViewModel(private val repository: DatabaseRepository) : ViewModel()
                 listForDelete.add(it)
         }
         repository.deleteWays(listForDelete.toList())
-    }
-
-    fun insertNewWay(name: String, description: String?) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val newId = repository.getMaxWayId()?.let { it + 1 } ?: 1
-            repository.insertWays(Way(newId, name, description))
-        }
     }
 }

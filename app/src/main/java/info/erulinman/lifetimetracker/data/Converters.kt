@@ -5,6 +5,9 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import info.erulinman.lifetimetracker.data.entity.Preset
 
+/**
+* Not used because data storage schema changed
+*/
 class Converters {
     @TypeConverter
     fun toListOfPresets(jsonData: String?): List<Preset>? {

@@ -11,6 +11,9 @@ interface PresetDao {
     @Query("SELECT * FROM pomodoro_presets WHERE wayId = :wayId ORDER BY id")
     fun getPresetForWayId(wayId: Long): Flow<List<Preset>>
 
+    @Query("SELECT MAX(id) FROM pomodoro_presets")
+    fun getMaxPresetId(): Long?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(preset: Preset)
 

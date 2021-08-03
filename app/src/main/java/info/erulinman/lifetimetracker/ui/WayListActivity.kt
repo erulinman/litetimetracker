@@ -139,7 +139,7 @@ class WayListActivity : AppCompatActivity() {
             data?.let {
                 val name: String = data.getStringExtra(NEW_WAY_NAME) ?: return
                     val description = data.getStringExtra(NEW_WAY_DESCRIPTION)
-                    wayListViewModel.insertNewWay(name, description)
+                    wayListViewModel.addNewWay(name, description)
             }
         }
     }

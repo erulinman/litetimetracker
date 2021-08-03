@@ -1,10 +1,14 @@
 package info.erulinman.lifetimetracker.ui
 
+import android.content.DialogInterface
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentResultListener
 import androidx.recyclerview.selection.SelectionPredicates
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.selection.StorageStrategy
@@ -18,6 +22,7 @@ import info.erulinman.lifetimetracker.adapters.AddPresetAdapter
 import info.erulinman.lifetimetracker.selection.PresetItemDetailsLookup
 import info.erulinman.lifetimetracker.selection.PresetItemKeyProvider
 import info.erulinman.lifetimetracker.selection.PresetSelectionPredicate
+import info.erulinman.lifetimetracker.utilities.DEBUG_TAG
 import info.erulinman.lifetimetracker.utilities.WAY_ID
 import info.erulinman.lifetimetracker.utilities.WAY_NAME
 import info.erulinman.lifetimetracker.viewmodels.PresetViewModel
@@ -65,6 +70,18 @@ class PresetActivity : AppCompatActivity() {
 
         presetAdapter.setTracker(tracker)
 
+        setTrackerObserver()
+
+        setPresetFragmentListener()
+    }
+
+    private fun submitUi(adapter: PresetAdapter) {
+        presetViewModel.liveDataPresets.observe(this, {
+            it?.let { adapter.submitList(it) }
+        })
+    }
+
+    private fun setTrackerObserver() {
         tracker?.addObserver(
             object : SelectionTracker.SelectionObserver<Long>() {
                 override fun onSelectionChanged() {
@@ -76,12 +93,6 @@ class PresetActivity : AppCompatActivity() {
                 }
             }
         )
-    }
-
-    private fun submitUi(adapter: PresetAdapter) {
-        presetViewModel.liveDataPresets.observe(this, {
-            it?.let { adapter.submitList(it) }
-        })
     }
 
     private fun showTheNumberOfSelectedItems() {
@@ -103,12 +114,29 @@ class PresetActivity : AppCompatActivity() {
         presetFragment.show(supportFragmentManager, PresetFragment.TAG)
     }
 
+    private fun setPresetFragmentListener() {
+        supportFragmentManager.setFragmentResultListener(
+            PresetFragment.REQUEST_KEY,
+            this
+        ) { _, result ->
+                val response = result.getInt(PresetFragment.KEY_RESPONSE)
+                if ( response == DialogInterface.BUTTON_POSITIVE) {
+                    val presetName = result.getString(PresetFragment.PRESET_NAME) ?: "new preset"
+                    val presetTime = result.getString(PresetFragment.PRESET_TIME) ?: "500"
+
+                    presetViewModel.addNewPreset(presetName, presetTime)
+                    Toast.makeText(
+                        this,
+                        "$response, $presetName, $presetTime",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+    }
+
     private fun startNewTime() {
-        Toast.makeText(
-            this,
-            "Start timer!",
-            Toast.LENGTH_SHORT
-        ).show()
+        val intent = Intent(this, TimerActivity::class.java)
+        startActivity(intent)
     }
 
     private fun deleteSelectedPresets() {
