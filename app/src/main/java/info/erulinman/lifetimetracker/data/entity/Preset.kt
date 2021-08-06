@@ -9,4 +9,9 @@ data class Preset(
     val wayId: Long,
     val name: String,
     val time: Long = 90000
-)
+) {
+    companion object {
+        const val DEFAULT_NAME = "Work"
+        const val DEFAULT_TIME = "1500000"
+    }
+}

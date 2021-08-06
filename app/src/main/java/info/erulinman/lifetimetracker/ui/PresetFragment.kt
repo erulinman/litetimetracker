@@ -3,14 +3,11 @@ package info.erulinman.lifetimetracker.ui;
 import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
-import info.erulinman.lifetimetracker.R
 import info.erulinman.lifetimetracker.databinding.FragmentPresetBinding
-import info.erulinman.lifetimetracker.utilities.DEBUG_TAG
 
 class PresetFragment() : DialogFragment() {
     private lateinit var binding: FragmentPresetBinding
@@ -38,7 +35,7 @@ class PresetFragment() : DialogFragment() {
         @JvmStatic val TAG: String = PresetFragment::class.java.simpleName
         @JvmStatic val REQUEST_KEY = "$TAG.defaultRequestKey"
         @JvmStatic val KEY_RESPONSE = "response"
-        @JvmStatic val PRESET_NAME = "preset name"
-        @JvmStatic val PRESET_TIME = "preset time"
+        @JvmStatic val PRESET_NAME = "preset.name"
+        @JvmStatic val PRESET_TIME = "preset.time"
     }
 }

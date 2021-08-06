@@ -1,7 +1,6 @@
 package info.erulinman.lifetimetracker.data.database
 
 import android.content.Context
-import android.util.Log
 
 import androidx.room.Database
 import androidx.room.Room
@@ -16,10 +15,6 @@ import info.erulinman.lifetimetracker.data.dao.WayDao
 import info.erulinman.lifetimetracker.data.entity.Preset
 import info.erulinman.lifetimetracker.data.entity.Way
 
-import info.erulinman.lifetimetracker.utilities.DATABASE_NAME
-import info.erulinman.lifetimetracker.utilities.DEBUG_TAG
-import info.erulinman.lifetimetracker.utilities.WAY_DATA_FILENAME
-
 import kotlinx.coroutines.*
 
 @Database(entities = [Way::class, Preset::class], version = 1)
@@ -29,6 +24,8 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun presetDao(): PresetDao
 
     companion object {
+        private const val DATABASE_NAME = "application.database.name"
+        const val WAY_DATA_FILENAME = "application.assets.ways.json"
         private var INSTANCE: AppDatabase? = null
 
         @Synchronized
@@ -55,7 +52,6 @@ abstract class AppDatabase : RoomDatabase() {
 
                         scope.launch(Dispatchers.IO) {
                             INSTANCE?.let { database ->
-                                Log.d(DEBUG_TAG, "way list: $wayList")
                                 prepopulateWays(wayList, database.wayDao())
                             }
                         }

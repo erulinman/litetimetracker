@@ -23,6 +23,10 @@ class PomodoroService : Service() {
         return result
     }
 
+    override fun onBind(intent: Intent?): IBinder? {
+        TODO("Not yet implemented")
+    }
+
     private fun startTimer() {
         TODO("Not yet implemented")
     }
@@ -31,7 +35,4 @@ class PomodoroService : Service() {
         TODO("Not yet implemented")
     }
 
-    override fun onBind(intent: Intent): IBinder {
-        TODO("Return the communication channel to the service.")
-    }
 }

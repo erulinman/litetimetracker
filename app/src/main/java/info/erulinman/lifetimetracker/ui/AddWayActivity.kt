@@ -8,8 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import info.erulinman.lifetimetracker.R
 
 import info.erulinman.lifetimetracker.databinding.ActivityAddWayBinding
-import info.erulinman.lifetimetracker.utilities.NEW_WAY_DESCRIPTION
-import info.erulinman.lifetimetracker.utilities.NEW_WAY_NAME
+import info.erulinman.lifetimetracker.utilities.Constants
 
 class AddWayActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddWayBinding
@@ -34,8 +33,8 @@ class AddWayActivity : AppCompatActivity() {
         } else {
             val name = binding.newWayName.text.toString()
             val description: String? = binding.newWayDescription.text?.toString()
-            resultIntent.putExtra(NEW_WAY_NAME, name)
-            resultIntent.putExtra(NEW_WAY_DESCRIPTION, description)
+            resultIntent.putExtra(Constants.NEW_WAY_NAME, name)
+            resultIntent.putExtra(Constants.NEW_WAY_DESCRIPTION, description)
             setResult(Activity.RESULT_OK, resultIntent)
         }
         finish()

@@ -19,12 +19,11 @@ import info.erulinman.lifetimetracker.databinding.ActivityPresetBinding
 import info.erulinman.lifetimetracker.MainApplication
 import info.erulinman.lifetimetracker.R
 import info.erulinman.lifetimetracker.adapters.AddPresetAdapter
+import info.erulinman.lifetimetracker.data.entity.Preset
 import info.erulinman.lifetimetracker.selection.PresetItemDetailsLookup
 import info.erulinman.lifetimetracker.selection.PresetItemKeyProvider
 import info.erulinman.lifetimetracker.selection.PresetSelectionPredicate
-import info.erulinman.lifetimetracker.utilities.DEBUG_TAG
-import info.erulinman.lifetimetracker.utilities.WAY_ID
-import info.erulinman.lifetimetracker.utilities.WAY_NAME
+import info.erulinman.lifetimetracker.utilities.Constants
 import info.erulinman.lifetimetracker.viewmodels.PresetViewModel
 import info.erulinman.lifetimetracker.viewmodels.PresetViewModelFactory
 
@@ -32,7 +31,7 @@ class PresetActivity : AppCompatActivity() {
     private val presetViewModel by viewModels<PresetViewModel> {
         PresetViewModelFactory(
             (application as MainApplication).databaseRepository,
-            intent.getLongExtra(WAY_ID, -1)
+            intent.getLongExtra(Constants.WAY_ID, -1)
         )
     }
     private var tracker: SelectionTracker<Long>? = null
@@ -51,12 +50,12 @@ class PresetActivity : AppCompatActivity() {
         binding.recyclerView.adapter = concatAdapter
         submitUi(presetAdapter)
 
-        fabOnClick = ::startNewTime
+        fabOnClick = ::runTimerActivity
         binding.fab.apply {
             setOnClickListener { fabOnClick() }
             setImageResource(R.drawable.ic_play_24)
         }
-        binding.appBarTitle.text = intent.getStringExtra(WAY_NAME)
+        binding.appBarTitle.text = intent.getStringExtra(Constants.WAY_NAME)
 
         tracker = SelectionTracker.Builder(
             "PresetActivity selection tracker",
@@ -105,7 +104,7 @@ class PresetActivity : AppCompatActivity() {
         } else {
             binding.appBarTitle.setText(R.string.app_name)
             binding.fab.setImageResource(R.drawable.ic_play_24)
-            fabOnClick = ::startNewTime
+            fabOnClick = ::runTimerActivity
         }
     }
 
@@ -121,8 +120,8 @@ class PresetActivity : AppCompatActivity() {
         ) { _, result ->
                 val response = result.getInt(PresetFragment.KEY_RESPONSE)
                 if ( response == DialogInterface.BUTTON_POSITIVE) {
-                    val presetName = result.getString(PresetFragment.PRESET_NAME) ?: "new preset"
-                    val presetTime = result.getString(PresetFragment.PRESET_TIME) ?: "500"
+                    val presetName = result.getString(PresetFragment.PRESET_NAME) ?: Preset.DEFAULT_NAME
+                    val presetTime = result.getString(PresetFragment.PRESET_TIME) ?: Preset.DEFAULT_TIME
 
                     presetViewModel.addNewPreset(presetName, presetTime)
                     Toast.makeText(
@@ -134,7 +133,7 @@ class PresetActivity : AppCompatActivity() {
             }
     }
 
-    private fun startNewTime() {
+    private fun runTimerActivity() {
         val intent = Intent(this, TimerActivity::class.java)
         startActivity(intent)
     }

@@ -1,7 +1,9 @@
 package info.erulinman.lifetimetracker.model
 
 import android.os.CountDownTimer
+import androidx.annotation.StringDef
 import info.erulinman.lifetimetracker.data.entity.Preset
+import info.erulinman.lifetimetracker.utilities.Constants
 
 class TimerManager(private val presets: List<Preset>) {
 
@@ -16,7 +18,9 @@ class TimerManager(private val presets: List<Preset>) {
         
     }
 
-    private class Timer(private val millisInFuture: Long) : CountDownTimer(millisInFuture, 1000) {
+    private class Timer(
+        private val millisInFuture: Long
+    ) : CountDownTimer(millisInFuture, 1000) {
         override fun onTick(millisUntilFinished: Long) {
             TODO("Not yet implemented")
         }
@@ -25,5 +29,11 @@ class TimerManager(private val presets: List<Preset>) {
             TODO("Not yet implemented")
         }
 
+    }
+
+    companion object {
+        const val START = "application.timer_manager.task.start"
+        const val STOP  = "application.timer_manager.task.stop"
+        const val SKIP  = "application.timer_manager.task.skip"
     }
 }
