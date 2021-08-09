@@ -2,14 +2,11 @@ package info.erulinman.lifetimetracker
 
 import android.app.Service
 import android.content.Intent
-import android.os.CountDownTimer
 import android.os.IBinder
-import info.erulinman.lifetimetracker.model.TimerManager
-import java.util.*
-import kotlin.properties.Delegates
+import info.erulinman.lifetimetracker.model.TimerService
 
 class PomodoroService : Service() {
-    private lateinit var timerManager: TimerManager
+    private lateinit var timerManager: TimerService
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)

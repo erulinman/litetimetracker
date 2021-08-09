@@ -17,10 +17,7 @@ import info.erulinman.lifetimetracker.MainApplication
 import info.erulinman.lifetimetracker.R
 import info.erulinman.lifetimetracker.selection.WayItemDetailsLookup
 import info.erulinman.lifetimetracker.selection.WayItemKeyProvider
-import info.erulinman.lifetimetracker.utilities.NEW_WAY_DESCRIPTION
-import info.erulinman.lifetimetracker.utilities.NEW_WAY_NAME
-import info.erulinman.lifetimetracker.utilities.WAY_ID
-import info.erulinman.lifetimetracker.utilities.WAY_NAME
+import info.erulinman.lifetimetracker.utilities.Constants
 import info.erulinman.lifetimetracker.viewmodels.WayListViewModel
 import info.erulinman.lifetimetracker.viewmodels.WayListViewModelFactory
 
@@ -42,7 +39,6 @@ class WayListActivity : AppCompatActivity() {
 
         binding.recyclerView.adapter = wayAdapter
         submitUi(wayAdapter)
-
 
         binding.bottomAppBarLayout.fab.apply {
             fabOnClick = ::addNewWay
@@ -109,6 +105,7 @@ class WayListActivity : AppCompatActivity() {
     private fun addNewWay() {
         val intent = Intent(this, AddWayActivity::class.java)
         startActivityForResult(intent, newWayActivityRequestCode)
+        //registerForActivityResult()
     }
 
     private fun deleteSelectedWays() {
@@ -127,8 +124,8 @@ class WayListActivity : AppCompatActivity() {
 
     private fun adapterOnClick(way: Way) {
         val intent = Intent(this, PresetActivity::class.java)
-        intent.putExtra(WAY_ID, way.id)
-        intent.putExtra(WAY_NAME, way.name)
+        intent.putExtra(Constants.WAY_ID, way.id)
+        intent.putExtra(Constants.WAY_NAME, way.name)
         startActivity(intent)
     }
 
@@ -137,8 +134,8 @@ class WayListActivity : AppCompatActivity() {
 
         if (requestCode == newWayActivityRequestCode && resultCode == Activity.RESULT_OK) {
             data?.let {
-                val name: String = data.getStringExtra(NEW_WAY_NAME) ?: return
-                    val description = data.getStringExtra(NEW_WAY_DESCRIPTION)
+                val name: String = data.getStringExtra(Constants.NEW_WAY_NAME) ?: return
+                    val description = data.getStringExtra(Constants.NEW_WAY_DESCRIPTION)
                     wayListViewModel.addNewWay(name, description)
             }
         }

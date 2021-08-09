@@ -135,6 +135,7 @@ class PresetActivity : AppCompatActivity() {
 
     private fun runTimerActivity() {
         val intent = Intent(this, TimerActivity::class.java)
+        Log.d(Constants.DEBUG_TAG, "runTimerActivity()")
         startActivity(intent)
     }
 

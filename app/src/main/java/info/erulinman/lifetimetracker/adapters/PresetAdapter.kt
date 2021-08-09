@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 import info.erulinman.lifetimetracker.data.entity.Preset
 import info.erulinman.lifetimetracker.databinding.ListItemPresetBinding
-import info.erulinman.lifetimetracker.utilities.DEBUG_TAG
+import info.erulinman.lifetimetracker.utilities.Constants.DEBUG_TAG
 
 class PresetAdapter(private val onClick: () -> Unit) :
     ListAdapter<Preset, PresetAdapter.PresetViewHolder>(PresetDiffCallback) {

@@ -25,7 +25,8 @@ abstract class AppDatabase : RoomDatabase() {
 
     companion object {
         private const val DATABASE_NAME = "application.database.name"
-        const val WAY_DATA_FILENAME = "application.assets.ways.json"
+        private const val WAY_DATA_FILENAME = "ways.json"
+
         private var INSTANCE: AppDatabase? = null
 
         @Synchronized
