@@ -2,7 +2,9 @@ package info.erulinman.lifetimetracker.data.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.serialization.Serializable
 
+@Serializable
 @Entity(tableName = "pomodoro_presets")
 data class Preset(
     @PrimaryKey val id: Long,

@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 import info.erulinman.lifetimetracker.data.entity.Preset
 import info.erulinman.lifetimetracker.databinding.ListItemPresetBinding
+import info.erulinman.lifetimetracker.ui.fromLongToTimerString
 import info.erulinman.lifetimetracker.utilities.Constants.DEBUG_TAG
 
 class PresetAdapter(private val onClick: () -> Unit) :
@@ -52,9 +53,11 @@ class PresetAdapter(private val onClick: () -> Unit) :
         }
 
         fun bind(preset: Preset, isSelected: Boolean = false) {
-            binding.presetName.text = preset.name
-            binding.presetTime.text = preset.time.toString()
-            binding.tickPointImage.isVisible = isSelected
+            binding.apply {
+                presetName.text = preset.name
+                presetTime.text = preset.time.fromLongToTimerString()
+                tickPointImage.isVisible = isSelected
+            }
         }
 
         fun getItemDetails(): ItemDetailsLookup.ItemDetails<Long> =

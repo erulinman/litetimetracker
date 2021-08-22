@@ -26,6 +26,8 @@ import info.erulinman.lifetimetracker.selection.PresetSelectionPredicate
 import info.erulinman.lifetimetracker.utilities.Constants
 import info.erulinman.lifetimetracker.viewmodels.PresetViewModel
 import info.erulinman.lifetimetracker.viewmodels.PresetViewModelFactory
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 class PresetActivity : AppCompatActivity() {
     private val presetViewModel by viewModels<PresetViewModel> {
@@ -122,20 +124,15 @@ class PresetActivity : AppCompatActivity() {
                 if ( response == DialogInterface.BUTTON_POSITIVE) {
                     val presetName = result.getString(PresetFragment.PRESET_NAME) ?: Preset.DEFAULT_NAME
                     val presetTime = result.getString(PresetFragment.PRESET_TIME) ?: Preset.DEFAULT_TIME
-
                     presetViewModel.addNewPreset(presetName, presetTime)
-                    Toast.makeText(
-                        this,
-                        "$response, $presetName, $presetTime",
-                        Toast.LENGTH_LONG
-                    ).show()
                 }
             }
     }
 
     private fun runTimerActivity() {
         val intent = Intent(this, TimerActivity::class.java)
-        Log.d(Constants.DEBUG_TAG, "runTimerActivity()")
+        intent.putExtra(EXTRA_PRESETS_IN_JSON, Json.encodeToString(presetViewModel.liveDataPresets.value))
+        Log.d(Constants.DEBUG_TAG, "PresetActivity.runTimerActivity()")
         startActivity(intent)
     }
 
@@ -154,6 +151,7 @@ class PresetActivity : AppCompatActivity() {
     }
 
     private fun adapterOnClick() {
+        //TODO: show PresetFragment with item's data
         Toast.makeText(
             this,
             "Show preset settings",
@@ -171,5 +169,9 @@ class PresetActivity : AppCompatActivity() {
         super.onSaveInstanceState(outState)
 
         tracker?.onSaveInstanceState(outState)
+    }
+
+    companion object {
+        const val EXTRA_PRESETS_IN_JSON = "info.erulinman.lifetimetracker.EXTRA_PRESETS_IN_JSON"
     }
 }

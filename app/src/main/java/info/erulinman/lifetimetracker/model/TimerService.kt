@@ -8,86 +8,159 @@ import android.os.IBinder
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.asLiveData
 import info.erulinman.lifetimetracker.data.entity.Preset
+import info.erulinman.lifetimetracker.ui.fromLongToTimerString
 import info.erulinman.lifetimetracker.utilities.Constants
-import kotlin.properties.Delegates
 
-//class TimerService(private val presets: List<Preset>): Service() {
 class TimerService: Service() {
-    private var duration by Delegates.notNull<Long>()
+    private lateinit var binder: TimerServiceBinder
     private var timer: Timer? = null
-    private val binder = MyBinder()
+    private var currentPresetDuration: Long = 0
+    private var currentPresetRemaining: Long? = null
+    private var currentPresetIndex: Int = 0
+
+    private val presets = mutableListOf<Preset>()
 
     private val _time = MutableLiveData<Long>()
-    private val _presetName = MutableLiveData<String>()
-
-    private var state = STATE.INACTIVE
-
     val time get() = _time as LiveData<Long>
+
+    private val _presetName = MutableLiveData<String>()
     val presetName get() = _presetName as LiveData<String>
 
+    private val _state = MutableLiveData<String>()
+    val state get() = _state as LiveData<String>
+
+    companion object {
+        const val INITIALIZED = "info.erulinman.lifetimetracker.TIMER.INITIALIZED"
+        const val STARTED     = "info.erulinman.lifetimetracker.TIMER.STARTED"
+        const val STOPPED     = "info.erulinman.lifetimetracker.TIMER.STOPPED"
+        const val FINISHED    = "info.erulinman.lifetimetracker.TIMER.FINISHED"
+    }
+
     override fun onCreate() {
-        Log.d(Constants.DEBUG_TAG, "onCreate service")
+        Log.d(Constants.DEBUG_TAG, "TimerService.onCreate()")
         super.onCreate()
+        _state.value = INITIALIZED
+        binder = TimerServiceBinder()
     }
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        super.onStartCommand(intent, flags, startId)
-        duration = 150000
-        _time.value = duration
-        _presetName.value = "work"
 
-        Log.d(Constants.DEBUG_TAG, "on start command")
-        val result = START_STICKY
-        val action = intent?.action
-
-        Log.d(Constants.DEBUG_TAG, "action: $action")
-        when(action) {
-            ACTION.START -> startTimer()
-            ACTION.STOP -> stopTimer()
+    fun loadPresets(_presets: List<Preset>) {
+        Log.d(Constants.DEBUG_TAG, "TimerService.loadPresets()")
+        if (state.value == INITIALIZED && _presets.isNotEmpty()) {
+            presets.apply {
+                addAll(_presets)
+                first().let { firstPreset ->
+                    _time.value = firstPreset.time
+                    _presetName.value = firstPreset.name
+                    currentPresetDuration = firstPreset.time
+                }
+            }
         }
-
-        return result
     }
 
-    private fun stopTimer() {
-        timer?.cancel()
-        state = STATE.STOPPED
+    fun runPresets() {
+        Log.d(Constants.DEBUG_TAG, "TimerService.runPresets()")
+        startTimer()
+    }
+
+    fun stopPresets() {
+        Log.d(Constants.DEBUG_TAG, "TimerService.stopPresets()")
+        stopTimer()
+    }
+
+    fun skipPreset() {
+        Log.d(Constants.DEBUG_TAG, "TimerService.skipPreset()")
+        stopTimer()
+        currentPresetRemaining = null
+        runNextPreset()
     }
 
     private fun startTimer() {
-        timer = Timer(duration!!)
-        timer!!.start()
-        state = STATE.RUNNING
+        Log.d(Constants.DEBUG_TAG, "TimerService.startTimer()")
+        Log.d(Constants.DEBUG_TAG, "Current preset index: $currentPresetIndex")
+        Log.d(Constants.DEBUG_TAG, "Current preset name: ${presetName.value}")
+        Log.d(Constants.DEBUG_TAG, "Current preset duration: $currentPresetDuration")
+        Log.d(Constants.DEBUG_TAG, "Current preset remaining: $currentPresetRemaining")
+        if (timer == null) {
+            timer = Timer(currentPresetRemaining ?: (currentPresetDuration + 1000))
+            timer?.start()
+            _state.value = STARTED
+        } else {
+            Log.d(Constants.DEBUG_TAG, "TimerService.startTimer(): there is old timer")
+        }
+
     }
 
-    private inner class Timer(millisInFuture: Long) : CountDownTimer(millisInFuture, 1000) {
+    private fun stopTimer() {
+        Log.d(Constants.DEBUG_TAG, "TimerService.stopTimer()")
+        if (state.value == STARTED) {
+            timer?.cancel()
+            timer = null
+            _state.value = STOPPED
+        }
+    }
+
+    private fun runNextPreset() {
+        Log.d(Constants.DEBUG_TAG, "TimerService.runNextPreset()")
+        currentPresetIndex++
+        val nextRun = presets.getOrNull(currentPresetIndex)?.let { nextPreset ->
+            Log.d(Constants.DEBUG_TAG, "TimerService.runNextPreset(): there is new preset: $nextPreset")
+            currentPresetDuration = nextPreset.time
+            _presetName.value = nextPreset.name
+            startTimer()
+            true
+        } ?: false
+        if (!nextRun) {
+            _state.value = FINISHED
+            Log.d(Constants.DEBUG_TAG, "TimerService.runNextPreset(): there is no new preset")
+        }
+    }
+
+    override fun onBind(intent: Intent?): IBinder {
+        Log.d(Constants.DEBUG_TAG, "TimerService.onBind()")
+        return binder
+    }
+
+    fun restartPresets() {
+        presets.first().let { firstPreset ->
+            currentPresetIndex = 0
+            _time.value = firstPreset.time
+            _presetName.value = firstPreset.name
+            currentPresetDuration = firstPreset.time
+            startTimer()
+        }
+    }
+
+    override fun onDestroy() {
+        Log.d(Constants.DEBUG_TAG, "TimerService.Timer.onDestroy()")
+        stopTimer()
+        super.onDestroy()
+    }
+
+    private inner class Timer(millisInFuture: Long) : CountDownTimer(millisInFuture, Constants.ONE_SECOND_INTERVAL) {
         override fun onTick(millisUntilFinished: Long) {
-            _time.value = millisUntilFinished
-            Log.d(Constants.DEBUG_TAG, "on tick work")
+            if (millisUntilFinished < 1000) {
+                onFinish()
+            } else {
+                Log.d(
+                    Constants.DEBUG_TAG,
+                    "TimerService.Timer.onTick(): ${millisUntilFinished.fromLongToTimerString()}"
+                )
+                _time.value = millisUntilFinished
+                currentPresetRemaining = millisUntilFinished
+            }
         }
 
         override fun onFinish() {
-            TODO("Not yet implemented")
+            Log.d(Constants.DEBUG_TAG, "TimerService.Timer.onFinish()")
+            cancel()
+            timer = null
+            currentPresetRemaining = null
+            runNextPreset()
         }
-
     }
 
-    enum class STATE {
-        RUNNING, STOPPED, INACTIVE
-    }
-
-    object ACTION {
-        const val START = "application.timer_manager.start"
-        const val STOP  = "application.timer_manager.stop"
-        //const val SKIP  = "application.timer_manager.task.skip"
-    }
-
-    override fun onBind(intent: Intent?): IBinder? {
-        Log.d(Constants.DEBUG_TAG, "onBind()")
-        return binder
-    }
-    inner class MyBinder: Binder() {
+    inner class TimerServiceBinder: Binder() {
         fun getService(): TimerService = this@TimerService
     }
 }
