@@ -20,6 +20,9 @@ interface PresetDao {
     @Delete
     suspend fun delete(presets: List<Preset>)
 
+    @Update
+    suspend fun update(preset: Preset)
+
     // for prepopulate on create db
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(presets: List<Preset>)

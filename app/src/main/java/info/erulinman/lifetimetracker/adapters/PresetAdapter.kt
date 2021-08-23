@@ -16,7 +16,7 @@ import info.erulinman.lifetimetracker.databinding.ListItemPresetBinding
 import info.erulinman.lifetimetracker.ui.fromLongToTimerString
 import info.erulinman.lifetimetracker.utilities.Constants.DEBUG_TAG
 
-class PresetAdapter(private val onClick: () -> Unit) :
+class PresetAdapter(private val onClick: (Preset) -> Unit) :
     ListAdapter<Preset, PresetAdapter.PresetViewHolder>(PresetDiffCallback) {
     private var tracker: SelectionTracker<Long>? = null
 
@@ -42,17 +42,20 @@ class PresetAdapter(private val onClick: () -> Unit) :
 
     inner class PresetViewHolder(
         private val binding: ListItemPresetBinding,
-        val onClick: () -> Unit
+        val onClick: (Preset) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
+        private var thisPreset: Preset? = null
 
         init {
             itemView.setOnClickListener {
-                Log.d(DEBUG_TAG, "on click")
-                onClick()
+                thisPreset?.let {
+                    onClick(it)
+                }
             }
         }
 
         fun bind(preset: Preset, isSelected: Boolean = false) {
+            thisPreset = preset
             binding.apply {
                 presetName.text = preset.name
                 presetTime.text = preset.time.fromLongToTimerString()

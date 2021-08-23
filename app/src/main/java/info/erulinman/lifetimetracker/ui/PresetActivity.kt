@@ -4,12 +4,9 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.FragmentResultListener
-import androidx.recyclerview.selection.SelectionPredicates
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.selection.StorageStrategy
 import androidx.recyclerview.widget.ConcatAdapter
@@ -27,6 +24,7 @@ import info.erulinman.lifetimetracker.utilities.Constants
 import info.erulinman.lifetimetracker.viewmodels.PresetViewModel
 import info.erulinman.lifetimetracker.viewmodels.PresetViewModelFactory
 import kotlinx.serialization.encodeToString
+import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
 class PresetActivity : AppCompatActivity() {
@@ -45,13 +43,12 @@ class PresetActivity : AppCompatActivity() {
         binding = ActivityPresetBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val presetAdapter = PresetAdapter { adapterOnClick() }
+        val presetAdapter = PresetAdapter { preset -> presetOnClick(preset) }
         val addPresetAdapter = AddPresetAdapter { addNewPreset() }
         val concatAdapter = ConcatAdapter(presetAdapter, addPresetAdapter)
 
         binding.recyclerView.adapter = concatAdapter
         submitUi(presetAdapter)
-
         fabOnClick = ::runTimerActivity
         binding.fab.apply {
             setOnClickListener { fabOnClick() }
@@ -111,8 +108,8 @@ class PresetActivity : AppCompatActivity() {
     }
 
     private fun addNewPreset() {
-        val presetFragment = PresetFragment()
-        presetFragment.show(supportFragmentManager, PresetFragment.TAG)
+        val newPresetFragment = PresetFragment()
+        newPresetFragment.show(supportFragmentManager, PresetFragment.TAG)
     }
 
     private fun setPresetFragmentListener() {
@@ -120,13 +117,20 @@ class PresetActivity : AppCompatActivity() {
             PresetFragment.REQUEST_KEY,
             this
         ) { _, result ->
-                val response = result.getInt(PresetFragment.KEY_RESPONSE)
-                if ( response == DialogInterface.BUTTON_POSITIVE) {
-                    val presetName = result.getString(PresetFragment.PRESET_NAME) ?: Preset.DEFAULT_NAME
-                    val presetTime = result.getString(PresetFragment.PRESET_TIME) ?: Preset.DEFAULT_TIME
+            val response = result.getInt(PresetFragment.KEY_RESPONSE)
+            if (response == DialogInterface.BUTTON_POSITIVE) {
+                val presetName = result.getString(PresetFragment.PRESET_NAME) ?: Preset.DEFAULT_NAME
+                val presetTime = result.getString(PresetFragment.PRESET_TIME) ?: Preset.DEFAULT_TIME
+                val updatedPresetInString = result.getString(PresetFragment.UPDATED_PRESET)
+                updatedPresetInString?.let {
+                    Log.d(Constants.DEBUG_TAG, "PresetActivity.setPresetFragmentListener()")
+                    presetViewModel.updatePreset(Json.decodeFromString(it))
+                } ?: run {
+                    Log.d(Constants.DEBUG_TAG, "PresetActivity.setPresetFragmentListener()")
                     presetViewModel.addNewPreset(presetName, presetTime)
                 }
             }
+        }
     }
 
     private fun runTimerActivity() {
@@ -150,13 +154,9 @@ class PresetActivity : AppCompatActivity() {
         }
     }
 
-    private fun adapterOnClick() {
-        //TODO: show PresetFragment with item's data
-        Toast.makeText(
-            this,
-            "Show preset settings",
-            Toast.LENGTH_SHORT
-        ).show()
+    private fun presetOnClick(preset: Preset) {
+        val changePresetFragment = PresetFragment(preset)
+        changePresetFragment.show(supportFragmentManager, PresetFragment.TAG)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {

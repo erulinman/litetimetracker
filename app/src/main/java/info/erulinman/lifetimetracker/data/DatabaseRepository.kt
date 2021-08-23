@@ -25,4 +25,7 @@ class DatabaseRepository(private val database: AppDatabase) {
 
     suspend fun deletePresets(presets: List<Preset>) =
         database.presetDao().delete(presets)
+
+    suspend fun updatePreset(preset: Preset) =
+        database.presetDao().update(preset)
 }

@@ -15,14 +15,13 @@ class PresetViewModel(
 ) : ViewModel() {
     val liveDataPresets = repository.loadPresets(wayId).asLiveData()
 
-    fun addNewPreset(name: String, time: String) = viewModelScope.launch(Dispatchers.IO) {
+    fun addNewPreset(presetName: String, presetTime: String) = viewModelScope.launch(Dispatchers.IO) {
         val newId = repository.getMaxPresetId()?.let { it + 1 } ?: 1
-        val time = time.toLong()
         val newPreset = Preset(
             id = newId,
             wayId = wayId,
-            name,
-            time
+            name = presetName,
+            time = presetTime.toLong() //TODO: implement fromTimerStringToLong extension
         )
         repository.insertPresets(newPreset)
     }
@@ -34,5 +33,10 @@ class PresetViewModel(
                 listForDelete.add(it)
         }
         repository.deletePresets(listForDelete.toList())
+    }
+
+    fun updatePreset(preset: Preset) = viewModelScope.launch(Dispatchers.IO) {
+        //TODO
+        repository.updatePreset(preset)
     }
 }

@@ -12,6 +12,7 @@ data class Preset(
     val name: String,
     val time: Long = 90000
 ) {
+    // temporary data TODO: implement name/time data checker in input view
     companion object {
         const val DEFAULT_NAME = "Work"
         const val DEFAULT_TIME = "1500000"
