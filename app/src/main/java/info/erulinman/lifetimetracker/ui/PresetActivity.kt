@@ -119,8 +119,8 @@ class PresetActivity : AppCompatActivity() {
         ) { _, result ->
             val response = result.getInt(PresetFragment.KEY_RESPONSE)
             if (response == DialogInterface.BUTTON_POSITIVE) {
-                val presetName = result.getString(PresetFragment.PRESET_NAME) ?: Preset.DEFAULT_NAME
-                val presetTime = result.getString(PresetFragment.PRESET_TIME) ?: Preset.DEFAULT_TIME
+                val presetName = result.getString(PresetFragment.PRESET_NAME, Preset.DEFAULT_NAME)
+                val presetTime = result.getLong(PresetFragment.PRESET_TIME, Preset.DEFAULT_TIME)
                 val updatedPresetInString = result.getString(PresetFragment.UPDATED_PRESET)
                 updatedPresetInString?.let {
                     Log.d(Constants.DEBUG_TAG, "PresetActivity.setPresetFragmentListener()")

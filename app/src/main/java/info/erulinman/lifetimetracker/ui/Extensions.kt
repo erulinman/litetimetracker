@@ -1,6 +1,7 @@
 package info.erulinman.lifetimetracker.ui
 
 import java.util.concurrent.TimeUnit
+import java.util.regex.Pattern
 
 fun Long.fromLongToTimerString(): String {
     var seconds = TimeUnit.MILLISECONDS.toSeconds(this)
@@ -12,5 +13,11 @@ fun Long.fromLongToTimerString(): String {
 }
 
 fun String.fromTimerStringToLong(): Long {
-    return 0
+    val pattern = Pattern.compile("^(\\d\\d):(\\d\\d)$")
+    val matcher = pattern.matcher(this)
+    if (matcher.find()) {
+        val minutes = matcher.group(1)?.toLong() ?: throw IllegalStateException("Empty regexp group")
+        val seconds = matcher.group(2)?.toLong() ?: throw IllegalStateException("Empty regexp group")
+        return (minutes * 60000) + (seconds * 1000)
+    } else throw IllegalStateException("No matches found")
 }

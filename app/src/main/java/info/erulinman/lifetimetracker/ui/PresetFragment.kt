@@ -3,12 +3,14 @@ package info.erulinman.lifetimetracker.ui;
 import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import info.erulinman.lifetimetracker.data.entity.Preset
 import info.erulinman.lifetimetracker.databinding.FragmentPresetBinding
+import info.erulinman.lifetimetracker.utilities.Constants
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
@@ -29,12 +31,13 @@ class PresetFragment(private val preset: Preset? = null) : DialogFragment() {
             val presetName = binding.presetName.text.toString().ifEmpty { null }
             val presetTime = binding.presetTime.text.toString().ifEmpty { null }
             updatedPresetInString = preset?.let { oldPreset ->
+                Log.d(Constants.DEBUG_TAG, "PresetFragment.DialogInterface.OnClickListener.updatedPresetInString")
                 Json.encodeToString(
                     Preset(
                         id = oldPreset.id,
                         wayId = oldPreset.wayId,
                         name = binding.presetName.text.toString(),
-                        time = binding.presetTime.text.toString().toLong()
+                        time = binding.presetTime.text.toString().fromTimerStringToLong()
                     )
                 )
             }
@@ -42,7 +45,7 @@ class PresetFragment(private val preset: Preset? = null) : DialogFragment() {
             parentFragmentManager.setFragmentResult(REQUEST_KEY, bundleOf(
                 KEY_RESPONSE to which,
                 PRESET_NAME to presetName,
-                PRESET_TIME to presetTime,
+                PRESET_TIME to presetTime?.fromTimerStringToLong(),
                 UPDATED_PRESET to updatedPresetInString
             ))
         }
