@@ -135,8 +135,8 @@ class WayListActivity : AppCompatActivity() {
         if (requestCode == newWayActivityRequestCode && resultCode == Activity.RESULT_OK) {
             data?.let {
                 val name: String = data.getStringExtra(Constants.NEW_WAY_NAME) ?: return
-                    val description = data.getStringExtra(Constants.NEW_WAY_DESCRIPTION)
-                    wayListViewModel.addNewWay(name, description)
+                val description = data.getStringExtra(Constants.NEW_WAY_DESCRIPTION)
+                wayListViewModel.addNewWay(name, description)
             }
         }
     }

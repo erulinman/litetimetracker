@@ -4,8 +4,16 @@
     <string name="fab_content_description">fab</string>
     <string name="list_item_preset_time">25:00</string>
     <string name="list_item_preset_name">WORK</string>
-    <string name="order_confirmation">message ok</string>
-    <string name="ok">ok</string>
+    <string name="order_confirmation">message OK</string>
+    <string name="ok">OK</string>
     <string name="timer_text">00:00</string>
     <string name="preset_name_on_timer">work</string>
+    <string name="notification_channel_name">Life Time Tracker</string>
+    <string name="notification_channel_description">Test notification description for Life Time Tracker App</string>
+    <string name="time_value_on_finish">DONE</string>
+    <string name="notification_action_stop_title">Stop</string>
+    <string name="notification_action_start_title">Start</string>
+    <string name="notification_action_restart_title">Restart</string>
+    <string name="notification_action_skip_title">Skip</string>
+    <string name="notification_action_close_title">Close</string>
 </resources>
