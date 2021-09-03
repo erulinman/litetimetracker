@@ -26,10 +26,10 @@ class NotificationHelper(context: Context) : ContextWrapper(context) {
         //.setContentIntent(getResultPendingIntent())
 
     init {
-        manager.createNotificationChannel(getNotificationChannel())
+        manager.createNotificationChannel(initChannel())
     }
 
-    private fun getNotificationChannel(): NotificationChannel {
+    private fun initChannel(): NotificationChannel {
         val name = getString(R.string.notification_channel_name)
         val description = getString(R.string.notification_channel_description)
         val importance = NotificationManager.IMPORTANCE_LOW
