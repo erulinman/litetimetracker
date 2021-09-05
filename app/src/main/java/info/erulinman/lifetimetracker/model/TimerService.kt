@@ -8,14 +8,16 @@ import android.os.IBinder
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import info.erulinman.lifetimetracker.R
 import info.erulinman.lifetimetracker.data.entity.Preset
+import info.erulinman.lifetimetracker.ui.TimerActivity
 import info.erulinman.lifetimetracker.ui.fromLongToTimerString
 import info.erulinman.lifetimetracker.utilities.Constants
 
 class TimerService: Service() {
     private lateinit var notificationHelper: NotificationHelper
-    private lateinit var binder: TimerServiceBinder
+    private val binder = LocalBinder()
     private var timer: Timer? = null
     private var currentPresetDuration: Long = 0
     private var currentPresetRemaining: Long? = null
@@ -35,10 +37,12 @@ class TimerService: Service() {
     override fun onCreate() {
         Log.d(Constants.DEBUG_TAG, "TimerService.onCreate()")
         super.onCreate()
-        notificationHelper = NotificationHelper(this)
-        binder = TimerServiceBinder()
         _state.value = INITIALIZED
-
+        notificationHelper = NotificationHelper(this)
+        startForeground(
+            NotificationHelper.NOTIFICATION_ID,
+            notificationHelper.getStartedNotificationBuilder().build()
+        )
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -58,8 +62,8 @@ class TimerService: Service() {
     }
 
     fun loadPresets(_presets: List<Preset>) {
-        Log.d(Constants.DEBUG_TAG, "TimerService.loadPresets()")
         if (state.value == INITIALIZED && _presets.isNotEmpty()) {
+            Log.d(Constants.DEBUG_TAG, "TimerService.loadPresets()")
             presets.apply {
                 addAll(_presets)
                 first().let { firstPreset ->
@@ -104,8 +108,8 @@ class TimerService: Service() {
     }
 
     private fun stopTimer() {
-        Log.d(Constants.DEBUG_TAG, "TimerService.stopTimer()")
         if (state.value == STARTED) {
+            Log.d(Constants.DEBUG_TAG, "TimerService.stopTimer()")
             timer?.cancel()
             timer = null
             _state.value = STOPPED
@@ -125,10 +129,7 @@ class TimerService: Service() {
         } ?: false
         if (!nextRun) {
             _state.value = FINISHED
-            getString(R.string.time_value_on_finish).let {
-                _time.value = it
-                notificationHelper.notifyWhenFinished(it)
-            }
+            notificationHelper.notifyWhenFinished()
             Log.d(Constants.DEBUG_TAG, "TimerService.runNextPreset(): there is no new preset")
         }
     }
@@ -149,12 +150,15 @@ class TimerService: Service() {
     }
 
     private fun closeService() {
-        this.stopSelf()
-    }
-    override fun onDestroy() {
-        Log.d(Constants.DEBUG_TAG, "TimerService.Timer.onDestroy()")
+        Log.d(Constants.DEBUG_TAG, "TimerService.closeService()")
         stopTimer()
-        super.onDestroy()
+        _state.value = CLOSED
+        Intent(CLOSE).also { intent ->
+            Log.d(Constants.DEBUG_TAG, "TimerService.closeService.sendBroadcast()")
+            LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
+        }
+        stopForeground(true)
+        stopSelf()
     }
 
     private inner class Timer(millisInFuture: Long) : CountDownTimer(millisInFuture, ONE_SECOND_INTERVAL) {
@@ -170,7 +174,7 @@ class TimerService: Service() {
 
                 _time.value = timeInString
                 currentPresetRemaining = millisUntilFinished
-                notificationHelper.notifyWhenStarted(timeInString)
+                notificationHelper.updateStartedNotification(timeInString)
             }
         }
 
@@ -183,7 +187,7 @@ class TimerService: Service() {
         }
     }
 
-    inner class TimerServiceBinder: Binder() {
+    inner class LocalBinder: Binder() {
         fun getService(): TimerService = this@TimerService
     }
 
@@ -192,6 +196,7 @@ class TimerService: Service() {
         const val STARTED     = "info.erulinman.lifetimetracker.TIMER.STARTED"
         const val STOPPED     = "info.erulinman.lifetimetracker.TIMER.STOPPED"
         const val FINISHED    = "info.erulinman.lifetimetracker.TIMER.FINISHED"
+        const val CLOSED      = "info.erulinman.lifetimetracker.TIMER.CLOSED"
 
         const val START = "info.erulinman.lifetimetracker.TIMER.START"
         const val STOP = "info.erulinman.lifetimetracker.TIMER.STOP"

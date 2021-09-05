@@ -1,14 +1,13 @@
 package info.erulinman.lifetimetracker.ui
 
-import android.content.ComponentName
-import android.content.Intent
-import android.content.ServiceConnection
+import android.content.*
 import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
 
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import info.erulinman.lifetimetracker.R
 import info.erulinman.lifetimetracker.data.entity.Preset
 
@@ -24,14 +23,53 @@ class TimerActivity : AppCompatActivity() {
     private lateinit var serviceConnection: ServiceConnection
     private lateinit var binding: ActivityTimerBinding
     private lateinit var fabOnClick: () -> Unit
+    private lateinit var localBroadcastManager: LocalBroadcastManager
+    private lateinit var broadcastReceiver: BroadcastReceiver
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.d(Constants.DEBUG_TAG, "TimerActivity.onCreate()")
         super.onCreate(savedInstanceState)
         binding = ActivityTimerBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        broadcastReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                Log.d(Constants.DEBUG_TAG, "TimerActivity.broadcastReceiver.onReceive()")
+                if (intent?.action == TimerService.CLOSE) finish()
+            }
+        }
+        localBroadcastManager = LocalBroadcastManager.getInstance(this).apply {
+            registerReceiver(broadcastReceiver, IntentFilter(TimerService.CLOSE))
+        }
         setServiceConnection()
+        startForegroundService(Intent(this, TimerService::class.java))
+    }
+
+    override fun onStart() {
+        Log.d(Constants.DEBUG_TAG, "TimerActivity.onStart()")
         bindTimerService()
+        super.onStart()
+    }
+
+    override fun onResume() {
+        Log.d(Constants.DEBUG_TAG, "TimerActivity.onResume()")
+        super.onResume()
+    }
+
+    override fun onPause() {
+        Log.d(Constants.DEBUG_TAG, "TimerActivity.onPause()")
+        super.onPause()
+    }
+
+    override fun onStop() {
+        Log.d(Constants.DEBUG_TAG, "TimerActivity.onStop()")
+        unbindService(serviceConnection)
+        super.onStop()
+    }
+
+    override fun onDestroy() {
+        Log.d(Constants.DEBUG_TAG, "TimerActivity.onDestroy()")
+        unregisterReceiver(broadcastReceiver)
+        super.onDestroy()
     }
 
     private fun bindTimerService() {
@@ -39,7 +77,7 @@ class TimerActivity : AppCompatActivity() {
         bindService(
             Intent(this, TimerService::class.java),
             serviceConnection,
-            BIND_AUTO_CREATE
+            BIND_ABOVE_CLIENT
         )
     }
 
@@ -48,7 +86,7 @@ class TimerActivity : AppCompatActivity() {
         serviceConnection = object : ServiceConnection {
             override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
                 Log.d(Constants.DEBUG_TAG, "TimerActivity.serviceConnection.onServiceConnected()")
-                timerService = (service as TimerService.TimerServiceBinder).getService().apply {
+                timerService = (service as TimerService.LocalBinder).getService().apply {
                     val presets = intent.getStringExtra(
                         PresetActivity.EXTRA_PRESETS_IN_JSON
                     )?.let { presets_in_json ->
@@ -67,7 +105,6 @@ class TimerActivity : AppCompatActivity() {
                 Log.d(Constants.DEBUG_TAG, "TimerActivity.serviceConnection.onServiceDisconnected()")
                 //TODO: rebind to service?
             }
-
         }
     }
 
