@@ -17,7 +17,7 @@ import info.erulinman.lifetimetracker.utilities.Constants
 
 class TimerService: Service() {
     private lateinit var notificationHelper: NotificationHelper
-    private val binder = LocalBinder()
+    private lateinit var binder: LocalBinder
     private var timer: Timer? = null
     private var currentPresetDuration: Long = 0
     private var currentPresetRemaining: Long? = null
@@ -38,6 +38,7 @@ class TimerService: Service() {
         Log.d(Constants.DEBUG_TAG, "TimerService.onCreate()")
         super.onCreate()
         _state.value = INITIALIZED
+        binder = LocalBinder()
         notificationHelper = NotificationHelper(this)
         startForeground(
             NotificationHelper.NOTIFICATION_ID,
@@ -75,16 +76,6 @@ class TimerService: Service() {
         }
     }
 
-    fun runPresets() {
-        Log.d(Constants.DEBUG_TAG, "TimerService.runPresets()")
-        startTimer()
-    }
-
-    fun stopPresets() {
-        Log.d(Constants.DEBUG_TAG, "TimerService.stopPresets()")
-        stopTimer()
-    }
-
     fun skipPreset() {
         Log.d(Constants.DEBUG_TAG, "TimerService.skipPreset()")
         stopTimer()
@@ -92,7 +83,7 @@ class TimerService: Service() {
         runNextPreset()
     }
 
-    private fun startTimer() {
+    fun startTimer() {
         Log.d(Constants.DEBUG_TAG, "TimerService.startTimer()")
 
         if (timer == null) {
@@ -107,7 +98,7 @@ class TimerService: Service() {
 
     }
 
-    private fun stopTimer() {
+    fun stopTimer() {
         if (state.value == STARTED) {
             Log.d(Constants.DEBUG_TAG, "TimerService.stopTimer()")
             timer?.cancel()
@@ -121,7 +112,10 @@ class TimerService: Service() {
         Log.d(Constants.DEBUG_TAG, "TimerService.runNextPreset()")
         currentPresetIndex++
         val nextRun = presets.getOrNull(currentPresetIndex)?.let { nextPreset ->
-            Log.d(Constants.DEBUG_TAG, "TimerService.runNextPreset(): there is new preset: $nextPreset")
+            Log.d(
+                Constants.DEBUG_TAG,
+                "TimerService.runNextPreset(): there is new preset: $nextPreset"
+            )
             currentPresetDuration = nextPreset.time
             _presetName.value = nextPreset.name
             startTimer()
@@ -149,16 +143,16 @@ class TimerService: Service() {
         }
     }
 
-    private fun closeService() {
+    fun closeService() {
         Log.d(Constants.DEBUG_TAG, "TimerService.closeService()")
         stopTimer()
         _state.value = CLOSED
+        stopForeground(true)
+        stopSelf()
         Intent(CLOSE).also { intent ->
             Log.d(Constants.DEBUG_TAG, "TimerService.closeService.sendBroadcast()")
             LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
         }
-        stopForeground(true)
-        stopSelf()
     }
 
     private inner class Timer(millisInFuture: Long) : CountDownTimer(millisInFuture, ONE_SECOND_INTERVAL) {

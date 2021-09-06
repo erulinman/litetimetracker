@@ -41,7 +41,9 @@ class TimerActivity : AppCompatActivity() {
             registerReceiver(broadcastReceiver, IntentFilter(TimerService.CLOSE))
         }
         setServiceConnection()
-        startForegroundService(Intent(this, TimerService::class.java))
+        Intent(this, TimerService::class.java).also { intent ->
+            startForegroundService(intent)
+        }
     }
 
     override fun onStart() {
@@ -50,28 +52,16 @@ class TimerActivity : AppCompatActivity() {
         super.onStart()
     }
 
-    override fun onResume() {
-        Log.d(Constants.DEBUG_TAG, "TimerActivity.onResume()")
-        super.onResume()
-    }
-
-    override fun onPause() {
-        Log.d(Constants.DEBUG_TAG, "TimerActivity.onPause()")
-        super.onPause()
-    }
-
     override fun onStop() {
         Log.d(Constants.DEBUG_TAG, "TimerActivity.onStop()")
         unbindService(serviceConnection)
         super.onStop()
     }
 
-    override fun onDestroy() {
-        Log.d(Constants.DEBUG_TAG, "TimerActivity.onDestroy()")
-        unregisterReceiver(broadcastReceiver)
-        super.onDestroy()
+    override fun onBackPressed() {
+        timerService.closeService()
+        super.onBackPressed()
     }
-
     private fun bindTimerService() {
         Log.d(Constants.DEBUG_TAG, "TimerActivity.bindTimerService()")
         bindService(
@@ -92,7 +82,6 @@ class TimerActivity : AppCompatActivity() {
                     )?.let { presets_in_json ->
                         Json.decodeFromString<List<Preset>>(presets_in_json)
                     }
-                    Log.d(Constants.DEBUG_TAG, "$presets")
                     if (presets != null) {
                         loadPresets(presets)
                     }
@@ -126,9 +115,9 @@ class TimerActivity : AppCompatActivity() {
             }
             state.observe(this@TimerActivity) { state ->
                 when(state) {
-                    TimerService.INITIALIZED -> runPresets()
+                    TimerService.INITIALIZED -> timerService.startTimer()
                     TimerService.STOPPED  -> {
-                        fabOnClick = { timerService.runPresets() }
+                        fabOnClick = { timerService.stopTimer() }
                         binding.apply {
                             bottomAppBarLayout.fab.setImageResource(R.drawable.ic_play_24)
                             bottomAppBarLayout.appBarTitle.isVisible = true
@@ -136,7 +125,7 @@ class TimerActivity : AppCompatActivity() {
 
                     }
                     TimerService.STARTED -> {
-                        fabOnClick = { timerService.stopPresets() }
+                        fabOnClick = { timerService.stopTimer() }
                         binding.apply {
                             bottomAppBarLayout.fab.setImageResource(R.drawable.ic_pause_24)
                             bottomAppBarLayout.appBarTitle.isVisible = true
