@@ -1,9 +1,6 @@
 package info.erulinman.lifetimetracker.model
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
-import android.app.TaskStackBuilder
+import android.app.*
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
@@ -26,10 +23,10 @@ class NotificationHelper(context: Context) : ContextWrapper(context) {
         //.setContentIntent(getResultPendingIntent())
 
     init {
-        manager.createNotificationChannel(getNotificationChannel())
+        manager.createNotificationChannel(initChannel())
     }
 
-    private fun getNotificationChannel(): NotificationChannel {
+    private fun initChannel(): NotificationChannel {
         val name = getString(R.string.notification_channel_name)
         val description = getString(R.string.notification_channel_description)
         val importance = NotificationManager.IMPORTANCE_LOW
@@ -49,15 +46,17 @@ class NotificationHelper(context: Context) : ContextWrapper(context) {
         }
     }
 
-    fun notifyWhenStarted(time: String) {
+    fun getStartedNotificationBuilder(): NotificationCompat.Builder = notification
+        .clearActions()
+        .addAction(buildStopAction(this))
+        .addAction(buildSkipAction(this))
+        .addAction(buildCloseAction(this))
+
+    fun updateStartedNotification(time: String) {
         manager.notify(
             NOTIFICATION_ID,
-            notification
-                .clearActions()
+            getStartedNotificationBuilder()
                 .setContentText(time)
-                .addAction(buildStopAction(this))
-                .addAction(buildSkipAction(this))
-                .addAction(buildCloseAction(this))
                 .build()
         )
     }
@@ -75,12 +74,12 @@ class NotificationHelper(context: Context) : ContextWrapper(context) {
         )
     }
 
-    fun notifyWhenFinished(time: String) {
+    fun notifyWhenFinished() {
         manager.notify(
             NOTIFICATION_ID,
             notification
                 .clearActions()
-                .setContentText(time)
+                .setContentText(getString(R.string.time_value_on_finish))
                 .addAction(buildRestartAction(this))
                 .addAction(buildCloseAction(this))
                 .build()
@@ -152,7 +151,7 @@ class NotificationHelper(context: Context) : ContextWrapper(context) {
             context,
             ACTION_CLOSE_ID,
             ActionIntent(context, TimerService::class.java, TimerService.CLOSE),
-            PendingIntent.FLAG_ONE_SHOT
+            PendingIntent.FLAG_UPDATE_CURRENT
         )
         val title = getString(R.string.notification_action_close_title)
         return NotificationCompat.Action.Builder(
@@ -163,12 +162,12 @@ class NotificationHelper(context: Context) : ContextWrapper(context) {
     }
 
     companion object {
-        private const val NOTIFICATION_ID = 50
         private const val ACTION_START_ID = 51
         private const val ACTION_STOP_ID = 52
         private const val ACTION_RESTART_ID = 53
         private const val ACTION_SKIP_ID = 54
         private const val ACTION_CLOSE_ID = 55
+        const val NOTIFICATION_ID = 50
         const val CHANNEL_ID = "info.erulinman.lifetimetracker.CHANNEL_ID"
     }
 }
