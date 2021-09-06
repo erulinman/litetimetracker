@@ -2,6 +2,7 @@ package info.erulinman.lifetimetracker.model
 
 import android.app.Service
 import android.content.Intent
+import android.media.MediaPlayer
 import android.os.Binder
 import android.os.CountDownTimer
 import android.os.IBinder
@@ -18,6 +19,7 @@ import info.erulinman.lifetimetracker.utilities.Constants
 class TimerService: Service() {
     private lateinit var notificationHelper: NotificationHelper
     private lateinit var binder: LocalBinder
+    private lateinit var mediaPlayer: MediaPlayer
     private var timer: Timer? = null
     private var currentPresetDuration: Long = 0
     private var currentPresetRemaining: Long? = null
@@ -44,6 +46,7 @@ class TimerService: Service() {
             NotificationHelper.NOTIFICATION_ID,
             notificationHelper.getStartedNotificationBuilder().build()
         )
+        mediaPlayer = MediaPlayer.create(this, R.raw.sound)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -165,7 +168,6 @@ class TimerService: Service() {
                     Constants.DEBUG_TAG,
                     "TimerService.Timer.onTick(): on string - $timeInString, on long - $millisUntilFinished}"
                 )
-
                 _time.value = timeInString
                 currentPresetRemaining = millisUntilFinished
                 notificationHelper.updateStartedNotification(timeInString)
@@ -177,6 +179,7 @@ class TimerService: Service() {
             cancel()
             timer = null
             currentPresetRemaining = null
+            mediaPlayer.start()
             runNextPreset()
         }
     }
