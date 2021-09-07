@@ -1,4 +1,4 @@
-package info.erulinman.lifetimetracker.ui;
+package info.erulinman.lifetimetracker.ui
 
 import android.app.Dialog
 import android.content.DialogInterface
@@ -13,6 +13,7 @@ import info.erulinman.lifetimetracker.databinding.FragmentPresetBinding
 import info.erulinman.lifetimetracker.utilities.Constants
 import info.erulinman.lifetimetracker.utilities.fromLongToTimerString
 import info.erulinman.lifetimetracker.utilities.fromTimerStringToLong
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 

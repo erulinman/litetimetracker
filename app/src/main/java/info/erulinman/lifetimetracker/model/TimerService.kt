@@ -2,7 +2,6 @@ package info.erulinman.lifetimetracker.model
 
 import android.app.Service
 import android.content.Intent
-import android.media.MediaPlayer
 import android.os.Binder
 import android.os.CountDownTimer
 import android.os.IBinder
@@ -26,13 +25,16 @@ class TimerService: Service() {
     private val presets = mutableListOf<Preset>()
 
     private val _time = MutableLiveData<String>()
-    val time get() = _time as LiveData<String>
+    val time: LiveData<String>
+        get() = _time
 
     private val _presetName = MutableLiveData<String>()
-    val presetName get() = _presetName as LiveData<String>
+    val presetName: LiveData<String>
+        get() = _presetName
 
     private val _state = MutableLiveData<String>()
-    val state get() = _state as LiveData<String>
+    val state: LiveData<String>
+        get() = _state
 
     override fun onCreate() {
         Log.d(Constants.DEBUG_TAG, "TimerService.onCreate()")
