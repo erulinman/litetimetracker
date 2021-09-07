@@ -16,4 +16,5 @@
     <string name="notification_action_restart_title">Restart</string>
     <string name="notification_action_skip_title">Skip</string>
     <string name="notification_action_close_title">Close</string>
+    <string name="add_new_preset_button_text">NEW</string>
 </resources>

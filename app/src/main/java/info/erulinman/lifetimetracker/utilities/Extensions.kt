@@ -1,4 +1,4 @@
-package info.erulinman.lifetimetracker.ui
+package info.erulinman.lifetimetracker.utilities
 
 import java.util.concurrent.TimeUnit
 import java.util.regex.Pattern

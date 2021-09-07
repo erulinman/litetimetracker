@@ -12,14 +12,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import info.erulinman.lifetimetracker.R
 import info.erulinman.lifetimetracker.data.entity.Preset
-import info.erulinman.lifetimetracker.ui.TimerActivity
-import info.erulinman.lifetimetracker.ui.fromLongToTimerString
+import info.erulinman.lifetimetracker.utilities.fromLongToTimerString
 import info.erulinman.lifetimetracker.utilities.Constants
 
 class TimerService: Service() {
     private lateinit var notificationHelper: NotificationHelper
     private lateinit var binder: LocalBinder
-    private lateinit var mediaPlayer: MediaPlayer
     private var timer: Timer? = null
     private var currentPresetDuration: Long = 0
     private var currentPresetRemaining: Long? = null
@@ -46,7 +44,6 @@ class TimerService: Service() {
             NotificationHelper.NOTIFICATION_ID,
             notificationHelper.getStartedNotificationBuilder().build()
         )
-        mediaPlayer = MediaPlayer.create(this, R.raw.sound)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -98,7 +95,6 @@ class TimerService: Service() {
             Log.d(Constants.DEBUG_TAG, "TimerService.startTimer(): there is old timer")
             //TODO: throw exception???
         }
-
     }
 
     fun stopTimer() {
@@ -126,6 +122,7 @@ class TimerService: Service() {
         } ?: false
         if (!nextRun) {
             _state.value = FINISHED
+            _time.value = getString(R.string.time_value_on_finish)
             notificationHelper.notifyWhenFinished()
             Log.d(Constants.DEBUG_TAG, "TimerService.runNextPreset(): there is no new preset")
         }
@@ -179,7 +176,7 @@ class TimerService: Service() {
             cancel()
             timer = null
             currentPresetRemaining = null
-            mediaPlayer.start()
+            notificationHelper.playSound()
             runNextPreset()
         }
     }

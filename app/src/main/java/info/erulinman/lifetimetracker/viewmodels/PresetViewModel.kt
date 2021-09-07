@@ -5,7 +5,6 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import info.erulinman.lifetimetracker.data.DatabaseRepository
 import info.erulinman.lifetimetracker.data.entity.Preset
-import info.erulinman.lifetimetracker.ui.fromTimerStringToLong
 import kotlinx.coroutines.Dispatchers
 
 import kotlinx.coroutines.launch

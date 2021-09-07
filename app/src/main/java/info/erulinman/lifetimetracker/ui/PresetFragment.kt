@@ -11,6 +11,8 @@ import androidx.fragment.app.DialogFragment
 import info.erulinman.lifetimetracker.data.entity.Preset
 import info.erulinman.lifetimetracker.databinding.FragmentPresetBinding
 import info.erulinman.lifetimetracker.utilities.Constants
+import info.erulinman.lifetimetracker.utilities.fromLongToTimerString
+import info.erulinman.lifetimetracker.utilities.fromTimerStringToLong
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 

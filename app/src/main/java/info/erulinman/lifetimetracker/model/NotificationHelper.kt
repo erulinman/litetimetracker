@@ -4,12 +4,12 @@ import android.app.*
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
+import android.media.MediaPlayer
+import android.provider.MediaStore
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationCompat.VISIBILITY_PUBLIC
-import androidx.core.app.NotificationManagerCompat
 import info.erulinman.lifetimetracker.R
 import info.erulinman.lifetimetracker.ui.TimerActivity
-import info.erulinman.lifetimetracker.ui.fromLongToTimerString
 import info.erulinman.lifetimetracker.utilities.ActionIntent
 
 class NotificationHelper(context: Context) : ContextWrapper(context) {
@@ -21,6 +21,7 @@ class NotificationHelper(context: Context) : ContextWrapper(context) {
         .setOngoing(true)
         .setShowWhen(false)
         //.setContentIntent(getResultPendingIntent())
+    private val mediaPlayer = MediaPlayer.create(this, R.raw.sound)
 
     init {
         manager.createNotificationChannel(initChannel())
@@ -161,6 +162,9 @@ class NotificationHelper(context: Context) : ContextWrapper(context) {
         ).build()
     }
 
+    fun playSound() {
+        mediaPlayer.start()
+    }
     companion object {
         private const val ACTION_START_ID = 51
         private const val ACTION_STOP_ID = 52

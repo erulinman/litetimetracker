@@ -14,7 +14,6 @@ import info.erulinman.lifetimetracker.data.entity.Preset
 import info.erulinman.lifetimetracker.databinding.ActivityTimerBinding
 import info.erulinman.lifetimetracker.model.TimerService
 import info.erulinman.lifetimetracker.utilities.Constants
-import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
@@ -117,12 +116,11 @@ class TimerActivity : AppCompatActivity() {
                 when(state) {
                     TimerService.INITIALIZED -> timerService.startTimer()
                     TimerService.STOPPED  -> {
-                        fabOnClick = { timerService.stopTimer() }
+                        fabOnClick = { timerService.startTimer() }
                         binding.apply {
                             bottomAppBarLayout.fab.setImageResource(R.drawable.ic_play_24)
                             bottomAppBarLayout.appBarTitle.isVisible = true
                         }
-
                     }
                     TimerService.STARTED -> {
                         fabOnClick = { timerService.stopTimer() }
@@ -130,7 +128,6 @@ class TimerActivity : AppCompatActivity() {
                             bottomAppBarLayout.fab.setImageResource(R.drawable.ic_pause_24)
                             bottomAppBarLayout.appBarTitle.isVisible = true
                         }
-
                     }
                     TimerService.FINISHED -> {
                         fabOnClick = { timerService.restartPresets() }
