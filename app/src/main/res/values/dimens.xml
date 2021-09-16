@@ -2,4 +2,5 @@
 <resources>
     <dimen name="list_item_text_size">32sp</dimen>
     <dimen name="list_item_layout_margin">8dp</dimen>
+    <dimen name="preset_editor_dialog_width">340dp</dimen>
 </resources>

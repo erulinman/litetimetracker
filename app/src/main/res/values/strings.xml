@@ -17,4 +17,6 @@
     <string name="notification_action_skip_title">Skip</string>
     <string name="notification_action_close_title">Close</string>
     <string name="add_new_preset_button_text">NEW</string>
+    <string name="edit_text_preset_name_hint">Preset name</string>
+    <string name="default_preset_name">New Preset</string>
 </resources>

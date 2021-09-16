@@ -70,7 +70,7 @@ class PresetActivity : AppCompatActivity() {
 
         setTrackerObserver()
 
-        setPresetFragmentListener()
+        setPresetEditorFragmentListener()
     }
 
     private fun submitUi(adapter: PresetAdapter) {
@@ -108,25 +108,31 @@ class PresetActivity : AppCompatActivity() {
     }
 
     private fun addNewPreset() {
-        val newPresetFragment = PresetFragment()
-        newPresetFragment.show(supportFragmentManager, PresetFragment.TAG)
+        val newPresetEditorFragment = PresetEditorFragment()
+        newPresetEditorFragment.show(supportFragmentManager, PresetEditorFragment.TAG)
     }
 
-    private fun setPresetFragmentListener() {
+    private fun setPresetEditorFragmentListener() {
         supportFragmentManager.setFragmentResultListener(
-            PresetFragment.REQUEST_KEY,
+            PresetEditorFragment.REQUEST_KEY,
             this
         ) { _, result ->
-            val response = result.getInt(PresetFragment.KEY_RESPONSE)
+            val response = result.getInt(PresetEditorFragment.RESPONSE_KEY)
             if (response == DialogInterface.BUTTON_POSITIVE) {
-                val presetName = result.getString(PresetFragment.PRESET_NAME, Preset.DEFAULT_NAME)
-                val presetTime = result.getLong(PresetFragment.PRESET_TIME, Preset.DEFAULT_TIME)
-                val updatedPresetInString = result.getString(PresetFragment.UPDATED_PRESET)
-                updatedPresetInString?.let {
-                    Log.d(Constants.DEBUG_TAG, "PresetActivity.setPresetFragmentListener()")
-                    presetViewModel.updatePreset(Json.decodeFromString(it))
-                } ?: run {
-                    Log.d(Constants.DEBUG_TAG, "PresetActivity.setPresetFragmentListener()")
+                val update = result.getBoolean(PresetEditorFragment.UPDATE, false)
+                val presetId = result.getLong(PresetEditorFragment.PRESET_ID)
+                val wayId = result.getLong(PresetEditorFragment.WAY_ID)
+                val presetName = result.getString(PresetEditorFragment.PRESET_NAME, Preset.DEFAULT_NAME)
+                val presetTime = result.getLong(PresetEditorFragment.PRESET_TIME, Preset.DEFAULT_TIME)
+                if (update) {
+                    val updatedPreset = Preset(
+                        id = presetId,
+                        wayId = wayId,
+                        name = presetName,
+                        time = presetTime
+                    )
+                    presetViewModel.updatePreset(updatedPreset)
+                } else {
                     presetViewModel.addNewPreset(presetName, presetTime)
                 }
             }
@@ -155,8 +161,9 @@ class PresetActivity : AppCompatActivity() {
     }
 
     private fun presetOnClick(preset: Preset) {
-        val changePresetFragment = PresetFragment(preset)
-        changePresetFragment.show(supportFragmentManager, PresetFragment.TAG)
+        Log.d(Constants.DEBUG_TAG, "PresetActivity.presetOnClick()")
+        val changePresetEditorFragment = PresetEditorFragment(preset)
+        changePresetEditorFragment.show(supportFragmentManager, PresetEditorFragment.TAG)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {

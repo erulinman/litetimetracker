@@ -13,8 +13,9 @@ import androidx.recyclerview.widget.RecyclerView
 
 import info.erulinman.lifetimetracker.data.entity.Preset
 import info.erulinman.lifetimetracker.databinding.ListItemPresetBinding
-import info.erulinman.lifetimetracker.utilities.fromLongToTimerString
 import info.erulinman.lifetimetracker.utilities.Constants.DEBUG_TAG
+import info.erulinman.lifetimetracker.utilities.toListHHMMSS
+import info.erulinman.lifetimetracker.utilities.toStringHHMMSS
 
 class PresetAdapter(private val onClick: (Preset) -> Unit) :
     ListAdapter<Preset, PresetAdapter.PresetViewHolder>(PresetDiffCallback) {
@@ -58,7 +59,7 @@ class PresetAdapter(private val onClick: (Preset) -> Unit) :
             thisPreset = preset
             binding.apply {
                 presetName.text = preset.name
-                presetTime.text = preset.time.fromLongToTimerString()
+                presetTime.text = preset.time.toListHHMMSS().toStringHHMMSS()
                 tickPointImage.isVisible = isSelected
             }
         }
@@ -70,7 +71,7 @@ class PresetAdapter(private val onClick: (Preset) -> Unit) :
                     return bindingAdapterPosition
                 }
 
-                override fun getSelectionKey(): Long? =
+                override fun getSelectionKey(): Long =
                     (getItem(position) as Preset).id
 
             }

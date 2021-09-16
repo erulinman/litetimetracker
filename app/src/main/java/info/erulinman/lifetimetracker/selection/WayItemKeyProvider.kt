@@ -7,7 +7,7 @@ import info.erulinman.lifetimetracker.adapters.WayAdapter
 
 class WayItemKeyProvider(private val adapter: WayAdapter) :
     ItemKeyProvider<Long>(SCOPE_CACHED) {
-    override fun getKey(position: Int): Long? =
+    override fun getKey(position: Int): Long =
         adapter.currentList[position].id
 
     override fun getPosition(key: Long): Int =

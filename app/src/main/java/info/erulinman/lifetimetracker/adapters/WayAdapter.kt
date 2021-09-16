@@ -60,7 +60,7 @@ class WayAdapter(private val onClick: (Way) -> Unit) :
             object : ItemDetailsLookup.ItemDetails<Long>() {
                 override fun getPosition(): Int = bindingAdapterPosition
 
-                override fun getSelectionKey(): Long? =
+                override fun getSelectionKey(): Long =
                     (getItem(position) as Way).id
             }
     }

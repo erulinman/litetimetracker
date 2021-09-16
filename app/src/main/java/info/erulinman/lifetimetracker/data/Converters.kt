@@ -11,17 +11,17 @@ import info.erulinman.lifetimetracker.data.entity.Preset
 class Converters {
     @TypeConverter
     fun toListOfPresets(jsonData: String?): List<Preset>? {
-        return jsonData?.let { jsonData ->
+        return jsonData?.let {
             val typeToken = object : TypeToken<List<Preset>>() {}.type
-            val listOfPreset: List<Preset> = Gson().fromJson(jsonData, typeToken)
+            val listOfPreset: List<Preset> = Gson().fromJson(it, typeToken)
             listOfPreset.toList()
         }
     }
 
     @TypeConverter
     fun toJson(presets: List<Preset>?): String? {
-        return presets?.let { listOfPreset ->
-            val jsonData: String? = Gson().toJson(listOfPreset)
+        return presets?.let {
+            val jsonData: String? = Gson().toJson(it)
             jsonData
         }
     }
