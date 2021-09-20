@@ -10,4 +10,5 @@
     <color name="background">#FFDFDFDF</color>
     <color name="text">@color/black</color>
     <color name="hint">@color/gray</color>
+    <color name="background_black">#303030</color>
 </resources>

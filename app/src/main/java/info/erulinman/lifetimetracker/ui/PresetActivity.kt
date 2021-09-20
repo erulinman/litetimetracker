@@ -2,6 +2,7 @@ package info.erulinman.lifetimetracker.ui
 
 import android.content.DialogInterface
 import android.content.Intent
+import android.graphics.PorterDuff
 import android.os.Bundle
 import android.util.Log
 
@@ -37,6 +38,7 @@ class PresetActivity : AppCompatActivity() {
     private var tracker: SelectionTracker<Long>? = null
     private lateinit var binding: ActivityPresetBinding
     private lateinit var fabOnClick: () -> Unit
+    private lateinit var wayName: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,11 +52,12 @@ class PresetActivity : AppCompatActivity() {
         binding.recyclerView.adapter = concatAdapter
         submitUi(presetAdapter)
         fabOnClick = ::runTimerActivity
-        binding.fab.apply {
+        binding.bottomAppBarLayout.fab.apply {
             setOnClickListener { fabOnClick() }
-            setImageResource(R.drawable.ic_play_24)
+            setImageResource(R.drawable.ic_play)
         }
-        binding.appBarTitle.text = intent.getStringExtra(Constants.WAY_NAME)
+        wayName = intent.getStringExtra(Constants.WAY_NAME) ?: getString(R.string.default_preset_name)
+        binding.bottomAppBarLayout.appBarTitle.text = wayName
 
         tracker = SelectionTracker.Builder(
             "PresetActivity selection tracker",
@@ -97,12 +100,12 @@ class PresetActivity : AppCompatActivity() {
         val nItems: Int? = tracker?.selection?.size()
         val counterText = "Selected: "
         if (nItems != null && nItems > 0) {
-            binding.appBarTitle.text = counterText + nItems
-            binding.fab.setImageResource(R.drawable.ic_delete_24)
+            binding.bottomAppBarLayout.appBarTitle.text = counterText + nItems
+            binding.bottomAppBarLayout.fab.setImageResource(R.drawable.ic_delete)
             fabOnClick = ::deleteSelectedPresets
         } else {
-            binding.appBarTitle.setText(R.string.app_name)
-            binding.fab.setImageResource(R.drawable.ic_play_24)
+            binding.bottomAppBarLayout.appBarTitle.setText(wayName)
+            binding.bottomAppBarLayout.fab.setImageResource(R.drawable.ic_play)
             fabOnClick = ::runTimerActivity
         }
     }

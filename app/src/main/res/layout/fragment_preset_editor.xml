@@ -18,6 +18,7 @@
         android:textColorHint="@color/hint"
         android:textCursorDrawable="@drawable/edit_text_cursor"
         android:textSize="32sp"
+        android:maxLength="20"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>

@@ -15,7 +15,7 @@ class NotificationHelper(context: Context) : ContextWrapper(context) {
     private val manager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
     private val notification = NotificationCompat.Builder(context, CHANNEL_ID)
         .setCategory(NotificationCompat.CATEGORY_PROGRESS)
-        .setSmallIcon(R.drawable.ic_timer_24)
+        .setSmallIcon(R.drawable.ic_timer)
         .setVisibility(VISIBILITY_PUBLIC)
         .setOngoing(true)
         .setShowWhen(false)
@@ -95,7 +95,7 @@ class NotificationHelper(context: Context) : ContextWrapper(context) {
         )
         val title = getString(R.string.notification_action_stop_title)
         return NotificationCompat.Action.Builder(
-            R.drawable.ic_pause_24,
+            R.drawable.ic_pause,
             title,
             pendingIntent
         ).build()
@@ -110,7 +110,7 @@ class NotificationHelper(context: Context) : ContextWrapper(context) {
         )
         val title = getString(R.string.notification_action_start_title)
         return NotificationCompat.Action.Builder(
-            R.drawable.ic_play_24,
+            R.drawable.ic_play,
             title,
             pendingIntent
         ).build()
@@ -125,7 +125,7 @@ class NotificationHelper(context: Context) : ContextWrapper(context) {
         )
         val title = getString(R.string.notification_action_restart_title)
         return NotificationCompat.Action.Builder(
-            R.drawable.ic_restart_24,
+            R.drawable.ic_restart,
             title,
             pendingIntent
         ).build()
@@ -140,7 +140,7 @@ class NotificationHelper(context: Context) : ContextWrapper(context) {
         )
         val title = getString(R.string.notification_action_skip_title)
         return NotificationCompat.Action.Builder(
-            R.drawable.ic_skip_24,
+            R.drawable.ic_next,
             title,
             pendingIntent
         ).build()
@@ -155,7 +155,7 @@ class NotificationHelper(context: Context) : ContextWrapper(context) {
         )
         val title = getString(R.string.notification_action_close_title)
         return NotificationCompat.Action.Builder(
-            R.drawable.ic_close_24,
+            R.drawable.ic_close,
             title,
             pendingIntent
         ).build()
@@ -164,6 +164,7 @@ class NotificationHelper(context: Context) : ContextWrapper(context) {
     fun playSound() {
         mediaPlayer.start()
     }
+
     companion object {
         private const val ACTION_START_ID = 51
         private const val ACTION_STOP_ID = 52

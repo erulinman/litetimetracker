@@ -3,7 +3,6 @@ package info.erulinman.lifetimetracker.ui
 import android.content.*
 import android.os.Bundle
 import android.os.IBinder
-import android.util.Log
 
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -13,7 +12,6 @@ import info.erulinman.lifetimetracker.data.entity.Preset
 
 import info.erulinman.lifetimetracker.databinding.ActivityTimerBinding
 import info.erulinman.lifetimetracker.model.TimerService
-import info.erulinman.lifetimetracker.utilities.Constants
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
@@ -26,13 +24,11 @@ class TimerActivity : AppCompatActivity() {
     private lateinit var broadcastReceiver: BroadcastReceiver
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Log.d(Constants.DEBUG_TAG, "TimerActivity.onCreate()")
         super.onCreate(savedInstanceState)
         binding = ActivityTimerBinding.inflate(layoutInflater)
         setContentView(binding.root)
         broadcastReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
-                Log.d(Constants.DEBUG_TAG, "TimerActivity.broadcastReceiver.onReceive()")
                 if (intent?.action == TimerService.CLOSE) finish()
             }
         }
@@ -46,13 +42,11 @@ class TimerActivity : AppCompatActivity() {
     }
 
     override fun onStart() {
-        Log.d(Constants.DEBUG_TAG, "TimerActivity.onStart()")
         bindTimerService()
         super.onStart()
     }
 
     override fun onStop() {
-        Log.d(Constants.DEBUG_TAG, "TimerActivity.onStop()")
         unbindService(serviceConnection)
         super.onStop()
     }
@@ -62,7 +56,6 @@ class TimerActivity : AppCompatActivity() {
         super.onBackPressed()
     }
     private fun bindTimerService() {
-        Log.d(Constants.DEBUG_TAG, "TimerActivity.bindTimerService()")
         bindService(
             Intent(this, TimerService::class.java),
             serviceConnection,
@@ -71,10 +64,8 @@ class TimerActivity : AppCompatActivity() {
     }
 
     private fun setServiceConnection() {
-        Log.d(Constants.DEBUG_TAG, "TimerActivity.setServiceConnection()")
         serviceConnection = object : ServiceConnection {
             override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-                Log.d(Constants.DEBUG_TAG, "TimerActivity.serviceConnection.onServiceConnected()")
                 timerService = (service as TimerService.LocalBinder).getService().apply {
                     val presets = intent.getStringExtra(
                         PresetActivity.EXTRA_PRESETS_IN_JSON
@@ -90,21 +81,21 @@ class TimerActivity : AppCompatActivity() {
             }
 
             override fun onServiceDisconnected(name: ComponentName?) {
-                Log.d(Constants.DEBUG_TAG, "TimerActivity.serviceConnection.onServiceDisconnected()")
                 //TODO: rebind to service?
             }
         }
     }
 
     private fun setOnFabClickListener() {
-        Log.d(Constants.DEBUG_TAG, "TimerActivity.setOnFabClickListener()")
         binding.bottomAppBarLayout.fab.setOnClickListener {
             fabOnClick()
+        }
+        binding.nextButton.setOnClickListener {
+            timerService.skipPreset()
         }
     }
 
     private fun setObservers() {
-        Log.d(Constants.DEBUG_TAG, "TimerActivity.setObservers()")
         timerService.apply {
             presetName.observe(this@TimerActivity) { presetName ->
                 binding.bottomAppBarLayout.appBarTitle.text = presetName
@@ -118,25 +109,28 @@ class TimerActivity : AppCompatActivity() {
                     TimerService.STOPPED  -> {
                         fabOnClick = { timerService.startTimer() }
                         binding.apply {
-                            bottomAppBarLayout.fab.setImageResource(R.drawable.ic_play_24)
+                            bottomAppBarLayout.fab.setImageResource(R.drawable.ic_play)
                             bottomAppBarLayout.appBarTitle.isVisible = true
                         }
                     }
                     TimerService.STARTED -> {
                         fabOnClick = { timerService.stopTimer() }
                         binding.apply {
-                            bottomAppBarLayout.fab.setImageResource(R.drawable.ic_pause_24)
+                            bottomAppBarLayout.fab.setImageResource(R.drawable.ic_pause)
                             bottomAppBarLayout.appBarTitle.isVisible = true
                         }
                     }
                     TimerService.FINISHED -> {
                         fabOnClick = { timerService.restartPresets() }
                         binding.apply {
-                            bottomAppBarLayout.fab.setImageResource(R.drawable.ic_restart_24)
+                            bottomAppBarLayout.fab.setImageResource(R.drawable.ic_restart)
                             bottomAppBarLayout.appBarTitle.isVisible = false
                         }
                     }
                 }
+            }
+            canSkip.observe(this@TimerActivity) { canSkip ->
+                binding.nextButton.isVisible = canSkip
             }
         }
     }

@@ -29,12 +29,8 @@
             android:name=".ui.PresetActivity"
             android:parentActivityName=".ui.WayListActivity"/>
         <activity
-            android:name=".ui.AddWayActivity"
-            android:parentActivityName=".ui.WayListActivity"/>
-        <activity
             android:name=".ui.TimerActivity"
             android:parentActivityName=".ui.PresetActivity"/>
 
     </application>
-
 </manifest>

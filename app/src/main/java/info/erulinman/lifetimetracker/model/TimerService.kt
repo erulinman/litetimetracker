@@ -36,6 +36,10 @@ class TimerService: Service() {
     val state: LiveData<String>
         get() = _state
 
+    private val _canSkip = MutableLiveData(false)
+    val canSkip: LiveData<Boolean>
+        get() = _canSkip
+
     override fun onCreate() {
         Log.d(Constants.DEBUG_TAG, "TimerService.onCreate()")
         super.onCreate()
@@ -73,6 +77,7 @@ class TimerService: Service() {
                     _time.value = firstPreset.time.fromLongToTimerString()
                     _presetName.value = firstPreset.name
                     currentPresetDuration = firstPreset.time
+                    _canSkip.value = true
                 }
             }
         }
@@ -124,6 +129,7 @@ class TimerService: Service() {
         } ?: false
         if (!nextRun) {
             _state.value = FINISHED
+            _canSkip.value = false
             _time.value = getString(R.string.time_value_on_finish)
             notificationHelper.notifyWhenFinished()
             Log.d(Constants.DEBUG_TAG, "TimerService.runNextPreset(): there is no new preset")
@@ -138,6 +144,7 @@ class TimerService: Service() {
     fun restartPresets() {
         presets.first().let { firstPreset ->
             currentPresetIndex = 0
+            _canSkip.value = true
             _time.value = firstPreset.time.fromLongToTimerString()
             _presetName.value = firstPreset.name
             currentPresetDuration = firstPreset.time

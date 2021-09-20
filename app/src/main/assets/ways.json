@@ -2,67 +2,16 @@
   {
     "id": 1,
     "name": "Work",
-    "description": "Android application programming",
-    "scenario" : [
-      {
-        "id": 1,
-        "name": "Work",
-        "time": 1500
-      },
-      {
-        "id": 2,
-        "name": "Rest",
-        "time": 300
-      },
-      {
-        "id": 3,
-        "name": "Work",
-        "time": 1500
-      },
-      {
-        "id": 4,
-        "name": "Rest",
-        "time": 300
-      }
-    ]
+    "description": "Android application programming"
   },
   {
     "id": 2,
-    "name": "Civ 6",
-    "description": "Play civilisation 6",
-    "scenario": [
-      {
-        "id": 1,
-        "name": "Play",
-        "time": 7200
-      },
-      {
-        "id": 2,
-        "name": "Rest",
-        "time": 1200
-      },
-      {
-        "id": 3,
-        "name": "Play",
-        "time": 7200
-      },
-      {
-        "id": 4,
-        "name": "Rest",
-        "time": 1200
-      }
-    ]
+    "name": "Workout",
+    "description": "increase my power"
   },
   {
     "id": 3,
-    "name": "Workout",
-    "description": "increase my power",
-    "scenario": [
-      {
-        "id": 1,
-        "name": "Walk",
-        "time": 1800
-      }
-    ]
+    "name": "Games",
+    "description": "Play games"
   }
 ]

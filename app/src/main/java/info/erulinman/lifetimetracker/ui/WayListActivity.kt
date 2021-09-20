@@ -1,6 +1,7 @@
 package info.erulinman.lifetimetracker.ui
 
 import android.app.Activity
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 
@@ -22,7 +23,6 @@ import info.erulinman.lifetimetracker.viewmodels.WayListViewModel
 import info.erulinman.lifetimetracker.viewmodels.WayListViewModelFactory
 
 class WayListActivity : AppCompatActivity() {
-    private val newWayActivityRequestCode = 1
     private val wayListViewModel by viewModels<WayListViewModel> {
         WayListViewModelFactory((application as MainApplication).databaseRepository)
     }
@@ -43,7 +43,7 @@ class WayListActivity : AppCompatActivity() {
         binding.bottomAppBarLayout.fab.apply {
             fabOnClick = ::addNewWay
             setOnClickListener { fabOnClick() }
-            setImageResource(R.drawable.baseline_add_24)
+            setImageResource(R.drawable.ic_plus)
         }
 
         tracker = SelectionTracker.Builder(
@@ -59,13 +59,31 @@ class WayListActivity : AppCompatActivity() {
         wayAdapter.setTracker(tracker)
         setTrackerObserver()
 
-
         /*
         * Disable deselecting on touching recyclerview`s empty area
         *
         * I think this is a bad decision
         * TODO: searching SelectionTracker.SelectionPredicate
-        }*/
+        */
+
+        setNewWayFragmentListener()
+    }
+
+    private fun setNewWayFragmentListener() {
+        supportFragmentManager.setFragmentResultListener(
+            NewWayFragment.REQUEST_KEY,
+            this
+        ) { _, result ->
+            val response = result.getInt(NewWayFragment.RESPONSE_KEY)
+            if (response == DialogInterface.BUTTON_POSITIVE) {
+                val wayName = result.getString(
+                    NewWayFragment.WAY_NAME,
+                    getString(R.string.default_way_name)
+                )
+                val wayDescription = result.getString(NewWayFragment.WAY_DESCRIPTION)
+                wayListViewModel.addNewWay(wayName, wayDescription)
+            }
+        }
     }
 
     private fun setTrackerObserver() {
@@ -93,19 +111,18 @@ class WayListActivity : AppCompatActivity() {
         val counterText = "Selected: "
         if (nItems != null && nItems > 0) {
             binding.bottomAppBarLayout.appBarTitle.text = counterText + nItems
-            binding.bottomAppBarLayout.fab.setImageResource(R.drawable.ic_delete_24)
+            binding.bottomAppBarLayout.fab.setImageResource(R.drawable.ic_delete)
             fabOnClick = ::deleteSelectedWays
         } else {
             binding.bottomAppBarLayout.appBarTitle.setText(R.string.app_name)
-            binding.bottomAppBarLayout.fab.setImageResource(R.drawable.baseline_add_24)
+            binding.bottomAppBarLayout.fab.setImageResource(R.drawable.ic_plus)
             fabOnClick = ::addNewWay
         }
     }
 
     private fun addNewWay() {
-        val intent = Intent(this, AddWayActivity::class.java)
-        startActivityForResult(intent, newWayActivityRequestCode)
-        //registerForActivityResult()
+        val newWayFragment = NewWayFragment()
+        newWayFragment.show(supportFragmentManager, NewWayFragment.TAG)
     }
 
     private fun deleteSelectedWays() {
@@ -127,18 +144,6 @@ class WayListActivity : AppCompatActivity() {
         intent.putExtra(Constants.WAY_ID, way.id)
         intent.putExtra(Constants.WAY_NAME, way.name)
         startActivity(intent)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == newWayActivityRequestCode && resultCode == Activity.RESULT_OK) {
-            data?.let {
-                val name: String = data.getStringExtra(Constants.NEW_WAY_NAME) ?: return
-                val description = data.getStringExtra(Constants.NEW_WAY_DESCRIPTION)
-                wayListViewModel.addNewWay(name, description)
-            }
-        }
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {

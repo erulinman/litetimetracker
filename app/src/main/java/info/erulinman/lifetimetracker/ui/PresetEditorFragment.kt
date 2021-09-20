@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.EditText
+import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.DialogFragment
@@ -19,7 +20,7 @@ import java.util.concurrent.TimeUnit
 
 class PresetEditorFragment(private val preset: Preset? = null) : DialogFragment() {
     private lateinit var binding: FragmentPresetEditorBinding
-    private lateinit var dialog: android.app.AlertDialog
+    private lateinit var dialog: AlertDialog
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         binding = FragmentPresetEditorBinding.inflate(LayoutInflater.from(context))
@@ -90,7 +91,7 @@ class PresetEditorFragment(private val preset: Preset? = null) : DialogFragment(
             }
         }
 
-        dialog = android.app.AlertDialog.Builder(requireContext())
+        dialog = AlertDialog.Builder(requireContext())
             .setView(binding.root)
             .create()
 
@@ -163,7 +164,7 @@ class PresetEditorFragment(private val preset: Preset? = null) : DialogFragment(
         private const val SELECTION: Int = 2
         private const val ZERO_TIME_VALUE = "00"
 
-        const val TAG = "info.erulinman.lifetimetracker.PresetFragment"
+        const val TAG = "info.erulinman.lifetimetracker.PresetEditorFragment"
         const val REQUEST_KEY = "info.erulinman.lifetimetracker.REQUEST_KEY"
         const val RESPONSE_KEY = "info.erulinman.lifetimetracker.RESPONSE_KEY"
         const val PRESET_ID = "info.erulinman.lifetimetracker.PRESET_ID"
