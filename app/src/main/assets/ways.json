@@ -2,16 +2,16 @@
   {
     "id": 1,
     "name": "Work",
-    "description": "Android application programming"
+    "description": "Need more money"
   },
   {
     "id": 2,
     "name": "Workout",
-    "description": "increase my power"
+    "description": "Increase my dark power"
   },
   {
     "id": 3,
-    "name": "Games",
+    "name": "Game",
     "description": "Play games"
   }
 ]

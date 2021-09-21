@@ -1,37 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tool="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:tool="http://schemas.android.com/tools">
+    android:layout_height="match_parent">
 
     <com.google.android.material.bottomappbar.BottomAppBar
         android:id="@+id/bottomAppBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        app:fabAlignmentMode="end"
-        style="@style/Widget.MaterialComponents.BottomAppBar.Colored" />
+        android:backgroundTint="?attr/colorPrimary"
+        app:fabAlignmentMode="end" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="@string/fab_content_description"
-        android:backgroundTint="@color/background_black"
-        android:tint="@color/white"
+        android:backgroundTint="?attr/colorPrimary"
+        app:tint="?attr/colorOnPrimary"
         app:layout_anchor="@id/bottomAppBar"
-        tool:src="@drawable/ic_play" />
+        tool:src="@drawable/ic_plus" />
 
     <TextView
         android:id="@+id/appBarTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:background="?attr/colorPrimary"
+        android:textColor="?attr/colorOnPrimary"
         android:text="@string/app_name"
-        android:textColor="@color/white"
-        android:textSize="20sp"
+        android:textSize="@dimen/text_size_app_bar_title"
         app:layout_anchor="@+id/bottomAppBar"
-        app:layout_anchorGravity="start|center"
-        android:layout_marginStart="24dp" />
+        app:layout_anchorGravity="start|center_vertical" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

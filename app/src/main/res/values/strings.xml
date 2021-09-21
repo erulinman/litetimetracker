@@ -24,4 +24,6 @@
     <string name="edit_text_way_description_hint">Way description</string>
     <string name="default_way_name">New Way</string>
     <string name="default_way_description" />
+    <string name="dialog_cancel_button">Cancel</string>
+    <string name="dialog_save_button">Save</string>
 </resources>

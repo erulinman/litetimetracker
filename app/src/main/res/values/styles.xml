@@ -1,9 +1,0 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <style name="new_preset_button">
-        <item name="background">@drawable/new_preset_button_shape</item>
-    </style>
-
-    <style name="tick_pint_image">
-        <item name="android:tint">@color/background_black</item>
-    </style>
-</resources>

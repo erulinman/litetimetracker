@@ -4,37 +4,38 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@drawable/dialog_shape"
+    android:background="@drawable/shape_dialog"
     android:padding="5dp">
 
-    <EditText android:id="@+id/wayNameInput"
+    <EditText
+        android:id="@+id/wayNameInput"
         android:layout_width="328dp"
         android:layout_height="70dp"
-        android:background="@drawable/edit_text_shape"
-        android:hint="@string/edit_text_way_name_hint"
+        android:background="@drawable/shape_edit_text"
         android:inputType="text|textNoSuggestions"
         android:textAlignment="center"
-        android:textColor="@color/text"
-        android:textColorHint="@color/hint"
-        android:textCursorDrawable="@drawable/edit_text_cursor"
-        android:textSize="32sp"
+        android:textCursorDrawable="@drawable/shape_edit_text_cursor"
+        android:hint="@string/edit_text_way_name_hint"
+        android:textColorHint="@color/gray"
+        android:textSize="@dimen/text_size_edit_preset_name"
         android:maxLength="20"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <EditText android:id="@+id/wayDescriptionInput"
+    <EditText
+        android:id="@+id/wayDescriptionInput"
         android:layout_width="328dp"
         android:layout_height="200dp"
         android:layout_marginTop="5dp"
-        android:background="@drawable/edit_text_shape"
-        android:hint="@string/edit_text_way_description_hint"
+        android:background="@drawable/shape_edit_text"
         android:inputType="textCapSentences|textMultiLine"
         android:textAlignment="center"
-        android:textColor="@color/text"
-        android:textColorHint="@color/hint"
-        android:textCursorDrawable="@drawable/edit_text_cursor"
-        android:textSize="32sp"
+        android:textCursorDrawable="@drawable/shape_edit_text_cursor"
+        android:textColor="?attr/colorOnSecondary"
+        android:hint="@string/edit_text_way_description_hint"
+        android:textColorHint="@color/gray"
+        android:textSize="@dimen/text_size_edit_preset_time"
         android:maxLength="50"
         app:layout_constraintTop_toBottomOf="@+id/wayNameInput"
         app:layout_constraintStart_toStartOf="parent"
@@ -49,18 +50,20 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <Button android:id="@+id/cancelButton"
+        <Button
+            android:id="@+id/cancelButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Cancel"
-            android:textColor="@color/black"
+            android:text="@string/dialog_cancel_button"
+            android:textColor="?attr/colorOnSecondary"
             style="?attr/borderlessButtonStyle"/>
 
-        <Button android:id="@+id/saveButton"
+        <Button
+            android:id="@+id/saveButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Save"
-            android:textColor="@color/black"
+            android:text="@string/dialog_save_button"
+            android:textColor="?attr/colorOnSecondary"
             style="?attr/borderlessButtonStyle"/>
     </LinearLayout>
 

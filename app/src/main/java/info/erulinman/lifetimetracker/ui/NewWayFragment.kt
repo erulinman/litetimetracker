@@ -56,7 +56,7 @@ class NewWayFragment: DialogFragment() {
         super.onResume()
         dialog.window?.apply {
             val updatedAttributes = attributes.apply {
-                width = resources.getDimensionPixelSize(R.dimen.preset_editor_dialog_width)
+                width = resources.getDimensionPixelSize(R.dimen.layout_width_preset_editor_dialog)
             }
             attributes = updatedAttributes
         }
