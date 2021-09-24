@@ -11,7 +11,7 @@
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="?actionBarSize"
+        android:layout_marginBottom="?attr/actionBarSize"
         app:layoutManager="LinearLayoutManager"
         tools:listitem="@layout/list_item_way"/>
 
