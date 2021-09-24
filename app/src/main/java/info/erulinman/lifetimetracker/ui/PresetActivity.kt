@@ -145,6 +145,7 @@ class PresetActivity : AppCompatActivity() {
     private fun runTimerActivity() {
         val intent = Intent(this, TimerActivity::class.java)
         intent.putExtra(EXTRA_PRESETS_IN_JSON, Json.encodeToString(presetViewModel.liveDataPresets.value))
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
         Log.d(Constants.DEBUG_TAG, "PresetActivity.runTimerActivity()")
         startActivity(intent)
     }
