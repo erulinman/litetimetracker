@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:backgroundTint="?attr/colorPrimary"
-        app:fabAlignmentMode="end" />
+        app:fabAlignmentMode="end"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
@@ -22,7 +22,7 @@
         android:backgroundTint="?attr/colorPrimary"
         app:tint="?attr/colorOnPrimary"
         app:layout_anchor="@id/bottomAppBar"
-        tool:src="@drawable/ic_plus" />
+        tool:src="@drawable/ic_plus"/>
 
     <TextView
         android:id="@+id/appBarTitle"
@@ -34,6 +34,6 @@
         android:text="@string/app_name"
         android:textSize="@dimen/text_size_app_bar_title"
         app:layout_anchor="@+id/bottomAppBar"
-        app:layout_anchorGravity="start|center_vertical" />
+        app:layout_anchorGravity="start|center_vertical"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

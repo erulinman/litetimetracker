@@ -13,39 +13,39 @@
         android:id="@+id/presetTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/layout_margin_list_item"
-        android:paddingHorizontal="5dp"
+        android:layout_marginStart="8dp"
         android:textSize="@dimen/text_size_list_item"
         android:textColor="?attr/colorOnSecondary"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         tool:text="@string/list_item_preset_time"/>
 
     <TextView
         android:id="@+id/presetName"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/layout_margin_list_item"
-        android:paddingStart="8dp"
+        android:layout_marginHorizontal="8dp"
         android:textSize="@dimen/text_size_list_item"
         android:textColor="?attr/colorOnSecondary"
+        android:lines="1"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/presetTime"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/tickPointImage"
         tool:text="@string/list_item_preset_name"/>
 
     <ImageView
         android:id="@+id/tickPointImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="8dp"
         android:src="@drawable/ic_tick_point"
         android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         app:tint="?attr/colorPrimary"
-        tool:visibility="visible" />
+        tool:visibility="visible"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

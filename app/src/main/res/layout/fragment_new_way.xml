@@ -4,13 +4,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@drawable/shape_dialog"
-    android:padding="5dp">
+    android:background="@drawable/shape_dialog">
 
     <EditText
         android:id="@+id/wayNameInput"
         android:layout_width="328dp"
         android:layout_height="70dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginHorizontal="5dp"
         android:background="@drawable/shape_edit_text"
         android:inputType="text|textNoSuggestions"
         android:textAlignment="center"
@@ -25,7 +26,7 @@
 
     <EditText
         android:id="@+id/wayDescriptionInput"
-        android:layout_width="328dp"
+        android:layout_width="0dp"
         android:layout_height="200dp"
         android:layout_marginTop="5dp"
         android:background="@drawable/shape_edit_text"
@@ -38,34 +39,30 @@
         android:textSize="@dimen/text_size_edit_preset_time"
         android:maxLength="50"
         app:layout_constraintTop_toBottomOf="@+id/wayNameInput"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintStart_toStartOf="@id/wayNameInput"
+        app:layout_constraintEnd_toEndOf="@id/wayNameInput"/>
 
-    <LinearLayout
+    <Button
+        android:id="@+id/saveButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_marginTop="10dp"
-        app:layout_constraintTop_toBottomOf="@+id/wayDescriptionInput"
+        android:text="@string/dialog_save_button"
+        android:textColor="?attr/colorOnSecondary"
+        style="?attr/borderlessButtonStyle"
+        app:layout_constraintTop_toBottomOf="@id/wayDescriptionInput"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"/>
 
-        <Button
-            android:id="@+id/cancelButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/dialog_cancel_button"
-            android:textColor="?attr/colorOnSecondary"
-            style="?attr/borderlessButtonStyle"/>
-
-        <Button
-            android:id="@+id/saveButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/dialog_save_button"
-            android:textColor="?attr/colorOnSecondary"
-            style="?attr/borderlessButtonStyle"/>
-    </LinearLayout>
-
+    <Button
+        android:id="@+id/cancelButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/dialog_cancel_button"
+        android:textColor="?attr/colorOnSecondary"
+        style="?attr/borderlessButtonStyle"
+        app:layout_constraintTop_toTopOf="@id/saveButton"
+        app:layout_constraintBottom_toBottomOf="@id/saveButton"
+        app:layout_constraintEnd_toStartOf="@id/saveButton"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
