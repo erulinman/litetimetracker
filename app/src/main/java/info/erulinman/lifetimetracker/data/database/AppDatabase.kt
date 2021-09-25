@@ -62,9 +62,9 @@ abstract class AppDatabase : RoomDatabase() {
 
             private suspend fun prepopulateWays(
                 wayList: List<Way>,
-                watDao: WayDao
+                wayDay: WayDao
             ) {
-                watDao.insertAll(wayList)
+                wayDay.insertAll(wayList)
             }
         }
     }

@@ -1,17 +1,6 @@
 [
   {
     "id": 1,
-    "name": "Work",
-    "description": "Need more money"
-  },
-  {
-    "id": 2,
-    "name": "Workout",
-    "description": "Increase my dark power"
-  },
-  {
-    "id": 3,
-    "name": "Game",
-    "description": "Play games"
+    "name": "Work"
   }
 ]
