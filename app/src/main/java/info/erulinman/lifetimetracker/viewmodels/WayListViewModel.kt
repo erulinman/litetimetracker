@@ -14,10 +14,10 @@ import kotlinx.coroutines.launch
 class WayListViewModel(private val repository: DatabaseRepository) : ViewModel() {
     val liveDataWays = repository.loadWays().asLiveData()
 
-    fun addNewWay(name: String, description: String?) {
+    fun addNewWay(name: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val newId = repository.getMaxWayId()?.let { it + 1 } ?: 1
-            repository.insertWays(Way(newId, name, description))
+            repository.insertWays(Way(newId, name))
         }
     }
 

@@ -76,12 +76,8 @@ class WayListActivity : AppCompatActivity() {
         ) { _, result ->
             val response = result.getInt(NewWayFragment.RESPONSE_KEY)
             if (response == DialogInterface.BUTTON_POSITIVE) {
-                val wayName = result.getString(
-                    NewWayFragment.WAY_NAME,
-                    getString(R.string.default_way_name)
-                )
-                val wayDescription = result.getString(NewWayFragment.WAY_DESCRIPTION)
-                wayListViewModel.addNewWay(wayName, wayDescription)
+                val wayName = result.getString(NewWayFragment.WAY_NAME)
+                wayListViewModel.addNewWay(wayName!!)
             }
         }
     }

@@ -26,4 +26,5 @@
     <string name="default_way_description" />
     <string name="dialog_cancel_button">Cancel</string>
     <string name="dialog_save_button">Save</string>
+    <string name="snackbar_message_empty_category_name">Cannot save with empty category name</string>
 </resources>

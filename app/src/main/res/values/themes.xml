@@ -1,10 +1,11 @@
 <resources>
     <style name="Theme.LifeTimeTracker" parent="Theme.MaterialComponents.NoActionBar">
         <item name="backgroundColor">@color/white</item>
+        <item name="colorOnBackground">@color/black_hole</item>
         <item name="colorPrimary">@color/black_night</item>
         <item name="colorOnPrimary">@color/white</item>
         <item name="colorPrimaryVariant">@color/gray</item>
-        <item name="colorSecondary">@color/white</item>
+        <item name="colorSecondary">@color/gray</item>
         <item name="colorOnSecondary">@color/black_hole</item>
         <item name="android:statusBarColor">?attr/colorPrimary</item>
     </style>
