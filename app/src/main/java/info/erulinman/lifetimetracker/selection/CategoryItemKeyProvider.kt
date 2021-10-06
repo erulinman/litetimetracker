@@ -1,11 +1,9 @@
 package info.erulinman.lifetimetracker.selection
 
 import androidx.recyclerview.selection.ItemKeyProvider
+import info.erulinman.lifetimetracker.adapters.CategoryAdapter
 
-import info.erulinman.lifetimetracker.adapters.WayAdapter
-
-
-class WayItemKeyProvider(private val adapter: WayAdapter) :
+class CategoryItemKeyProvider(private val adapter: CategoryAdapter) :
     ItemKeyProvider<Long>(SCOPE_CACHED) {
     override fun getKey(position: Int): Long =
         adapter.currentList[position].id

@@ -9,21 +9,21 @@ import kotlinx.coroutines.Dispatchers
 
 import kotlinx.coroutines.launch
 
-class PresetViewModel(
+class PresetListViewModel(
     private val repository: DatabaseRepository,
-    private val wayId: Long
+    private val categoryId: Long
 ) : ViewModel() {
-    val liveDataPresets = repository.loadPresets(wayId).asLiveData()
+    val liveDataPresets = repository.loadPresets(categoryId).asLiveData()
 
     fun addNewPreset(presetName: String, presetTime: Long) = viewModelScope.launch(Dispatchers.IO) {
         val newId = repository.getMaxPresetId()?.let { it + 1 } ?: 1
         val newPreset = Preset(
             id = newId,
-            wayId = wayId,
+            categoryId = categoryId,
             name = presetName,
             time = presetTime
         )
-        repository.insertPresets(newPreset)
+        repository.insertPreset(newPreset)
     }
 
     fun deleteSelectedPresets(idList: List<Long>) = viewModelScope.launch {
@@ -36,7 +36,6 @@ class PresetViewModel(
     }
 
     fun updatePreset(preset: Preset) = viewModelScope.launch(Dispatchers.IO) {
-        //TODO
         repository.updatePreset(preset)
     }
 }

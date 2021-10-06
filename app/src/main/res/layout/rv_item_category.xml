@@ -10,7 +10,7 @@
     android:layout_marginTop="5dp">
 
     <TextView
-        android:id="@+id/wayDetailText"
+        android:id="@+id/categoryName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="8dp"
@@ -21,7 +21,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/tickPointImage"
-        tool:text="@string/list_item_way_name"/>
+        tool:text="@string/tool_item_category_name"/>
 
     <ImageView
         android:id="@+id/tickPointImage"

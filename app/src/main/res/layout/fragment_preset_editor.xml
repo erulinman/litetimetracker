@@ -7,7 +7,7 @@
     android:background="@drawable/shape_dialog">
 
     <EditText
-        android:id="@+id/presetNameInput"
+        android:id="@+id/editPresetName"
         android:layout_width="328dp"
         android:layout_height="70dp"
         android:layout_margin="5dp"
@@ -30,9 +30,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@id/presetNameInput"
-        app:layout_constraintStart_toStartOf="@id/presetNameInput"
-        app:layout_constraintEnd_toEndOf="@id/presetNameInput">
+        app:layout_constraintTop_toBottomOf="@id/editPresetName"
+        app:layout_constraintStart_toStartOf="@id/editPresetName"
+        app:layout_constraintEnd_toEndOf="@id/editPresetName">
 
         <EditText
             android:id="@+id/hoursInput"
@@ -87,7 +87,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="@string/dialog_save_button"
+        android:text="@string/dialog_button_save"
         android:textColor="@color/black_hole"
         style="?attr/borderlessButtonStyle"
         app:layout_constraintTop_toBottomOf="@id/timePicker"
@@ -98,7 +98,7 @@
         android:id="@+id/cancelButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/dialog_cancel_button"
+        android:text="@string/dialog_button_cancel"
         android:textColor="@color/black_hole"
         style="?attr/borderlessButtonStyle"
         app:layout_constraintTop_toTopOf="@id/saveButton"

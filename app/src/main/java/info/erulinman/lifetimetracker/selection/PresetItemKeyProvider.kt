@@ -1,7 +1,6 @@
 package info.erulinman.lifetimetracker.selection
 
 import androidx.recyclerview.selection.ItemKeyProvider
-
 import info.erulinman.lifetimetracker.adapters.PresetAdapter
 
 class PresetItemKeyProvider(private val adapter: PresetAdapter) :

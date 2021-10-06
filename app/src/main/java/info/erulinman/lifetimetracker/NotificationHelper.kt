@@ -1,14 +1,11 @@
-package info.erulinman.lifetimetracker.model
+package info.erulinman.lifetimetracker
 
 import android.app.*
 import android.content.Context
 import android.content.ContextWrapper
-import android.content.Intent
 import android.media.MediaPlayer
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationCompat.VISIBILITY_PUBLIC
-import info.erulinman.lifetimetracker.R
-import info.erulinman.lifetimetracker.ui.TimerActivity
 import info.erulinman.lifetimetracker.utilities.ActionIntent
 
 class NotificationHelper(context: Context) : ContextWrapper(context) {
@@ -19,7 +16,6 @@ class NotificationHelper(context: Context) : ContextWrapper(context) {
         .setVisibility(VISIBILITY_PUBLIC)
         .setOngoing(true)
         .setShowWhen(false)
-        //.setContentIntent(getResultPendingIntent())
     private val mediaPlayer = MediaPlayer.create(this, R.raw.sound)
 
     init {
@@ -28,22 +24,8 @@ class NotificationHelper(context: Context) : ContextWrapper(context) {
 
     private fun initChannel(): NotificationChannel {
         val name = getString(R.string.notification_channel_name)
-        val description = getString(R.string.notification_channel_description)
         val importance = NotificationManager.IMPORTANCE_LOW
-        return NotificationChannel(CHANNEL_ID, name, importance).apply {
-            setDescription(description)
-        }
-    }
-
-    /**
-     * Broken because cant YET rebuild activity stack without data
-     * */
-    private fun getResultPendingIntent(): PendingIntent {
-        val resultIntent = Intent(this, TimerActivity::class.java)
-        return TaskStackBuilder.create(this).run {
-            addNextIntentWithParentStack(resultIntent)
-            getPendingIntent(0,PendingIntent.FLAG_UPDATE_CURRENT)
-        }
+        return NotificationChannel(CHANNEL_ID, name, importance)
     }
 
     fun getStartedNotificationBuilder(): NotificationCompat.Builder = notification
@@ -79,7 +61,7 @@ class NotificationHelper(context: Context) : ContextWrapper(context) {
             NOTIFICATION_ID,
             notification
                 .clearActions()
-                .setContentText(getString(R.string.time_value_on_finish))
+                .setContentText(getString(R.string.text_view_timer_finished))
                 .addAction(buildRestartAction(this))
                 .addAction(buildCloseAction(this))
                 .build()
@@ -93,7 +75,7 @@ class NotificationHelper(context: Context) : ContextWrapper(context) {
             ActionIntent(context, TimerService::class.java, TimerService.STOP),
             PendingIntent.FLAG_UPDATE_CURRENT
         )
-        val title = getString(R.string.notification_action_stop_title)
+        val title = getString(R.string.notification_action_title_stop)
         return NotificationCompat.Action.Builder(
             R.drawable.ic_pause,
             title,
@@ -108,7 +90,7 @@ class NotificationHelper(context: Context) : ContextWrapper(context) {
             ActionIntent(context, TimerService::class.java, TimerService.START),
             PendingIntent.FLAG_UPDATE_CURRENT
         )
-        val title = getString(R.string.notification_action_start_title)
+        val title = getString(R.string.notification_action_title_start)
         return NotificationCompat.Action.Builder(
             R.drawable.ic_play,
             title,
@@ -123,7 +105,7 @@ class NotificationHelper(context: Context) : ContextWrapper(context) {
             ActionIntent(context, TimerService::class.java, TimerService.RESTART),
             PendingIntent.FLAG_UPDATE_CURRENT
         )
-        val title = getString(R.string.notification_action_restart_title)
+        val title = getString(R.string.notification_action_title_restart)
         return NotificationCompat.Action.Builder(
             R.drawable.ic_restart,
             title,
@@ -138,7 +120,7 @@ class NotificationHelper(context: Context) : ContextWrapper(context) {
             ActionIntent(context, TimerService::class.java, TimerService.SKIP),
             PendingIntent.FLAG_UPDATE_CURRENT
         )
-        val title = getString(R.string.notification_action_skip_title)
+        val title = getString(R.string.notification_action_title_skip)
         return NotificationCompat.Action.Builder(
             R.drawable.ic_next,
             title,
@@ -153,7 +135,7 @@ class NotificationHelper(context: Context) : ContextWrapper(context) {
             ActionIntent(context, TimerService::class.java, TimerService.CLOSE),
             PendingIntent.FLAG_UPDATE_CURRENT
         )
-        val title = getString(R.string.notification_action_close_title)
+        val title = getString(R.string.notification_action_title_close)
         return NotificationCompat.Action.Builder(
             R.drawable.ic_close,
             title,
@@ -171,6 +153,7 @@ class NotificationHelper(context: Context) : ContextWrapper(context) {
         private const val ACTION_RESTART_ID = 53
         private const val ACTION_SKIP_ID = 54
         private const val ACTION_CLOSE_ID = 55
+
         const val NOTIFICATION_ID = 50
         const val CHANNEL_ID = "info.erulinman.lifetimetracker.CHANNEL_ID"
     }

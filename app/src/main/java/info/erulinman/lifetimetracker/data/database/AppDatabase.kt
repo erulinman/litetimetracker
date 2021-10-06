@@ -1,31 +1,28 @@
 package info.erulinman.lifetimetracker.data.database
 
 import android.content.Context
-
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
-
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.google.gson.stream.JsonReader
+import info.erulinman.lifetimetracker.data.dao.CategoryDao
 import info.erulinman.lifetimetracker.data.dao.PresetDao
-import info.erulinman.lifetimetracker.data.dao.WayDao
+import info.erulinman.lifetimetracker.data.entity.Category
 import info.erulinman.lifetimetracker.data.entity.Preset
-import info.erulinman.lifetimetracker.data.entity.Way
-
 import kotlinx.coroutines.*
 
-@Database(entities = [Way::class, Preset::class], version = 1)
+@Database(entities = [Category::class, Preset::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun wayDao(): WayDao
+    abstract fun categoryDao(): CategoryDao
 
     abstract fun presetDao(): PresetDao
 
     companion object {
         private const val DATABASE_NAME = "application.database.name"
-        private const val WAY_DATA_FILENAME = "ways.json"
+        private const val CATEGORY_DATA_FILENAME = "categories.json"
 
         private var INSTANCE: AppDatabase? = null
 
@@ -46,25 +43,25 @@ abstract class AppDatabase : RoomDatabase() {
         ) : RoomDatabase.Callback() {
             override fun onCreate(db: SupportSQLiteDatabase) {
                 super.onCreate(db)
-                context.applicationContext.assets.open(WAY_DATA_FILENAME).use {
+                context.applicationContext.assets.open(CATEGORY_DATA_FILENAME).use {
                     JsonReader(it.reader()).use { jsonReader ->
-                        val wayType = object : TypeToken<List<Way>>() {}.type
-                        val wayList: List<Way> = Gson().fromJson(jsonReader, wayType)
+                        val categoryType = object : TypeToken<List<Category>>() {}.type
+                        val categoryList: List<Category> = Gson().fromJson(jsonReader, categoryType)
 
                         scope.launch(Dispatchers.IO) {
                             INSTANCE?.let { database ->
-                                prepopulateWays(wayList, database.wayDao())
+                                prepopulateCategories(categoryList, database.categoryDao())
                             }
                         }
                     }
                 }
             }
 
-            private suspend fun prepopulateWays(
-                wayList: List<Way>,
-                wayDay: WayDao
+            private suspend fun prepopulateCategories(
+                categoryList: List<Category>,
+                categoryDao: CategoryDao
             ) {
-                wayDay.insertAll(wayList)
+                categoryDao.insertAll(categoryList)
             }
         }
     }

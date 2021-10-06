@@ -8,10 +8,10 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface PresetDao {
-    @Query("SELECT * FROM pomodoro_presets WHERE wayId = :wayId ORDER BY id")
-    fun getPresetForWayId(wayId: Long): Flow<List<Preset>>
+    @Query("SELECT * FROM presets WHERE categoryId = :categoryId ORDER BY id")
+    fun getPresetForCategoryId(categoryId: Long): Flow<List<Preset>>
 
-    @Query("SELECT MAX(id) FROM pomodoro_presets")
+    @Query("SELECT MAX(id) FROM presets")
     fun getMaxPresetId(): Long?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

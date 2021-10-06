@@ -11,29 +11,27 @@
         android:id="@+id/timer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="?attr/actionBarSize"
+        android:layout_marginTop="?attr/actionBarSize"
         android:background="?attr/backgroundColor"
         android:textColor="?attr/colorOnBackground"
         android:textSize="@dimen/text_size_timer"
-        app:layout_constraintBottom_toBottomOf="@+id/bottomAppBarLayout"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="@string/timer_text"/>
+        tools:text="@string/tool_text_view_timer_time"/>
 
     <ImageButton
         android:id="@+id/nextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_next"
+        android:visibility="gone"
+        android:contentDescription="@string/image_button_content_description"
         app:tint="?attr/colorPrimary"
         app:layout_constraintTop_toBottomOf="@id/timer"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        style="?android:attr/borderlessButtonStyle"/>
-
-    <include
-        android:id="@+id/bottomAppBarLayout"
-        layout="@layout/bottom_app_bar"/>
+        style="?android:attr/borderlessButtonStyle" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

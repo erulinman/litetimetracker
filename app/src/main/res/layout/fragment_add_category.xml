@@ -7,7 +7,7 @@
     android:background="@drawable/shape_dialog">
 
     <EditText
-        android:id="@+id/wayNameInput"
+        android:id="@+id/editCategoryName"
         android:layout_width="328dp"
         android:layout_height="70dp"
         android:layout_marginTop="5dp"
@@ -16,7 +16,7 @@
         android:inputType="text|textNoSuggestions"
         android:textAlignment="center"
         android:textCursorDrawable="@drawable/shape_edit_text_cursor"
-        android:hint="@string/edit_text_way_name_hint"
+        android:hint="@string/edit_text_hint_category_name"
         android:textColorHint="@color/gray"
         android:textSize="@dimen/text_size_edit_preset_name"
         android:textColor="?attr/colorOnSecondary"
@@ -30,10 +30,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="@string/dialog_save_button"
+        android:text="@string/dialog_button_save"
         android:textColor="?attr/colorOnSecondary"
         style="?attr/borderlessButtonStyle"
-        app:layout_constraintTop_toBottomOf="@id/wayNameInput"
+        app:layout_constraintTop_toBottomOf="@id/editCategoryName"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
@@ -41,7 +41,7 @@
         android:id="@+id/cancelButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/dialog_cancel_button"
+        android:text="@string/dialog_button_cancel"
         android:textColor="?attr/colorOnSecondary"
         style="?attr/borderlessButtonStyle"
         app:layout_constraintTop_toTopOf="@id/saveButton"

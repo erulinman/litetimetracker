@@ -1,30 +1,34 @@
 <resources>
+    <string name="app_bar_title_counter">"Selected:"</string>
     <string name="app_name">Life Time Tracker</string>
-    <string name="list_item_way_name">Way</string>
-    <string name="fab_content_description">fab</string>
-    <string name="list_item_preset_time">00:25:00</string>
-    <string name="list_item_preset_name">Work</string>
-    <string name="order_confirmation">message OK</string>
-    <string name="ok">OK</string>
-    <string name="timer_text">00:00</string>
-    <string name="preset_name_on_timer">work</string>
-    <string name="notification_channel_name">Life Time Tracker</string>
-    <string name="notification_channel_description">Test notification description for Life Time Tracker App</string>
-    <string name="time_value_on_finish">DONE</string>
-    <string name="notification_action_stop_title">Stop</string>
-    <string name="notification_action_start_title">Start</string>
-    <string name="notification_action_restart_title">Restart</string>
-    <string name="notification_action_skip_title">Skip</string>
-    <string name="notification_action_close_title">Close</string>
-    <string name="add_new_preset_button_text">NEW</string>
+    <string name="dialog_button_cancel">Cancel</string>
+    <string name="dialog_button_save">Save</string>
     <string name="edit_text_preset_name_hint">Preset name</string>
-    <string name="default_preset_name">New Preset</string>
+    <string name="edit_text_hint_category_description">category description</string>
+    <string name="edit_text_hint_category_name">Category name</string>
+    <string name="fab_content_description">Fab</string>
+    <string name="image_button_content_description">Image button</string>
+    <string name="image_view_content_description">Image view</string>
+    <string name="notification_action_title_close">Close</string>
+    <string name="notification_action_title_restart">Restart</string>
+    <string name="notification_action_title_skip">Skip</string>
+    <string name="notification_action_title_start">Start</string>
+    <string name="notification_action_title_stop">Stop</string>
+    <string name="notification_channel_name">Life Time Tracker</string>
+    <string name="snackbar_message_empty_category_name">
+        Cannot save with empty category name
+    </string>
+    <string name="text_view_timer_finished">Finished</string>
     <string name="tick_point_image">Tick point image</string>
-    <string name="edit_text_way_name_hint">Way name</string>
-    <string name="edit_text_way_description_hint">Way description</string>
-    <string name="default_way_name">New Way</string>
-    <string name="default_way_description" />
-    <string name="dialog_cancel_button">Cancel</string>
-    <string name="dialog_save_button">Save</string>
-    <string name="snackbar_message_empty_category_name">Cannot save with empty category name</string>
+
+    <!--Default value-->
+    <string name="default_category_name">New category</string>
+    <string name="default_category_description" />
+    <string name="default_preset_name">New preset</string>
+
+    <!--Tool Namespace-->
+    <string name="tool_item_category_name">Category</string>
+    <string name="tool_item_preset_name">Work</string>
+    <string name="tool_item_preset_time">00:25:00</string>
+    <string name="tool_text_view_timer_time">01:25:15</string>
 </resources>

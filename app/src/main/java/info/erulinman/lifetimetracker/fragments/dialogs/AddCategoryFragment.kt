@@ -1,4 +1,4 @@
-package info.erulinman.lifetimetracker.ui
+package info.erulinman.lifetimetracker.fragments.dialogs
 
 import android.app.Dialog
 import android.content.Context
@@ -12,29 +12,31 @@ import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentManager
 import com.google.android.material.snackbar.Snackbar
 import info.erulinman.lifetimetracker.R
-import info.erulinman.lifetimetracker.databinding.FragmentNewWayBinding
+import info.erulinman.lifetimetracker.databinding.FragmentAddCategoryBinding
 
-class NewWayFragment: DialogFragment() {
-    private lateinit var binding: FragmentNewWayBinding
+class AddCategoryFragment: DialogFragment() {
+    private lateinit var binding: FragmentAddCategoryBinding
     private lateinit var dialog: AlertDialog
-    private lateinit var wayName: String
+    private lateinit var categoryName: String
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        binding = FragmentNewWayBinding.inflate(LayoutInflater.from(context))
+        binding = FragmentAddCategoryBinding.inflate(LayoutInflater.from(context))
 
         val saveButtonClickListener = DialogInterface.OnClickListener { _, which ->
-            parentFragmentManager.setFragmentResult(REQUEST_KEY, bundleOf(
+            parentFragmentManager.setFragmentResult(
+                REQUEST_KEY, bundleOf(
                 RESPONSE_KEY to which,
-                WAY_NAME to wayName
+                CATEGORY_NAME to categoryName
             ))
         }
 
         binding.apply {
             saveButton.setOnClickListener {
-                wayName = binding.wayNameInput.text.toString()
-                if (wayName.isEmpty()) {
+                categoryName = binding.editCategoryName.text.toString()
+                if (categoryName.isEmpty()) {
                     Snackbar.make(
                         binding.root,
                         R.string.snackbar_message_empty_category_name,
@@ -66,7 +68,7 @@ class NewWayFragment: DialogFragment() {
                 width = resources.getDimensionPixelSize(R.dimen.layout_width_preset_editor_dialog)
             }
             attributes = updatedAttributes
-            binding.wayNameInput.focusAndShowKeyboard()
+            binding.editCategoryName.focusAndShowKeyboard()
         }
     }
 
@@ -97,9 +99,14 @@ class NewWayFragment: DialogFragment() {
     }
 
     companion object {
-        const val TAG = "info.erulinman.lifetimetracker.NewWayFragment"
+        const val TAG = "info.erulinman.lifetimetracker.AddCategoryFragment"
         const val REQUEST_KEY = "info.erulinman.lifetimetracker.REQUEST_KEY"
         const val RESPONSE_KEY = "info.erulinman.lifetimetracker.RESPONSE_KEY"
-        const val WAY_NAME = "info.erulinman.lifetimetracker.WAY_NAME"
+        const val CATEGORY_NAME = "info.erulinman.lifetimetracker.CATEGORY_NAME"
+
+        fun show(manager: FragmentManager) {
+            val dialogFragment = AddCategoryFragment()
+            dialogFragment.show(manager, TAG)
+        }
     }
 }

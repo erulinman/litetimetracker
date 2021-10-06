@@ -1,20 +1,15 @@
 package info.erulinman.lifetimetracker.data.entity
 
+import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import kotlinx.serialization.Serializable
+import kotlinx.parcelize.Parcelize
 
-@Serializable
-@Entity(tableName = "pomodoro_presets")
+@Parcelize
+@Entity(tableName = "presets")
 data class Preset(
     @PrimaryKey val id: Long,
-    val wayId: Long,
+    val categoryId: Long,
     val name: String,
     val time: Long = 90000
-) {
-    // temporary data TODO: implement name/time data checker in input view
-    companion object {
-        const val DEFAULT_NAME = "Work"
-        const val DEFAULT_TIME: Long = 1500000
-    }
-}
+) : Parcelable

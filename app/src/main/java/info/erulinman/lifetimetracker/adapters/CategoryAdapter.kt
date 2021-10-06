@@ -10,23 +10,23 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
-import info.erulinman.lifetimetracker.databinding.ListItemWayBinding
-import info.erulinman.lifetimetracker.data.entity.Way
+import info.erulinman.lifetimetracker.databinding.RvItemCategoryBinding
+import info.erulinman.lifetimetracker.data.entity.Category
 
-class WayAdapter(private val onClick: (Way) -> Unit) :
-    ListAdapter<Way, WayAdapter.WayViewHolder>(WayDiffCallback) {
+class CategoryAdapter(private val onClick: (Category) -> Unit) :
+    ListAdapter<Category, CategoryAdapter.CategoryViewHolder>(CategoryDiffCallback) {
     private var tracker: SelectionTracker<Long>? = null
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WayViewHolder {
-        val view = ListItemWayBinding.inflate(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
+        val view = RvItemCategoryBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
             false
         )
-        return WayViewHolder(view, onClick)
+        return CategoryViewHolder(view, onClick)
     }
 
-    override fun onBindViewHolder(holder: WayViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
         tracker?.let {
             val item = getItem(position)
             holder.bind(item, it.isSelected(item.id))
@@ -37,22 +37,22 @@ class WayAdapter(private val onClick: (Way) -> Unit) :
         this.tracker = tracker
     }
 
-    inner class WayViewHolder(
-        private val binding: ListItemWayBinding,
-        val onClick: (Way) -> Unit
+    inner class CategoryViewHolder(
+        private val binding: RvItemCategoryBinding,
+        val onClick: (Category) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
-        private var thisWay: Way? = null
+        private var thisCategory: Category? = null
         init {
             itemView.setOnClickListener {
-                thisWay?.let {
+                thisCategory?.let {
                     onClick(it)
                 }
             }
         }
 
-        fun bind(way: Way, isSelected: Boolean = false) {
-            thisWay = way
-            binding.wayDetailText.text = way.name
+        fun bind(Category: Category, isSelected: Boolean = false) {
+            thisCategory = Category
+            binding.categoryName.text = Category.name
             binding.tickPointImage.isVisible = isSelected
         }
 
@@ -61,17 +61,17 @@ class WayAdapter(private val onClick: (Way) -> Unit) :
                 override fun getPosition(): Int = bindingAdapterPosition
 
                 override fun getSelectionKey(): Long =
-                    (getItem(position) as Way).id
+                    (getItem(position) as Category).id
             }
     }
 }
 
-object WayDiffCallback: DiffUtil.ItemCallback<Way>() {
-    override fun areItemsTheSame(oldItem: Way, newItem: Way): Boolean {
+object CategoryDiffCallback: DiffUtil.ItemCallback<Category>() {
+    override fun areItemsTheSame(oldItem: Category, newItem: Category): Boolean {
         return oldItem == newItem
     }
 
-    override fun areContentsTheSame(oldItem: Way, newItem: Way): Boolean {
+    override fun areContentsTheSame(oldItem: Category, newItem: Category): Boolean {
         return oldItem.id == newItem.id
     }
 }

@@ -1,4 +1,4 @@
-package info.erulinman.lifetimetracker.model
+package info.erulinman.lifetimetracker
 
 import android.app.Service
 import android.content.Intent
@@ -9,36 +9,30 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import info.erulinman.lifetimetracker.R
 import info.erulinman.lifetimetracker.data.entity.Preset
 import info.erulinman.lifetimetracker.utilities.fromLongToTimerString
 import info.erulinman.lifetimetracker.utilities.Constants
 
 class TimerService: Service() {
-    private lateinit var notificationHelper: NotificationHelper
-    private lateinit var binder: LocalBinder
-    private var timer: Timer? = null
-    private var currentPresetDuration: Long = 0
-    private var currentPresetRemaining: Long? = null
-    private var currentPresetIndex: Int = 0
-
     private val presets = mutableListOf<Preset>()
 
     private val _time = MutableLiveData<String>()
-    val time: LiveData<String>
-        get() = _time
-
     private val _presetName = MutableLiveData<String>()
-    val presetName: LiveData<String>
-        get() = _presetName
-
     private val _state = MutableLiveData<String>()
-    val state: LiveData<String>
-        get() = _state
-
     private val _canSkip = MutableLiveData(false)
-    val canSkip: LiveData<Boolean>
-        get() = _canSkip
+
+    private var timer: Timer? = null
+    private var currentPresetDuration: Long = ZERO_PRESET_DURATION
+    private var currentPresetRemaining: Long? = null
+    private var currentPresetIndex: Int = ZERO_PRESET_INDEX
+
+    private lateinit var notificationHelper: NotificationHelper
+    private lateinit var binder: LocalBinder
+
+    val time: LiveData<String> get() = _time
+    val presetName: LiveData<String> get() = _presetName
+    val state: LiveData<String> get() = _state
+    val canSkip: LiveData<Boolean> get() = _canSkip
 
     override fun onCreate() {
         Log.d(Constants.DEBUG_TAG, "TimerService.onCreate()")
@@ -53,9 +47,8 @@ class TimerService: Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        Log.d(Constants.DEBUG_TAG, "TimerService.onStartCommand()")
         super.onStartCommand(intent, flags, startId)
-
-        val result = START_STICKY
 
         when (intent?.action) {
             START -> startTimer()
@@ -65,10 +58,11 @@ class TimerService: Service() {
             CLOSE -> closeService()
         }
 
-        return result
+        return START_NOT_STICKY
     }
 
     fun loadPresets(_presets: List<Preset>) {
+        Log.d(Constants.DEBUG_TAG, "TimerService.loadPresets()")
         if (state.value == INITIALIZED && _presets.isNotEmpty()) {
             Log.d(Constants.DEBUG_TAG, "TimerService.loadPresets()")
             presets.apply {
@@ -81,13 +75,6 @@ class TimerService: Service() {
                 }
             }
         }
-    }
-
-    fun skipPreset() {
-        Log.d(Constants.DEBUG_TAG, "TimerService.skipPreset()")
-        stopTimer()
-        currentPresetRemaining = null
-        runNextPreset()
     }
 
     fun startTimer() {
@@ -114,6 +101,13 @@ class TimerService: Service() {
         }
     }
 
+    fun skipPreset() {
+        Log.d(Constants.DEBUG_TAG, "TimerService.skipPreset()")
+        stopTimer()
+        currentPresetRemaining = null
+        runNextPreset()
+    }
+
     private fun runNextPreset() {
         Log.d(Constants.DEBUG_TAG, "TimerService.runNextPreset()")
         currentPresetIndex++
@@ -130,7 +124,7 @@ class TimerService: Service() {
         if (!nextRun) {
             _state.value = FINISHED
             _canSkip.value = false
-            _time.value = getString(R.string.time_value_on_finish)
+            _time.value = getString(R.string.text_view_timer_finished)
             notificationHelper.notifyWhenFinished()
             Log.d(Constants.DEBUG_TAG, "TimerService.runNextPreset(): there is no new preset")
         }
@@ -139,6 +133,11 @@ class TimerService: Service() {
     override fun onBind(intent: Intent?): IBinder {
         Log.d(Constants.DEBUG_TAG, "TimerService.onBind()")
         return binder
+    }
+
+    override fun onUnbind(intent: Intent?): Boolean {
+        Log.d(Constants.DEBUG_TAG, "TimerService.onUnbind()")
+        return super.onUnbind(intent)
     }
 
     fun restartPresets() {
@@ -190,22 +189,30 @@ class TimerService: Service() {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d(Constants.DEBUG_TAG, "TimerService.onDestroy()")
+    }
+
     inner class LocalBinder: Binder() {
         fun getService(): TimerService = this@TimerService
     }
 
     companion object {
+        const val ZERO_PRESET_DURATION = 0L
+        const val ZERO_PRESET_INDEX = 0
+
         const val INITIALIZED = "info.erulinman.lifetimetracker.TIMER.INITIALIZED"
         const val STARTED     = "info.erulinman.lifetimetracker.TIMER.STARTED"
         const val STOPPED     = "info.erulinman.lifetimetracker.TIMER.STOPPED"
         const val FINISHED    = "info.erulinman.lifetimetracker.TIMER.FINISHED"
         const val CLOSED      = "info.erulinman.lifetimetracker.TIMER.CLOSED"
 
-        const val START = "info.erulinman.lifetimetracker.TIMER.START"
-        const val STOP = "info.erulinman.lifetimetracker.TIMER.STOP"
+        const val START   = "info.erulinman.lifetimetracker.TIMER.START"
+        const val STOP    = "info.erulinman.lifetimetracker.TIMER.STOP"
         const val RESTART = "info.erulinman.lifetimetracker.TIMER.RESTART"
-        const val SKIP = "info.erulinman.lifetimetracker.TIMER.SKIP"
-        const val CLOSE = "info.erulinman.lifetimetracker.TIMER.CLOSE"
+        const val SKIP    = "info.erulinman.lifetimetracker.TIMER.SKIP"
+        const val CLOSE   = "info.erulinman.lifetimetracker.TIMER.CLOSE"
 
         private const val ONE_SECOND_INTERVAL: Long = 1000
         private const val TIME_COMPENSATION: Long = 999
