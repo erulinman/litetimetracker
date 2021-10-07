@@ -41,6 +41,11 @@ class MainActivity: AppCompatActivity(), Navigator {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        timerService?.closeService()
+    }
+
     /**
      * Implementation of navigator interface functions
      *
