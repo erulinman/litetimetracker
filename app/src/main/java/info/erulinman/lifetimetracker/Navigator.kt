@@ -18,4 +18,5 @@ interface Navigator {
     fun getTimerService(): TimerService?
     fun onBackPressed()
     fun onResume()
+    fun showToast(stringRes: Int)
 }

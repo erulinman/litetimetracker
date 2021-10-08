@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
@@ -159,4 +160,10 @@ class MainActivity: AppCompatActivity(), Navigator {
         }
         super.onBackPressed()
     }
+
+    override fun showToast(stringRes: Int) = Toast.makeText(
+        this,
+        getString(stringRes),
+        Toast.LENGTH_SHORT
+    ).show()
 }

@@ -81,10 +81,14 @@ class PresetListFragment : Fragment(), Selection {
 
     private fun runTimerFragment() {
         presetListViewModel.liveDataPresets.value?.let { presets ->
-            val fragment = TimerFragment.newInstance(presets as ArrayList)
-            parentFragmentManager.commit {
-                addToBackStack(null)
-                replace(R.id.mainFragmentContainer, fragment)
+            if (presets.isNotEmpty()) {
+                val fragment = TimerFragment.newInstance(presets as ArrayList)
+                parentFragmentManager.commit {
+                    addToBackStack(null)
+                    replace(R.id.mainFragmentContainer, fragment)
+                }
+            } else {
+                navigator().showToast(R.string.toast_message_no_presets)
             }
         }
     }
