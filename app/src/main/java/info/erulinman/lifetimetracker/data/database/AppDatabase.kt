@@ -22,7 +22,8 @@ abstract class AppDatabase : RoomDatabase() {
 
     companion object {
         private const val DATABASE_NAME = "application.database.name"
-        private const val CATEGORY_DATA_FILENAME = "categories.json"
+        private const val CATEGORIES = "categories.json"
+        private const val PRESETS = "presets.json"
 
         private var INSTANCE: AppDatabase? = null
 
@@ -43,25 +44,31 @@ abstract class AppDatabase : RoomDatabase() {
         ) : RoomDatabase.Callback() {
             override fun onCreate(db: SupportSQLiteDatabase) {
                 super.onCreate(db)
-                context.applicationContext.assets.open(CATEGORY_DATA_FILENAME).use {
-                    JsonReader(it.reader()).use { jsonReader ->
-                        val categoryType = object : TypeToken<List<Category>>() {}.type
-                        val categoryList: List<Category> = Gson().fromJson(jsonReader, categoryType)
 
-                        scope.launch(Dispatchers.IO) {
-                            INSTANCE?.let { database ->
-                                prepopulateCategories(categoryList, database.categoryDao())
-                            }
-                        }
-                    }
-                }
+                prepopulate(CATEGORIES)
+                prepopulate(PRESETS)
             }
 
-            private suspend fun prepopulateCategories(
-                categoryList: List<Category>,
-                categoryDao: CategoryDao
-            ) {
-                categoryDao.insertAll(categoryList)
+            private fun prepopulate(fileName: String) {
+                context.applicationContext.assets.open(fileName).use {
+                    JsonReader(it.reader()).use { jsonReader -> when (fileName) {
+                        CATEGORIES -> {
+                            val type = object : TypeToken<List<Category>>() {}.type
+                            val list: List<Category> = Gson().fromJson(jsonReader, type)
+                            INSTANCE?.let { database -> scope.launch(Dispatchers.IO) {
+                                database.categoryDao().insertAll(list)
+                            }}
+                        }
+                        PRESETS -> {
+                            val type = object : TypeToken<List<Preset>>() {}.type
+                            val list: List<Preset> = Gson().fromJson(jsonReader, type)
+                            INSTANCE?.let { database -> scope.launch(Dispatchers.IO) {
+                                database.presetDao().insertAll(list)
+                            }}
+                        }
+                        else -> return
+                    }}
+                }
             }
         }
     }

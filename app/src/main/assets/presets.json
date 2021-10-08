@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "categoryId": 1,
+    "name": "Work",
+    "time": 1500000
+  },
+  {
+    "id": 2,
+    "categoryId": 1,
+    "name": "Rest",
+    "time": 300000
+  },
+  {
+    "id": 3,
+    "categoryId": 1,
+    "name": "Work",
+    "time": 1500000
+  },
+  {
+    "id": 4,
+    "categoryId": 1,
+    "name": "Rest",
+    "time": 300000
+  }
+]
