@@ -20,8 +20,11 @@ class DatabaseRepository(private val database: AppDatabase) {
     suspend fun insertPreset(preset: Preset) =
         database.presetDao().insert(preset)
 
-    suspend fun deleteCategories(categories: List<Category>) =
+    suspend fun deleteCategories(categoriesId: List<Long>, categories: List<Category>) {
         database.categoryDao().delete(categories)
+        database.presetDao().deleteByCategoriesId(categoriesId)
+    }
+
 
     suspend fun deletePresets(presets: List<Preset>) =
         database.presetDao().delete(presets)

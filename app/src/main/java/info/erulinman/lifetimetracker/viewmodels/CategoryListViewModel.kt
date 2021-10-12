@@ -25,6 +25,6 @@ class CategoryListViewModel(private val repository: DatabaseRepository) : ViewMo
             if (idList.contains(it.id))
                 listForDelete.add(it)
         }
-        repository.deleteCategories(listForDelete.toList())
+        repository.deleteCategories(idList, listForDelete.toList())
     }
 }

@@ -26,4 +26,7 @@ interface PresetDao {
     // for prepopulate on create db
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(presets: List<Preset>)
+
+    @Query("DELETE FROM presets WHERE categoryId in (:categoriesId)")
+    suspend fun deleteByCategoriesId(categoriesId: List<Long>)
 }
