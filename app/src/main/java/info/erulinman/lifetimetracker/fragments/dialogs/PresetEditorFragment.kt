@@ -166,7 +166,9 @@ class PresetEditorFragment : DialogFragment() {
             TimeUnit.SECONDS.toMillis(it)
         } ?: 0
 
-        return hours + minutes + seconds
+        val time = hours + minutes + seconds
+
+        return if (time != 0L) time else DEFAULT_TIME
     }
 
     companion object {
@@ -176,6 +178,7 @@ class PresetEditorFragment : DialogFragment() {
         private const val ZERO_TIME_VALUE = "00"
         private const val ARG_PRESET = "PresetEditorFragment.ARG_PRESET"
         private const val TAG = "PresetEditorFragment.TAG"
+        private const val DEFAULT_TIME = 1500000L
 
         const val REQUEST_KEY = "PresetEditorFragment.REQUEST_KEY"
         const val RESPONSE_KEY = "PresetEditorFragment.RESPONSE_KEY"
