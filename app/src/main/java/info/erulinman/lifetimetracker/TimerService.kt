@@ -12,6 +12,8 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import info.erulinman.lifetimetracker.data.entity.Preset
 import info.erulinman.lifetimetracker.utilities.fromLongToTimerString
 import info.erulinman.lifetimetracker.utilities.Constants
+import info.erulinman.lifetimetracker.utilities.toListHHMMSS
+import info.erulinman.lifetimetracker.utilities.toStringHHMMSS
 
 class TimerService: Service() {
     private val presets = mutableListOf<Preset>()
@@ -168,7 +170,7 @@ class TimerService: Service() {
             if (millisUntilFinished < ONE_SECOND_INTERVAL) {
                 onFinish()
             } else {
-                val timeInString = millisUntilFinished.fromLongToTimerString()
+                val timeInString = millisUntilFinished.toListHHMMSS().toStringHHMMSS()
                 Log.d(
                     Constants.DEBUG_TAG,
                     "TimerService.Timer.onTick(): on string - $timeInString, on long - $millisUntilFinished}"
