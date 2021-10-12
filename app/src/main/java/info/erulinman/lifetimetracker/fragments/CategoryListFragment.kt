@@ -16,7 +16,7 @@ import info.erulinman.lifetimetracker.MainApplication
 import info.erulinman.lifetimetracker.R
 import info.erulinman.lifetimetracker.adapters.CategoryAdapter
 import info.erulinman.lifetimetracker.data.entity.Category
-import info.erulinman.lifetimetracker.databinding.FragmentRvListBinding
+import info.erulinman.lifetimetracker.databinding.FragmentCategoryListBinding
 import info.erulinman.lifetimetracker.selection.CategoryItemDetailsLookup
 import info.erulinman.lifetimetracker.selection.CategoryItemKeyProvider
 import info.erulinman.lifetimetracker.fragments.dialogs.AddCategoryFragment
@@ -32,7 +32,7 @@ class CategoryListFragment : Fragment(), Selection {
         )
     }
     private var tracker: SelectionTracker<Long>? = null
-    private lateinit var binding: FragmentRvListBinding
+    private lateinit var binding: FragmentCategoryListBinding
 
     override val hasSelection: Boolean
         get() = tracker?.hasSelection() ?: false
@@ -46,7 +46,7 @@ class CategoryListFragment : Fragment(), Selection {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentRvListBinding.inflate(inflater, container, false)
+        binding = FragmentCategoryListBinding.inflate(inflater, container, false)
         val categoryAdapter = CategoryAdapter { category -> categoryOnClick(category) }
         binding.recyclerView.adapter = categoryAdapter
         submitUi(categoryAdapter)

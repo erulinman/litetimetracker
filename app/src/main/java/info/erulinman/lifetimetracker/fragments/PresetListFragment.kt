@@ -13,14 +13,12 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.selection.SelectionPredicates
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.selection.StorageStrategy
-import androidx.recyclerview.widget.ConcatAdapter
 import info.erulinman.lifetimetracker.MainApplication
 import info.erulinman.lifetimetracker.R
-import info.erulinman.lifetimetracker.adapters.AddPresetAdapter
 import info.erulinman.lifetimetracker.adapters.PresetAdapter
 import info.erulinman.lifetimetracker.data.entity.Category
 import info.erulinman.lifetimetracker.data.entity.Preset
-import info.erulinman.lifetimetracker.databinding.FragmentRvListBinding
+import info.erulinman.lifetimetracker.databinding.FragmentPresetListBinding
 import info.erulinman.lifetimetracker.selection.PresetItemDetailsLookup
 import info.erulinman.lifetimetracker.selection.PresetItemKeyProvider
 import info.erulinman.lifetimetracker.fragments.dialogs.PresetEditorFragment
@@ -40,7 +38,7 @@ class PresetListFragment : Fragment(), Selection {
         )
     }
     private var tracker: SelectionTracker<Long>? = null
-    private lateinit var binding: FragmentRvListBinding
+    private lateinit var binding: FragmentPresetListBinding
 
     override val hasSelection: Boolean
         get() = tracker?.hasSelection() ?: false
@@ -54,11 +52,9 @@ class PresetListFragment : Fragment(), Selection {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentRvListBinding.inflate(inflater, container, false)
+        binding = FragmentPresetListBinding.inflate(inflater, container, false)
         val presetAdapter = PresetAdapter { preset -> editPreset(preset) }
-        val addPresetAdapter = AddPresetAdapter { addPreset() }
-        val concatAdapter = ConcatAdapter(presetAdapter, addPresetAdapter)
-        binding.recyclerView.adapter = concatAdapter
+        binding.recyclerView.adapter = presetAdapter
         submitUi(presetAdapter)
         setDefaultAppBar()
 
@@ -163,6 +159,9 @@ class PresetListFragment : Fragment(), Selection {
             Log.d(Constants.DEBUG_TAG, "new data: $it")
             it?.let { presetAdapter.submitList(it) }
         })
+        binding.addNewPresetButton.setOnClickListener {
+            addPreset()
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

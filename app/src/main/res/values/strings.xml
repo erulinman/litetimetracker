@@ -32,4 +32,5 @@
     <string name="tool_item_preset_name">Work</string>
     <string name="tool_item_preset_time">00:25:00</string>
     <string name="tool_text_view_timer_time">01:25:15</string>
+    <string name="image_button_content_description_add_new_preset">Add new preset</string>
 </resources>
