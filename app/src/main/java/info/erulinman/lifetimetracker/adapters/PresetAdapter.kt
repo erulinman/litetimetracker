@@ -80,9 +80,8 @@ class PresetAdapter(private val onClick: (Preset) -> Unit) :
 
 object PresetDiffCallback: DiffUtil.ItemCallback<Preset>() {
     override fun areItemsTheSame(oldItem: Preset, newItem: Preset): Boolean =
-        oldItem == newItem
-
-    override fun areContentsTheSame(oldItem: Preset, newItem: Preset): Boolean =
         oldItem.id == newItem.id
 
+    override fun areContentsTheSame(oldItem: Preset, newItem: Preset): Boolean =
+        oldItem == newItem
 }
