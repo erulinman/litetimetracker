@@ -16,7 +16,7 @@ interface Navigator {
     fun disableBroadcast()
     fun setServiceConnection(presets: List<Preset>)
     fun getTimerService(): TimerService?
+    fun onStart()
     fun onBackPressed()
-    fun onResume()
     fun showToast(stringRes: Int)
 }

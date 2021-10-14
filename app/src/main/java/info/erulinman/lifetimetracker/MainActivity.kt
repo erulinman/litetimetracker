@@ -24,7 +24,8 @@ class MainActivity: AppCompatActivity(), Navigator {
     private var broadcastManager: LocalBroadcastManager? = null
     private var serviceConnection: ServiceConnection? = null
     private var timerService: TimerService? = null
-    private var closeTimerFragment = false
+    private var bound = false
+    private var needToCloseTimerFragment = false
 
     private lateinit var binding: ActivityMainBinding
 
@@ -42,22 +43,18 @@ class MainActivity: AppCompatActivity(), Navigator {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        timerService?.closeService()
-    }
-
     /**
      * Implementation of navigator interface functions
      *
      * TODO(description)
      */
 
-    override fun onResume() {
-        super.onResume()
-        if (closeTimerFragment && currentFragment is TimerFragment) {
+    override fun onStart() {
+        super.onStart()
+        Log.d(Constants.DEBUG_TAG, "MainActivity.onStart(): $currentFragment")
+        if (needToCloseTimerFragment && currentFragment is TimerFragment) {
+            Log.d(Constants.DEBUG_TAG, "MainActivity.onStart(): close TimerFragment")
             supportFragmentManager.popBackStack()
-            closeTimerFragment = false
         }
     }
 
@@ -86,6 +83,7 @@ class MainActivity: AppCompatActivity(), Navigator {
     }
 
     override fun bindTimerService() {
+        if (needToCloseTimerFragment) return
         Log.d(Constants.DEBUG_TAG, "MainActivity.bindTimerService()")
         val intent = Intent(this, TimerService::class.java)
         startForegroundService(intent)
@@ -95,17 +93,22 @@ class MainActivity: AppCompatActivity(), Navigator {
     }
 
     override fun unbindTimerService() {
-        Log.d(Constants.DEBUG_TAG, "MainActivity.unbindTimerService()")
-        serviceConnection?.let { unbindService(it) }
+        if (bound) {
+            Log.d(Constants.DEBUG_TAG, "MainActivity.unbindTimerService()")
+            serviceConnection?.let { unbindService(it) }
+            bound = false
+        }
     }
 
     override fun enableBroadcast() {
-        Log.d(Constants.DEBUG_TAG, "MainActivity.enableBroadcast()")
+        Log.d(Constants.DEBUG_TAG, "MainActivity.enableBroadcast(): $currentFragment")
         val broadcastReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
-                if (intent?.action == TimerService.CLOSE && currentFragment is TimerFragment) {
-                    Log.d(Constants.DEBUG_TAG, "MainActivity.enableBroadcast().popBackStack()")
-                    closeTimerFragment = true
+                Log.d(Constants.DEBUG_TAG, "MainActivity.broadcastReceiver.onReceive()")
+                intent?.let {
+                    if (it.action == TimerService.CLOSE) {
+                        needToCloseTimerFragment = true
+                    }
                 }
             }
         }
@@ -117,6 +120,7 @@ class MainActivity: AppCompatActivity(), Navigator {
     override fun disableBroadcast() {
         Log.d(Constants.DEBUG_TAG, "MainActivity.disableBroadcast()")
         broadcastManager = null
+        needToCloseTimerFragment = false
     }
 
     override fun setServiceConnection(presets: List<Preset>) {
@@ -130,6 +134,7 @@ class MainActivity: AppCompatActivity(), Navigator {
                         (currentFragment as TimerFragment).setObservers(this)
                     }
                 }
+                bound = true
             }
 
             override fun onServiceDisconnected(name: ComponentName?) {
@@ -138,6 +143,7 @@ class MainActivity: AppCompatActivity(), Navigator {
                     Log.d(Constants.DEBUG_TAG, "")
                     supportFragmentManager.popBackStack()
                 }
+                bound = false
             }
         }
     }
@@ -156,7 +162,7 @@ class MainActivity: AppCompatActivity(), Navigator {
                     return
                 }
             }
-            is TimerFragment -> (timerService?.closeService())
+            is TimerFragment -> timerService?.closeService()
         }
         super.onBackPressed()
     }
