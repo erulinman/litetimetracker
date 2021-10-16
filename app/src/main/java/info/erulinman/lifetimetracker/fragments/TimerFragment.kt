@@ -60,9 +60,9 @@ class TimerFragment : Fragment() {
                     }
                 }
             }}
+            binding.skipButton.setOnClickListener { skipPreset() }
             canSkip.observe(viewLifecycleOwner) { canSkip ->
-                binding.nextButton.visibility = if (canSkip) View.VISIBLE else View.GONE
-                binding.nextButton.setOnClickListener { skipPreset() }
+                binding.skipButton.visibility = if (canSkip) View.VISIBLE else View.GONE
             }
         }
     }

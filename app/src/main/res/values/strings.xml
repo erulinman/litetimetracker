@@ -6,7 +6,7 @@
     <string name="edit_text_preset_name_hint">Preset name</string>
     <string name="edit_text_hint_category_description">category description</string>
     <string name="edit_text_hint_category_name">Category name</string>
-    <string name="fab_content_description">Fab</string>
+    <string name="fab_content_description">Main fab</string>
     <string name="image_button_content_description">Image button</string>
     <string name="image_view_content_description">Image view</string>
     <string name="notification_action_title_close">Close</string>
@@ -15,6 +15,7 @@
     <string name="notification_action_title_start">Start</string>
     <string name="notification_action_title_stop">Stop</string>
     <string name="notification_channel_name">Life Time Tracker</string>
+    <string name="skip_button_content_description">Skip preset</string>
     <string name="snackbar_message_empty_category_name">
         Cannot save with empty category name
     </string>

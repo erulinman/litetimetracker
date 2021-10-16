@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/timerFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/backgroundColor">
@@ -21,17 +22,19 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="@string/tool_text_view_timer_time"/>
 
-    <ImageButton
-        android:id="@+id/nextButton"
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/skipButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_next"
+        android:layout_marginTop="24dp"
+        android:src="@drawable/ic_skip"
         android:visibility="gone"
-        android:contentDescription="@string/image_button_content_description"
-        app:tint="?attr/colorPrimary"
+        android:contentDescription="@string/skip_button_content_description"
+        android:backgroundTint="?attr/colorPrimary"
+        app:tint="?attr/colorOnPrimary"
         app:layout_constraintTop_toBottomOf="@id/timer"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        style="?android:attr/borderlessButtonStyle" />
+        app:layout_constraintStart_toStartOf="@id/timer"
+        app:layout_constraintEnd_toEndOf="@id/timer"
+        tools:visibility="visible"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

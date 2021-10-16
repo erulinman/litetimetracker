@@ -7,7 +7,6 @@ import android.content.Intent
 import android.media.MediaPlayer
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationCompat.VISIBILITY_PUBLIC
-import info.erulinman.lifetimetracker.fragments.TimerFragment
 import info.erulinman.lifetimetracker.utilities.ActionIntent
 
 class NotificationHelper(context: Context) : ContextWrapper(context) {
@@ -131,7 +130,7 @@ class NotificationHelper(context: Context) : ContextWrapper(context) {
         )
         val title = getString(R.string.notification_action_title_skip)
         return NotificationCompat.Action.Builder(
-            R.drawable.ic_next,
+            R.drawable.ic_skip,
             title,
             pendingIntent
         ).build()
