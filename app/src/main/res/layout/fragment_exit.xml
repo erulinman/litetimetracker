@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/shape_dialog">
+
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:backgroundTint="?attr/backgroundColor"
+        android:text="@string/text_view_exit_fragment"
+        android:textSize="@dimen/text_size_hint"
+        android:textColor="?attr/colorPrimary"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0"/>
+
+    <Button
+        android:id="@+id/positiveButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/exit_fragment_positive"
+        android:textColor="?attr/colorOnSecondary"
+        style="?attr/borderlessButtonStyle"
+        app:layout_constraintTop_toBottomOf="@id/text"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <Button
+        android:id="@+id/cancelButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/exit_fragment_negative"
+        android:textColor="?attr/colorOnSecondary"
+        style="?attr/borderlessButtonStyle"
+        app:layout_constraintTop_toTopOf="@id/positiveButton"
+        app:layout_constraintBottom_toBottomOf="@id/positiveButton"
+        app:layout_constraintEnd_toStartOf="@id/positiveButton"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

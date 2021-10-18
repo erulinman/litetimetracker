@@ -19,4 +19,5 @@ interface Navigator {
     fun onStart()
     fun onBackPressed()
     fun showToast(stringRes: Int)
+    fun setExitFragmentListener()
 }

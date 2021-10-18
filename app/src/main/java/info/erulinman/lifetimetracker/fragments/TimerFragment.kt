@@ -71,6 +71,7 @@ class TimerFragment : Fragment() {
         Log.d(Constants.DEBUG_TAG, "TimerFragment.onStart()")
         super.onStart()
         navigator().bindTimerService()
+        navigator().setExitFragmentListener()
     }
 
     override fun onStop() {

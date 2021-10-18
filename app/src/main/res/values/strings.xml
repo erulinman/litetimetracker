@@ -26,6 +26,11 @@
     <string name="text_view_timer_finished">Finished</string>
     <string name="tick_point_image">Tick point image</string>
     <string name="toast_message_no_presets">No presets</string>
+    <string name="exit_fragment_positive">Yes</string>
+    <string name="exit_fragment_negative">Cancel</string>
+    <string name="text_view_exit_fragment">
+        Progress will be lost.\nAre you sure you want to close the timer?
+    </string>
 
     <!--Default value-->
     <string name="default_category_name">New category</string>

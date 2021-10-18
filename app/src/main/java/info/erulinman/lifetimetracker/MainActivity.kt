@@ -15,6 +15,7 @@ import info.erulinman.lifetimetracker.databinding.ActivityMainBinding
 import info.erulinman.lifetimetracker.fragments.Selection
 import info.erulinman.lifetimetracker.fragments.CategoryListFragment
 import info.erulinman.lifetimetracker.fragments.TimerFragment
+import info.erulinman.lifetimetracker.fragments.dialogs.ExitFragment
 import info.erulinman.lifetimetracker.utilities.Constants
 
 class MainActivity: AppCompatActivity(), Navigator {
@@ -162,7 +163,10 @@ class MainActivity: AppCompatActivity(), Navigator {
                     return
                 }
             }
-            is TimerFragment -> timerService?.closeService()
+            is TimerFragment -> {
+                ExitFragment.show(supportFragmentManager)
+                return
+            }
         }
         super.onBackPressed()
     }
@@ -172,4 +176,14 @@ class MainActivity: AppCompatActivity(), Navigator {
         getString(stringRes),
         Toast.LENGTH_SHORT
     ).show()
+
+    override fun setExitFragmentListener() {
+        supportFragmentManager.setFragmentResultListener(
+            ExitFragment.REQUEST_KEY, this
+        ) { _, result ->
+            if (result.getInt(ExitFragment.RESPONSE_KEY) == DialogInterface.BUTTON_POSITIVE) {
+                timerService?.closeService()
+            }
+        }
+    }
 }
