@@ -2,9 +2,15 @@
 <resources>
     <dimen name="layout_margin_list_item">8dp</dimen>
     <dimen name="layout_width_preset_editor_dialog">340dp</dimen>
+
+    <!--Text size-->
     <dimen name="text_size_list_item">32sp</dimen>
     <dimen name="text_size_app_bar_title">20sp</dimen>
     <dimen name="text_size_timer">94sp</dimen>
     <dimen name="text_size_edit_preset_name">32sp</dimen>
     <dimen name="text_size_edit_preset_time">32sp</dimen>
+    <dimen name="text_size_hint">18sp</dimen>
+
+    <!--Padding-->
+    <dimen name="padding_start_hint">16dp</dimen>
 </resources>

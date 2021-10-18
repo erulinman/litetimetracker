@@ -3,11 +3,15 @@
     <string name="app_name">Life Time Tracker</string>
     <string name="dialog_button_cancel">Cancel</string>
     <string name="dialog_button_save">Save</string>
+    <string name="edit_text_hours_input_hint">Hr</string>
+    <string name="edit_text_minutes_input_hint">Min</string>
+    <string name="edit_text_seconds_input_hint">Sec</string>
     <string name="edit_text_preset_name_hint">Preset name</string>
     <string name="edit_text_hint_category_description">category description</string>
     <string name="edit_text_hint_category_name">Category name</string>
     <string name="fab_content_description">Main fab</string>
     <string name="image_button_content_description">Image button</string>
+    <string name="image_button_content_description_add_new_preset">Add new preset</string>
     <string name="image_view_content_description">Image view</string>
     <string name="notification_action_title_close">Close</string>
     <string name="notification_action_title_restart">Restart</string>
@@ -33,5 +37,4 @@
     <string name="tool_item_preset_name">Work</string>
     <string name="tool_item_preset_time">00:25:00</string>
     <string name="tool_text_view_timer_time">01:25:15</string>
-    <string name="image_button_content_description_add_new_preset">Add new preset</string>
 </resources>

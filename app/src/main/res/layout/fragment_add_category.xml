@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@drawable/shape_dialog">
@@ -16,14 +17,26 @@
         android:inputType="text|textNoSuggestions"
         android:textAlignment="center"
         android:textCursorDrawable="@drawable/shape_edit_text_cursor"
-        android:hint="@string/edit_text_hint_category_name"
-        android:textColorHint="@color/gray"
         android:textSize="@dimen/text_size_edit_preset_name"
         android:textColor="?attr/colorOnSecondary"
         android:maxLength="20"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
+
+    <TextView
+        android:id="@+id/categoryHint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="?attr/backgroundColor"
+        android:paddingStart="16dp"
+        android:text="@string/edit_text_hint_category_name"
+        android:textSize="@dimen/text_size_hint"
+        android:textColor="?attr/colorPrimary"
+        app:layout_constraintTop_toBottomOf="@id/editCategoryName"
+        app:layout_constraintStart_toStartOf="@id/editCategoryName"
+        app:layout_constraintEnd_toEndOf="@id/editCategoryName"
+        app:layout_constraintHorizontal_bias="0"/>
 
     <Button
         android:id="@+id/saveButton"
@@ -33,7 +46,7 @@
         android:text="@string/dialog_button_save"
         android:textColor="?attr/colorOnSecondary"
         style="?attr/borderlessButtonStyle"
-        app:layout_constraintTop_toBottomOf="@id/editCategoryName"
+        app:layout_constraintTop_toBottomOf="@id/categoryHint"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 

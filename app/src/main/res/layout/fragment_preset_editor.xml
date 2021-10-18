@@ -6,81 +6,149 @@
     android:layout_height="wrap_content"
     android:background="@drawable/shape_dialog">
 
+    <TextView
+        android:id="@+id/presetNameHint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="?attr/backgroundColor"
+        android:paddingStart="@dimen/padding_start_hint"
+        android:text="@string/edit_text_preset_name_hint"
+        android:textColor="?attr/colorPrimary"
+        android:textSize="@dimen/text_size_hint"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="@id/editPresetName"
+        app:layout_constraintEnd_toEndOf="@id/editPresetName"
+        app:layout_constraintHorizontal_bias="0"/>
+
     <EditText
         android:id="@+id/editPresetName"
-        android:layout_width="328dp"
+        android:layout_width="0dp"
         android:layout_height="70dp"
-        android:layout_margin="5dp"
         android:background="@drawable/shape_edit_text"
         android:inputType="text|textNoSuggestions"
         android:textAlignment="center"
         android:textCursorDrawable="@drawable/shape_edit_text_cursor"
-        android:hint="@string/edit_text_preset_name_hint"
-        android:textColorHint="@color/gray"
         android:textColor="?attr/colorOnSecondary"
         android:textSize="@dimen/text_size_list_item"
         android:maxLength="20"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@id/presetNameHint"
+        app:layout_constraintStart_toStartOf="@id/hoursInput"
+        app:layout_constraintEnd_toEndOf="@id/secondsInput"/>
 
-    <LinearLayout
-        android:id="@+id/timePicker"
+
+    <EditText
+        android:id="@+id/hoursInput"
+        android:layout_width="96dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="5dp"
+        android:background="@drawable/shape_edit_text"
+        android:textCursorDrawable="@drawable/shape_edit_text_cursor"
+        android:textColor="?attr/colorOnSecondary"
+        android:textSize="40sp"
+        android:textAlignment="center"
+        android:inputType="time"
+        android:maxLength="2"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/sp1"
+        app:layout_constraintTop_toBottomOf="@id/editPresetName"/>
+
+    <ImageView
+        android:id="@+id/sp1"
+        android:layout_width="20dp"
+        android:layout_height="70dp"
+        android:src="@drawable/dw_colon"
+        app:layout_constraintStart_toEndOf="@+id/hoursInput"
+        app:layout_constraintEnd_toStartOf="@id/minutesInput"
+        app:layout_constraintTop_toTopOf="@id/hoursInput"
+        app:layout_constraintBottom_toBottomOf="@id/hoursInput"/>
+
+    <EditText
+        android:id="@+id/minutesInput"
+        android:layout_width="96dp"
+        android:layout_height="70dp"
+        android:background="@drawable/shape_edit_text"
+        android:textCursorDrawable="@drawable/shape_edit_text_cursor"
+        android:textColor="?attr/colorOnSecondary"
+        android:textSize="40sp"
+        android:textAlignment="center"
+        android:inputType="time"
+        android:maxLength="2"
+        app:layout_constraintStart_toEndOf="@id/sp1"
+        app:layout_constraintEnd_toStartOf="@id/sp2"
+        app:layout_constraintTop_toTopOf="@id/hoursInput"
+        app:layout_constraintBottom_toBottomOf="@id/hoursInput"/>
+
+    <ImageView
+        android:id="@+id/sp2"
+        android:layout_width="20dp"
+        android:layout_height="70dp"
+        android:src="@drawable/dw_colon"
+        app:layout_constraintStart_toEndOf="@id/minutesInput"
+        app:layout_constraintEnd_toStartOf="@id/secondsInput"
+        app:layout_constraintTop_toTopOf="@id/hoursInput"
+        app:layout_constraintBottom_toBottomOf="@id/hoursInput"/>
+
+    <EditText
+        android:id="@+id/secondsInput"
+        android:layout_width="96dp"
+        android:layout_height="70dp"
+        android:layout_marginEnd="5dp"
+        android:background="@drawable/shape_edit_text"
+        android:inputType="time"
+        android:maxLength="2"
+        android:textAlignment="center"
+        android:textColor="?attr/colorOnSecondary"
+        android:textCursorDrawable="@drawable/shape_edit_text_cursor"
+        android:textSize="40sp"
+        app:layout_constraintBottom_toBottomOf="@id/hoursInput"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/sp2"
+        app:layout_constraintTop_toTopOf="@id/hoursInput"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/hoursHint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@id/editPresetName"
-        app:layout_constraintStart_toStartOf="@id/editPresetName"
-        app:layout_constraintEnd_toEndOf="@id/editPresetName">
+        android:backgroundTint="?attr/backgroundColor"
+        android:paddingStart="@dimen/padding_start_hint"
+        android:text="@string/edit_text_hours_input_hint"
+        android:textColor="?attr/colorPrimary"
+        android:textSize="@dimen/text_size_hint"
+        app:layout_constraintTop_toBottomOf="@id/hoursInput"
+        app:layout_constraintStart_toStartOf="@id/hoursInput"
+        app:layout_constraintEnd_toEndOf="@id/hoursInput"
+        app:layout_constraintHorizontal_bias="0"/>
 
-        <EditText
-            android:id="@+id/hoursInput"
-            android:layout_width="96dp"
-            android:layout_height="70dp"
-            android:background="@drawable/shape_edit_text"
-            android:textCursorDrawable="@drawable/shape_edit_text_cursor"
-            android:textColor="?attr/colorOnSecondary"
-            android:textSize="40sp"
-            android:textAlignment="center"
-            android:inputType="time"
-            android:maxLength="2"/>
+    <TextView
+        android:id="@+id/minutesHint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="?attr/backgroundColor"
+        android:paddingStart="@dimen/padding_start_hint"
+        android:text="@string/edit_text_minutes_input_hint"
+        android:textColor="?attr/colorPrimary"
+        android:textSize="@dimen/text_size_hint"
+        app:layout_constraintTop_toBottomOf="@id/minutesInput"
+        app:layout_constraintStart_toStartOf="@id/minutesInput"
+        app:layout_constraintEnd_toEndOf="@id/minutesInput"
+        app:layout_constraintHorizontal_bias="0"/>
 
-        <ImageView
-            android:layout_width="20dp"
-            android:layout_height="70dp"
-            android:src="@drawable/dw_colon"/>
-
-        <EditText
-            android:id="@+id/minutesInput"
-            android:layout_width="96dp"
-            android:layout_height="70dp"
-            android:background="@drawable/shape_edit_text"
-            android:textCursorDrawable="@drawable/shape_edit_text_cursor"
-            android:textColor="?attr/colorOnSecondary"
-            android:textSize="40sp"
-            android:textAlignment="center"
-            android:inputType="time"
-            android:maxLength="2"/>
-
-        <ImageView
-            android:layout_width="20dp"
-            android:layout_height="70dp"
-            android:src="@drawable/dw_colon"/>
-
-        <EditText
-            android:id="@+id/secondsInput"
-            android:layout_width="96dp"
-            android:layout_height="70dp"
-            android:background="@drawable/shape_edit_text"
-            android:textCursorDrawable="@drawable/shape_edit_text_cursor"
-            android:textColor="?attr/colorOnSecondary"
-            android:textSize="40sp"
-            android:textAlignment="center"
-            android:inputType="time"
-            android:maxLength="2"/>
-
-    </LinearLayout>
+    <TextView
+        android:id="@+id/secondsHint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="?attr/backgroundColor"
+        android:paddingStart="@dimen/padding_start_hint"
+        android:text="@string/edit_text_seconds_input_hint"
+        android:textColor="?attr/colorPrimary"
+        android:textSize="@dimen/text_size_hint"
+        app:layout_constraintTop_toBottomOf="@id/secondsInput"
+        app:layout_constraintStart_toStartOf="@id/secondsInput"
+        app:layout_constraintEnd_toEndOf="@id/secondsInput"
+        app:layout_constraintHorizontal_bias="0"/>
 
     <Button
         android:id="@+id/saveButton"
@@ -90,7 +158,7 @@
         android:text="@string/dialog_button_save"
         android:textColor="@color/black_hole"
         style="?attr/borderlessButtonStyle"
-        app:layout_constraintTop_toBottomOf="@id/timePicker"
+        app:layout_constraintTop_toBottomOf="@id/hoursHint"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
