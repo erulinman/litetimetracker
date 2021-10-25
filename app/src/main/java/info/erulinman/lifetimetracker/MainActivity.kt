@@ -109,6 +109,7 @@ class MainActivity: AppCompatActivity(), Navigator {
                 intent?.let {
                     if (it.action == TimerService.CLOSE) {
                         needToCloseTimerFragment = true
+                        if (ExitFragment.isShowing) ExitFragment.close()
                     }
                 }
             }

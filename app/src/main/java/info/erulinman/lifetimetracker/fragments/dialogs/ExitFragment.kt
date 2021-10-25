@@ -15,6 +15,8 @@ import info.erulinman.lifetimetracker.databinding.FragmentExitBinding
 class ExitFragment: DialogFragment() {
     lateinit var binding: FragmentExitBinding
     lateinit var dialog: AlertDialog
+    private val isShowing: Boolean
+        get() = if (this::dialog.isInitialized) dialog.isShowing else false
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val positiveButtonClickListener = DialogInterface.OnClickListener { dialog, which ->
@@ -41,14 +43,18 @@ class ExitFragment: DialogFragment() {
     }
 
     companion object {
-        private const val TAG = "DialogFragment.TAG"
+        private const val TAG = "ExitFragment.TAG"
 
         const val REQUEST_KEY = "ExitFragment.REQUEST_KEY"
         const val RESPONSE_KEY = "ExitFragment.RESPONSE_KEY"
 
-        fun show(manager: FragmentManager) {
-            val dialogFragment = ExitFragment()
-            dialogFragment.show(manager, TAG)
-        }
+        private val dialogFragment = ExitFragment()
+
+        val isShowing: Boolean
+            get() = dialogFragment.isShowing
+
+        fun close() = dialogFragment.dismiss()
+
+        fun show(manager: FragmentManager) = dialogFragment.show(manager, TAG)
     }
 }
