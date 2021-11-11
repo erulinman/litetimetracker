@@ -32,6 +32,8 @@
         android:textSize="@dimen/text_size_list_item"
         android:textColor="?attr/colorOnSecondary"
         android:lines="1"
+        android:maxLength="20"
+        android:ellipsize="end"
         android:gravity="center_vertical"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
