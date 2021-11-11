@@ -165,8 +165,13 @@ class MainActivity: AppCompatActivity(), Navigator {
                 }
             }
             is TimerFragment -> {
-                ExitFragment.show(supportFragmentManager)
-                return
+                timerService?.let { timer ->
+                    if (timer.state.value != TimerService.FINISHED) {
+                        ExitFragment.show(supportFragmentManager)
+                        return
+                    }
+                    timer.closeService()
+                }
             }
         }
         super.onBackPressed()
