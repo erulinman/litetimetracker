@@ -1,19 +1,23 @@
 package info.erulinman.lifetimetracker.viewmodels
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import info.erulinman.lifetimetracker.data.DatabaseRepository
+import info.erulinman.lifetimetracker.data.entity.Category
 import info.erulinman.lifetimetracker.data.entity.Preset
 import kotlinx.coroutines.Dispatchers
-
 import kotlinx.coroutines.launch
 
 class PresetListViewModel(
     private val repository: DatabaseRepository,
     private val categoryId: Long
 ) : ViewModel() {
-    val liveDataPresets = repository.loadPresets(categoryId).asLiveData()
+    val presets = repository.loadPresets(categoryId)
+    val category = repository.loadCategoryById(categoryId)
+    val hasSelection = MutableLiveData(false)
+
+    fun MutableLiveData<Boolean>.refresh() {
+        this.value = this.value
+    }
 
     fun addNewPreset(presetName: String, presetTime: Long) = viewModelScope.launch(Dispatchers.IO) {
         val newId = repository.getMaxPresetId()?.let { it + 1 } ?: 1
@@ -28,7 +32,7 @@ class PresetListViewModel(
 
     fun deleteSelectedPresets(idList: List<Long>) = viewModelScope.launch {
         val listForDelete = mutableListOf<Preset>()
-        liveDataPresets.value?.forEach {
+        presets.value?.forEach {
             if (idList.contains(it.id))
                 listForDelete.add(it)
         }
@@ -37,5 +41,9 @@ class PresetListViewModel(
 
     fun updatePreset(preset: Preset) = viewModelScope.launch(Dispatchers.IO) {
         repository.updatePreset(preset)
+    }
+
+    fun updateCategory(category: Category) = viewModelScope.launch(Dispatchers.IO) {
+        repository.updateCategory(category)
     }
 }

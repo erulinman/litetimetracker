@@ -1,7 +1,6 @@
 package info.erulinman.lifetimetracker.viewmodels
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import info.erulinman.lifetimetracker.data.DatabaseRepository
 import info.erulinman.lifetimetracker.data.entity.Category
@@ -10,7 +9,7 @@ import kotlinx.coroutines.launch
 
 
 class CategoryListViewModel(private val repository: DatabaseRepository) : ViewModel() {
-    val liveDataCategory = repository.loadCategories().asLiveData()
+    val liveDataCategory = repository.loadCategories()
 
     fun addNewCategory(name: String) {
         viewModelScope.launch(Dispatchers.IO) {

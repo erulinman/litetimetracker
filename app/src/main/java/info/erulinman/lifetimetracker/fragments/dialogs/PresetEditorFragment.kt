@@ -47,26 +47,22 @@ class PresetEditorFragment : DialogFragment() {
             val presetName = binding.editPresetName.text.toString().ifEmpty {
                 getString(R.string.default_preset_name)
             }
-            var update = false
-            var presetId: Long? = null
-            var categoryId: Long? = null
             val presetTime = getPresetTimeInLong()
 
-            preset?.let {
-                presetId = it.id
-                categoryId = it.categoryId
-                update = true
-            }
+            // both null if fragment used for create new preset
+            val presetId = preset?.id
+            val categoryId = preset?.categoryId
 
             parentFragmentManager.setFragmentResult(
-                REQUEST_KEY, bundleOf(
-                RESPONSE_KEY to which,
-                PRESET_ID to presetId,
-                CATEGORY_ID to categoryId,
-                PRESET_NAME to presetName,
-                PRESET_TIME to presetTime,
-                UPDATE to update
-            ))
+                REQUEST_KEY,
+                bundleOf(
+                    RESPONSE_KEY to which,
+                    PRESET_ID to presetId,
+                    CATEGORY_ID to categoryId,
+                    PRESET_NAME to presetName,
+                    PRESET_TIME to presetTime,
+                )
+            )
         }
 
         val focusChangeListener = View.OnFocusChangeListener { view, hasFocus ->

@@ -19,7 +19,20 @@
         android:layout_height="?attr/actionBarSize"
         android:layout_gravity="bottom"
         android:backgroundTint="?attr/colorPrimary"
-        app:fabAlignmentMode="end"/>
+        app:fabAlignmentMode="end">
+
+        <TextView
+            android:id="@+id/appBarTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:background="?attr/colorPrimary"
+            android:textColor="?attr/colorOnPrimary"
+            android:text="@string/app_name"
+            android:textSize="@dimen/text_size_app_bar_title"
+            android:lines="1"
+            android:ellipsize="end" />
+    </com.google.android.material.bottomappbar.BottomAppBar>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
@@ -30,19 +43,5 @@
         app:tint="?attr/colorOnPrimary"
         app:layout_anchor="@id/bottomAppBar"
         tool:src="@drawable/ic_plus"/>
-
-    <TextView
-        android:id="@+id/appBarTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:background="?attr/colorPrimary"
-        android:textColor="?attr/colorOnPrimary"
-        android:text="@string/app_name"
-        android:textSize="@dimen/text_size_app_bar_title"
-        android:lines="1"
-        android:ellipsize="end"
-        app:layout_anchor="@+id/bottomAppBar"
-        app:layout_anchorGravity="start|center_vertical"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

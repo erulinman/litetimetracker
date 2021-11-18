@@ -15,27 +15,47 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.snackbar.Snackbar
 import info.erulinman.lifetimetracker.R
+import info.erulinman.lifetimetracker.data.entity.Category
 import info.erulinman.lifetimetracker.databinding.FragmentAddCategoryBinding
 
-class AddCategoryFragment: DialogFragment() {
+class CategoryEditorFragment: DialogFragment() {
     private lateinit var binding: FragmentAddCategoryBinding
     private lateinit var dialog: AlertDialog
-    private lateinit var categoryName: String
+    private var category: Category? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        category = arguments?.getParcelable(ARG_CATEGORY)
+    }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         binding = FragmentAddCategoryBinding.inflate(LayoutInflater.from(context))
+        category?.let {
+            binding.editCategoryName.setText(it.name)
+        }
 
         val saveButtonClickListener = DialogInterface.OnClickListener { _, which ->
+            val currentCategoryName = binding.editCategoryName.text.toString()
+            val categoryId = category?.id // null if fragment used to add new category
+
             parentFragmentManager.setFragmentResult(
-                REQUEST_KEY, bundleOf(
-                RESPONSE_KEY to which,
-                CATEGORY_NAME to categoryName
-            ))
+                REQUEST_KEY,
+                bundleOf(
+                    RESPONSE_KEY to which,
+                    CATEGORY_NAME to currentCategoryName,
+                    CATEGORY_ID to categoryId,
+                    /*
+                    UPDATE boolean flag is not used as in PresetEditorFragment
+                    because calling this fragment to update the category
+                    unique and expecting only from PresetListFragment
+                    */
+                )
+            )
         }
 
         binding.apply {
             saveButton.setOnClickListener {
-                categoryName = binding.editCategoryName.text.toString()
+                val categoryName = binding.editCategoryName.text.toString()
                 if (categoryName.isEmpty()) {
                     Snackbar.make(
                         binding.root,
@@ -94,18 +114,25 @@ class AddCategoryFragment: DialogFragment() {
                             viewTreeObserver.removeOnWindowFocusChangeListener(this)
                         }
                     }
-                })
+                }
+            )
         }
     }
 
     companion object {
-        const val TAG = "info.erulinman.lifetimetracker.AddCategoryFragment"
-        const val REQUEST_KEY = "info.erulinman.lifetimetracker.REQUEST_KEY"
-        const val RESPONSE_KEY = "info.erulinman.lifetimetracker.RESPONSE_KEY"
-        const val CATEGORY_NAME = "info.erulinman.lifetimetracker.CATEGORY_NAME"
+        private const val ARG_CATEGORY = "CategoryEditorFragment.ARG_CATEGORY"
+        private const val TAG = "CategoryEditorFragment.AddCategoryFragment"
 
-        fun show(manager: FragmentManager) {
-            val dialogFragment = AddCategoryFragment()
+        const val REQUEST_KEY   = "CategoryEditorFragment.REQUEST_KEY"
+        const val RESPONSE_KEY  = "CategoryEditorFragment.RESPONSE_KEY"
+        const val CATEGORY_NAME = "CategoryEditorFragment.CATEGORY_NAME"
+        const val CATEGORY_ID   = "CategoryEditorFragment.CATEGORY_ID"
+
+        fun show(manager: FragmentManager, category: Category? = null) {
+            val dialogFragment = CategoryEditorFragment()
+            category?.let {
+                dialogFragment.arguments = bundleOf(ARG_CATEGORY to it)
+            }
             dialogFragment.show(manager, TAG)
         }
     }

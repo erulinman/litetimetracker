@@ -20,10 +20,8 @@ class TimerFragment : Fragment() {
         Log.d(Constants.DEBUG_TAG, "TimerFragment.onCreate()")
         super.onCreate(savedInstanceState)
         arguments?.getParcelableArrayList<Preset>(ARG_PRESET_LIST)?.let { presets ->
-            navigator().apply {
-                enableBroadcast()
-                setServiceConnection(presets)
-            }
+            navigator().enableBroadcast()
+            navigator().setServiceConnection(presets)
         }
     }
 
@@ -34,30 +32,32 @@ class TimerFragment : Fragment() {
     ): View {
         Log.d(Constants.DEBUG_TAG, "TimerFragment.onCreateView()")
         binding = FragmentTimerBinding.inflate(inflater, container, false)
+        setDefaultAppBar()
         return binding.root
+    }
+
+    private fun setDefaultAppBar() {
+        navigator().setOnClickListenerToAppBarTitle(null)
     }
 
     fun setObservers(timerService: TimerService) {
         Log.d(Constants.DEBUG_TAG, "TimerFragment.setObservers()")
         timerService.apply {
-            presetName.observe(viewLifecycleOwner) { navigator().updateAppBar(it) }
+            presetName.observe(viewLifecycleOwner) { navigator().updateAppBarTitle(it) }
             time.observe(viewLifecycleOwner) { binding.timer.text = it}
             state.observe(viewLifecycleOwner) { state -> when (state) {
                 TimerService.INITIALIZED -> startTimer()
                 TimerService.STOPPED -> {
-                    navigator().updateAppBar(R.drawable.ic_play) {
-                        startTimer()
-                    }
+                    navigator().updateFabOnAppBar(R.drawable.ic_play) { startTimer() }
+                    navigator().updateAppBarTitle(true)
                 }
                 TimerService.STARTED -> {
-                    navigator().updateAppBar(R.drawable.ic_pause, true) {
-                        stopTimer()
-                    }
+                    navigator().updateFabOnAppBar(R.drawable.ic_pause) { stopTimer() }
+                    navigator().updateAppBarTitle(true)
                 }
                 TimerService.FINISHED -> {
-                    navigator().updateAppBar(R.drawable.ic_restart, false) {
-                        restartPresets()
-                    }
+                    navigator().updateFabOnAppBar(R.drawable.ic_restart) { restartPresets() }
+                    navigator().updateAppBarTitle(false)
                 }
             }}
             binding.skipButton.setOnClickListener { skipPreset() }

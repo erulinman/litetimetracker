@@ -7,6 +7,8 @@ import info.erulinman.lifetimetracker.data.entity.Preset
 class DatabaseRepository(private val database: AppDatabase) {
     fun loadCategories() = database.categoryDao().getCategoryList()
 
+    fun loadCategoryById(id: Long) = database.categoryDao().getCategoryById(id)
+
     fun loadPresets(categoryId: Long) =
         database.presetDao().getPresetForCategoryId(categoryId)
 
@@ -31,4 +33,7 @@ class DatabaseRepository(private val database: AppDatabase) {
 
     suspend fun updatePreset(preset: Preset) =
         database.presetDao().update(preset)
+
+    suspend fun updateCategory(category: Category) =
+        database.categoryDao().update(category)
 }

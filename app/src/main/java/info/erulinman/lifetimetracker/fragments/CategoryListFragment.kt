@@ -15,11 +15,10 @@ import androidx.recyclerview.selection.StorageStrategy
 import info.erulinman.lifetimetracker.MainApplication
 import info.erulinman.lifetimetracker.R
 import info.erulinman.lifetimetracker.adapters.CategoryAdapter
-import info.erulinman.lifetimetracker.data.entity.Category
 import info.erulinman.lifetimetracker.databinding.FragmentCategoryListBinding
 import info.erulinman.lifetimetracker.selection.CategoryItemDetailsLookup
 import info.erulinman.lifetimetracker.selection.CategoryItemKeyProvider
-import info.erulinman.lifetimetracker.fragments.dialogs.AddCategoryFragment
+import info.erulinman.lifetimetracker.fragments.dialogs.CategoryEditorFragment
 import info.erulinman.lifetimetracker.utilities.Constants
 import info.erulinman.lifetimetracker.viewmodels.CategoryListViewModel
 import info.erulinman.lifetimetracker.viewmodels.CategoryListViewModelFactory
@@ -47,7 +46,7 @@ class CategoryListFragment : Fragment(), Selection {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentCategoryListBinding.inflate(inflater, container, false)
-        val categoryAdapter = CategoryAdapter { category -> categoryOnClick(category) }
+        val categoryAdapter = CategoryAdapter { category -> categoryOnClick(category.id) }
         binding.recyclerView.adapter = categoryAdapter
         submitUi(categoryAdapter)
         setDefaultAppBar()
@@ -64,7 +63,7 @@ class CategoryListFragment : Fragment(), Selection {
 
         categoryAdapter.setTracker(tracker)
         setTrackerObserver()
-        setAddCategoryFragmentListener()
+        setCategoryEditorFragmentListener()
 
         return binding.root
     }
@@ -83,13 +82,13 @@ class CategoryListFragment : Fragment(), Selection {
         )
     }
 
-    private fun setAddCategoryFragmentListener() {
+    private fun setCategoryEditorFragmentListener() {
         parentFragmentManager.setFragmentResultListener(
-            AddCategoryFragment.REQUEST_KEY,
+            CategoryEditorFragment.REQUEST_KEY,
             viewLifecycleOwner
         ) { _, result -> with(result) {
-            if (getInt(AddCategoryFragment.RESPONSE_KEY) == DialogInterface.BUTTON_POSITIVE) {
-                val categoryName = getString(AddCategoryFragment.CATEGORY_NAME) ?:
+            if (getInt(CategoryEditorFragment.RESPONSE_KEY) == DialogInterface.BUTTON_POSITIVE) {
+                val categoryName = getString(CategoryEditorFragment.CATEGORY_NAME) ?:
                     throw NullPointerException("null name's value as a result of editing")
                 categoryListViewModel.addNewCategory(categoryName)
             }
@@ -119,12 +118,13 @@ class CategoryListFragment : Fragment(), Selection {
             R.drawable.ic_plus,
             getString(R.string.app_name)
         ) {
-            AddCategoryFragment.show(parentFragmentManager)
+            CategoryEditorFragment.show(parentFragmentManager)
         }
+        navigator().setOnClickListenerToAppBarTitle(null)
     }
 
-    private fun categoryOnClick(category: Category) {
-        val fragment = PresetListFragment.newInstance(category)
+    private fun categoryOnClick(categoryId: Long) {
+        val fragment = PresetListFragment.newInstance(categoryId)
         parentFragmentManager.commit {
             addToBackStack(null)
             replace(R.id.mainFragmentContainer, fragment)

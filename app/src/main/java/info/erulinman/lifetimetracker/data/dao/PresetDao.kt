@@ -1,15 +1,14 @@
 package info.erulinman.lifetimetracker.data.dao
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
-
 import info.erulinman.lifetimetracker.data.entity.Preset
 
-import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface PresetDao {
     @Query("SELECT * FROM presets WHERE categoryId = :categoryId ORDER BY id")
-    fun getPresetForCategoryId(categoryId: Long): Flow<List<Preset>>
+    fun getPresetForCategoryId(categoryId: Long): LiveData<List<Preset>>
 
     @Query("SELECT MAX(id) FROM presets")
     fun getMaxPresetId(): Long?

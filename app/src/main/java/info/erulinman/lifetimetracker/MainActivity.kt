@@ -60,27 +60,37 @@ class MainActivity: AppCompatActivity(), Navigator {
     }
 
     override fun updateAppBar(iconRes: Int, title: String, action: () -> Unit) {
+        binding.apply {
+            appBarTitle.setOnClickListener(null)
+            appBarTitle.text = title
+            fab.setImageResource(iconRes)
+            fab.setOnClickListener {
+                action()
+            }
+        }
+    }
+
+    override fun updateAppBarTitle(title: String) {
         binding.appBarTitle.text = title
+    }
+
+    override fun updateAppBarTitle(visibility: Boolean) {
+        binding.appBarTitle.visibility = if (visibility) View.VISIBLE else View.GONE
+    }
+
+    override fun updateFabOnAppBar(iconRes: Int, action: () -> Unit) {
         binding.fab.setImageResource(iconRes)
         binding.fab.setOnClickListener {
             action()
         }
     }
 
-    override fun updateAppBar(title: String) {
-        binding.appBarTitle.text = title
-    }
-
-    override fun updateAppBar(
-        iconRes: Int,
-        titleIsVisible: Boolean,
-        action: () -> Unit
-    ) {
-        binding.appBarTitle.visibility = if (titleIsVisible) View.VISIBLE else View.GONE
-        binding.fab.setImageResource(iconRes)
-        binding.fab.setOnClickListener {
-            action()
-        }
+    override fun setOnClickListenerToAppBarTitle(actionOnClick: (() -> Unit)?) {
+        binding.appBarTitle.setOnClickListener(
+            actionOnClick?.let {
+                View.OnClickListener { it() }
+            }
+        )
     }
 
     override fun bindTimerService() {
