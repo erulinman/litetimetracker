@@ -61,7 +61,6 @@ class MainActivity: AppCompatActivity(), Navigator {
 
     override fun updateAppBar(iconRes: Int, title: String, action: () -> Unit) {
         binding.apply {
-            appBarTitle.setOnClickListener(null)
             appBarTitle.text = title
             fab.setImageResource(iconRes)
             fab.setOnClickListener {

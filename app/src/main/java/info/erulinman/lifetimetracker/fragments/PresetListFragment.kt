@@ -177,6 +177,7 @@ class PresetListFragment : Fragment(), Selection {
                         navigator().updateAppBar(R.drawable.ic_delete, title) {
                             presetListViewModel.deleteSelectedPresets(tracker.selection.toList())
                         }
+                        navigator().setOnClickListenerToAppBarTitle(null)
                     }
                 }
             })
