@@ -2,7 +2,6 @@ package info.erulinman.lifetimetracker.fragments
 
 import android.content.DialogInterface
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,13 +18,12 @@ import info.erulinman.lifetimetracker.databinding.FragmentCategoryListBinding
 import info.erulinman.lifetimetracker.selection.CategoryItemDetailsLookup
 import info.erulinman.lifetimetracker.selection.CategoryItemKeyProvider
 import info.erulinman.lifetimetracker.fragments.dialogs.CategoryEditorFragment
-import info.erulinman.lifetimetracker.utilities.Constants
 import info.erulinman.lifetimetracker.viewmodels.CategoryListViewModel
 import info.erulinman.lifetimetracker.viewmodels.CategoryListViewModelFactory
 import java.lang.NullPointerException
 
 class CategoryListFragment : Fragment(), Selection {
-    private val categoryListViewModel by viewModels<CategoryListViewModel> {
+    private val viewModel by viewModels<CategoryListViewModel> {
         CategoryListViewModelFactory(
             (requireActivity().application as MainApplication).databaseRepository
         )
@@ -48,8 +46,7 @@ class CategoryListFragment : Fragment(), Selection {
         binding = FragmentCategoryListBinding.inflate(inflater, container, false)
         val categoryAdapter = CategoryAdapter { category -> categoryOnClick(category.id) }
         binding.recyclerView.adapter = categoryAdapter
-        submitUi(categoryAdapter)
-        setDefaultAppBar()
+        observeViewModel(categoryAdapter)
 
         tracker = SelectionTracker.Builder(
             SELECTION_TRACKER_ID,
@@ -72,11 +69,11 @@ class CategoryListFragment : Fragment(), Selection {
         tracker?.addObserver(
             object : SelectionTracker.SelectionObserver<Long>() {
                 override fun onSelectionChanged() {
-                    updateAppBarOnSelection()
+                    notifyViewModelAboutSelectionStatus()
                 }
 
                 override fun onSelectionRestored() {
-                    updateAppBarOnSelection()
+                    notifyViewModelAboutSelectionStatus()
                 }
             }
         )
@@ -90,37 +87,9 @@ class CategoryListFragment : Fragment(), Selection {
             if (getInt(CategoryEditorFragment.RESPONSE_KEY) == DialogInterface.BUTTON_POSITIVE) {
                 val categoryName = getString(CategoryEditorFragment.CATEGORY_NAME) ?:
                     throw NullPointerException("null name's value as a result of editing")
-                categoryListViewModel.addNewCategory(categoryName)
+                viewModel.addNewCategory(categoryName)
             }
         }}
-    }
-
-    private fun updateAppBarOnSelection() {
-        tracker?.selection?.let { selection ->
-            val selected = selection.size()
-            Log.d(Constants.DEBUG_TAG, "Selected: $selected")
-            if (selected > 0) {
-                val barTitle = "${getString(R.string.app_bar_title_counter)} $selected"
-                navigator().updateAppBar(
-                    R.drawable.ic_delete,
-                    barTitle
-                ) {
-                    categoryListViewModel.deleteSelectedCategories(selection.toList())
-                }
-                return
-            }
-        }
-        setDefaultAppBar()
-    }
-
-    private fun setDefaultAppBar() {
-        navigator().updateAppBar(
-            R.drawable.ic_plus,
-            getString(R.string.app_name)
-        ) {
-            CategoryEditorFragment.show(parentFragmentManager)
-        }
-        navigator().setOnClickListenerToAppBarTitle(null)
     }
 
     private fun categoryOnClick(categoryId: Long) {
@@ -131,10 +100,33 @@ class CategoryListFragment : Fragment(), Selection {
         }
     }
 
-    private fun submitUi(categoryAdapter: CategoryAdapter) {
-        categoryListViewModel.liveDataCategory.observe(viewLifecycleOwner, {
+    private fun notifyViewModelAboutSelectionStatus() {
+        tracker?.selection?.let {
+            viewModel.hasSelection.value = it.size() > 0
+        }
+    }
+
+    private fun observeViewModel(categoryAdapter: CategoryAdapter) = viewModel.apply {
+        categories.observe(viewLifecycleOwner) {
             it?.let {categoryAdapter.submitList(it)}
-        })
+        }
+        hasSelection.observe(viewLifecycleOwner) { hasSelection ->
+            if (!hasSelection) {
+                navigator().updateAppBar(R.drawable.ic_plus, getString(R.string.app_name)) {
+                    CategoryEditorFragment.show(parentFragmentManager)
+                }
+                navigator().setOnClickListenerToAppBarTitle(null)
+            } else {
+                tracker?.let { tracker ->
+                    val counter = tracker.selection.size()
+                    val title = "${getString(R.string.app_bar_title_counter)} $counter"
+                    navigator().updateAppBar(R.drawable.ic_delete, title) {
+                        viewModel.deleteSelectedCategories(tracker.selection.toList())
+                    }
+                    navigator().setOnClickListenerToAppBarTitle(null)
+                }
+            }
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

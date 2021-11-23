@@ -2,7 +2,6 @@ package info.erulinman.lifetimetracker.fragments
 
 import android.content.DialogInterface
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,12 +22,11 @@ import info.erulinman.lifetimetracker.fragments.dialogs.CategoryEditorFragment
 import info.erulinman.lifetimetracker.selection.PresetItemDetailsLookup
 import info.erulinman.lifetimetracker.selection.PresetItemKeyProvider
 import info.erulinman.lifetimetracker.fragments.dialogs.PresetEditorFragment
-import info.erulinman.lifetimetracker.utilities.Constants
 import info.erulinman.lifetimetracker.viewmodels.PresetListViewModel
 import info.erulinman.lifetimetracker.viewmodels.PresetListViewModelFactory
 
 class PresetListFragment : Fragment(), Selection {
-    private val presetListViewModel by viewModels<PresetListViewModel> {
+    private val viewModel by viewModels<PresetListViewModel> {
         PresetListViewModelFactory(
             (requireActivity().application as MainApplication).databaseRepository,
             arguments?.getLong(ARG_CATEGORY_ID)!!
@@ -51,9 +49,7 @@ class PresetListFragment : Fragment(), Selection {
     ): View {
         binding = FragmentPresetListBinding.inflate(inflater, container, false)
         val presetAdapter = PresetAdapter { preset -> editPreset(preset) }
-        binding.addNewPresetButton.setOnClickListener {
-            addPreset()
-        }
+        binding.addNewPresetButton.setOnClickListener { addPreset() }
         binding.recyclerView.adapter = presetAdapter
         observeViewModel(presetAdapter)
 
@@ -76,7 +72,7 @@ class PresetListFragment : Fragment(), Selection {
     }
 
     private fun runTimerFragment() {
-        presetListViewModel.presets.value?.let { presets ->
+        viewModel.presets.value?.let { presets ->
             if (presets.isNotEmpty()) {
                 val fragment = TimerFragment.newInstance(presets as ArrayList)
                 parentFragmentManager.commit {
@@ -105,10 +101,10 @@ class PresetListFragment : Fragment(), Selection {
                     val presetId = getLong(PresetEditorFragment.PRESET_ID)
                     val categoryId = getLong(PresetEditorFragment.CATEGORY_ID)
                     val updatedPreset = Preset(presetId, categoryId, presetName, presetTime)
-                    presetListViewModel.updatePreset(updatedPreset)
+                    viewModel.updatePreset(updatedPreset)
                     return@setFragmentResultListener
                 }
-                presetListViewModel.addNewPreset(presetName, presetTime)
+                viewModel.addNewPreset(presetName, presetTime)
             }
         }}
     }
@@ -125,7 +121,7 @@ class PresetListFragment : Fragment(), Selection {
             if (getInt(CategoryEditorFragment.RESPONSE_KEY) == DialogInterface.BUTTON_POSITIVE) {
                 val categoryId = getLong(CategoryEditorFragment.CATEGORY_ID)
                 val categoryName = getString(CategoryEditorFragment.CATEGORY_NAME)!! // null check in CategoryEditorFragment
-                presetListViewModel.updateCategory(Category(categoryId, categoryName))
+                viewModel.updateCategory(Category(categoryId, categoryName))
             }
         }}
     }
@@ -146,41 +142,37 @@ class PresetListFragment : Fragment(), Selection {
 
     private fun notifyViewModelAboutSelectionStatus() {
         tracker?.selection?.let {
-            presetListViewModel.hasSelection.value = it.size() > 0
+            viewModel.hasSelection.value = it.size() > 0
         }
     }
 
-    private fun observeViewModel(presetAdapter: PresetAdapter) {
-        presetListViewModel.apply {
-            presets.observe(viewLifecycleOwner, { presets ->
-                Log.d(Constants.DEBUG_TAG, "observe presets")
-                presets?.let {
-                    presetAdapter.submitList(it)
-                }
-            })
-            category.observe(viewLifecycleOwner, {
-                Log.d(Constants.DEBUG_TAG, "observe category")
-                it?.let { hasSelection.refresh() }
-            })
-            hasSelection.observe(viewLifecycleOwner, { hasSelection ->
-                if (!hasSelection) {
-                    category.value?.let{ category ->
-                        navigator().updateAppBar(R.drawable.ic_play, category.name) {
-                            runTimerFragment()
-                        }
-                        navigator().setOnClickListenerToAppBarTitle { editCategory(category) }
+    private fun observeViewModel(presetAdapter: PresetAdapter) = viewModel.apply {
+        presets.observe(viewLifecycleOwner) { presets ->
+            presets?.let {
+                presetAdapter.submitList(it)
+            }
+        }
+        category.observe(viewLifecycleOwner) {
+            it?.let { hasSelection.refresh() }
+        }
+        hasSelection.observe(viewLifecycleOwner) { hasSelection ->
+            if (!hasSelection) {
+                category.value?.let{ category ->
+                    navigator().updateAppBar(R.drawable.ic_play, category.name) {
+                        runTimerFragment()
                     }
-                } else {
-                    tracker?.let { tracker ->
-                        val counter = tracker.selection.size()
-                        val title = "${getString(R.string.app_bar_title_counter)} $counter"
-                        navigator().updateAppBar(R.drawable.ic_delete, title) {
-                            presetListViewModel.deleteSelectedPresets(tracker.selection.toList())
-                        }
-                        navigator().setOnClickListenerToAppBarTitle(null)
-                    }
+                    navigator().setOnClickListenerToAppBarTitle { editCategory(category) }
                 }
-            })
+            } else {
+                tracker?.let { tracker ->
+                    val counter = tracker.selection.size()
+                    val title = "${getString(R.string.app_bar_title_counter)} $counter"
+                    navigator().updateAppBar(R.drawable.ic_delete, title) {
+                        viewModel.deleteSelectedPresets(tracker.selection.toList())
+                    }
+                    navigator().setOnClickListenerToAppBarTitle(null)
+                }
+            }
         }
     }
 

@@ -1,5 +1,6 @@
 package info.erulinman.lifetimetracker.viewmodels
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import info.erulinman.lifetimetracker.data.DatabaseRepository
@@ -9,7 +10,8 @@ import kotlinx.coroutines.launch
 
 
 class CategoryListViewModel(private val repository: DatabaseRepository) : ViewModel() {
-    val liveDataCategory = repository.loadCategories()
+    val categories = repository.loadCategories()
+    val hasSelection = MutableLiveData(false)
 
     fun addNewCategory(name: String) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -20,7 +22,7 @@ class CategoryListViewModel(private val repository: DatabaseRepository) : ViewMo
 
     fun deleteSelectedCategories(idList: List<Long>) = viewModelScope.launch {
         val listForDelete = mutableListOf<Category>()
-        liveDataCategory.value?.forEach {
+        categories.value?.forEach {
             if (idList.contains(it.id))
                 listForDelete.add(it)
         }
