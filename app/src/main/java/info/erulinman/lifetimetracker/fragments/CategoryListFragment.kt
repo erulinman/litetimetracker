@@ -1,5 +1,6 @@
 package info.erulinman.lifetimetracker.fragments
 
+import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,28 +8,35 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.selection.SelectionPredicates
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.selection.StorageStrategy
+import dagger.Lazy
 import info.erulinman.lifetimetracker.MainApplication
 import info.erulinman.lifetimetracker.R
 import info.erulinman.lifetimetracker.adapters.CategoryAdapter
 import info.erulinman.lifetimetracker.databinding.FragmentCategoryListBinding
+import info.erulinman.lifetimetracker.di.AppComponent
 import info.erulinman.lifetimetracker.selection.CategoryItemDetailsLookup
 import info.erulinman.lifetimetracker.selection.CategoryItemKeyProvider
 import info.erulinman.lifetimetracker.fragments.dialogs.CategoryEditorFragment
 import info.erulinman.lifetimetracker.viewmodels.CategoryListViewModel
 import info.erulinman.lifetimetracker.viewmodels.CategoryListViewModelFactory
 import java.lang.NullPointerException
+import javax.inject.Inject
 
 class CategoryListFragment : Fragment(), Selection {
-    private val viewModel by viewModels<CategoryListViewModel> {
-        CategoryListViewModelFactory(
-            (requireActivity().application as MainApplication).databaseRepository
-        )
+
+    @Inject lateinit var viewModelFactory: Lazy<CategoryListViewModelFactory>
+
+    private val viewModel by lazy {
+        ViewModelProvider(this, viewModelFactory.get())
+            .get(CategoryListViewModel::class.java)
     }
+
     private var tracker: SelectionTracker<Long>? = null
+
     private lateinit var binding: FragmentCategoryListBinding
 
     override val hasSelection: Boolean
@@ -36,6 +44,13 @@ class CategoryListFragment : Fragment(), Selection {
 
     override fun cancelSelection() {
         tracker?.clearSelection()
+    }
+
+    override fun onAttach(context: Context) {
+        (context.applicationContext as MainApplication)
+            .appComponent
+            .inject(this)
+        super.onAttach(context)
     }
 
     override fun onCreateView(
@@ -137,6 +152,11 @@ class CategoryListFragment : Fragment(), Selection {
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
         tracker?.onRestoreInstanceState(savedInstanceState)
+    }
+
+    override fun onDestroy() {
+        tracker = null
+        super.onDestroy()
     }
 
     companion object {

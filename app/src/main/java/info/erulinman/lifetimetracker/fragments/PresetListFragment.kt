@@ -1,5 +1,6 @@
 package info.erulinman.lifetimetracker.fragments
 
+import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -18,21 +19,25 @@ import info.erulinman.lifetimetracker.adapters.PresetAdapter
 import info.erulinman.lifetimetracker.data.entity.Category
 import info.erulinman.lifetimetracker.data.entity.Preset
 import info.erulinman.lifetimetracker.databinding.FragmentPresetListBinding
+import info.erulinman.lifetimetracker.di.AppComponent
 import info.erulinman.lifetimetracker.fragments.dialogs.CategoryEditorFragment
 import info.erulinman.lifetimetracker.selection.PresetItemDetailsLookup
 import info.erulinman.lifetimetracker.selection.PresetItemKeyProvider
 import info.erulinman.lifetimetracker.fragments.dialogs.PresetEditorFragment
 import info.erulinman.lifetimetracker.viewmodels.PresetListViewModel
 import info.erulinman.lifetimetracker.viewmodels.PresetListViewModelFactory
+import javax.inject.Inject
 
 class PresetListFragment : Fragment(), Selection {
-    private val viewModel by viewModels<PresetListViewModel> {
-        PresetListViewModelFactory(
-            (requireActivity().application as MainApplication).databaseRepository,
-            arguments?.getLong(ARG_CATEGORY_ID)!!
-        )
+
+    @Inject lateinit var viewModelFactory: PresetListViewModelFactory.Factory
+
+    private val viewModel: PresetListViewModel by viewModels {
+        viewModelFactory.create(requireArguments().getLong(ARG_CATEGORY_ID))
     }
+
     private var tracker: SelectionTracker<Long>? = null
+
     private lateinit var binding: FragmentPresetListBinding
 
     override val hasSelection: Boolean
@@ -40,6 +45,13 @@ class PresetListFragment : Fragment(), Selection {
 
     override fun cancelSelection() {
         tracker?.clearSelection()
+    }
+
+    override fun onAttach(context: Context) {
+        (context.applicationContext as MainApplication)
+            .appComponent
+            .inject(this)
+        super.onAttach(context)
     }
 
     override fun onCreateView(
@@ -184,6 +196,11 @@ class PresetListFragment : Fragment(), Selection {
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
         tracker?.onRestoreInstanceState(savedInstanceState)
+    }
+
+    override fun onDestroy() {
+        tracker = null
+        super.onDestroy()
     }
 
     companion object {

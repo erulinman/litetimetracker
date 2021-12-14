@@ -8,8 +8,11 @@ import android.media.MediaPlayer
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationCompat.VISIBILITY_PUBLIC
 import info.erulinman.lifetimetracker.utilities.ActionIntent
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class NotificationHelper(context: Context) : ContextWrapper(context) {
+@Singleton
+class NotificationHelper @Inject constructor(context: Context) : ContextWrapper(context) {
     private val manager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
     private val contentIntent = PendingIntent.getActivity(
         this,

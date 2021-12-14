@@ -1,39 +1,35 @@
 package info.erulinman.lifetimetracker.data
 
+import androidx.lifecycle.LiveData
 import info.erulinman.lifetimetracker.data.database.AppDatabase
 import info.erulinman.lifetimetracker.data.entity.Category
 import info.erulinman.lifetimetracker.data.entity.Preset
+import javax.inject.Inject
 
-class DatabaseRepository(private val database: AppDatabase) {
-    fun loadCategories() = database.categoryDao().getCategoryList()
+interface DatabaseRepository {
 
-    fun loadCategoryById(id: Long) = database.categoryDao().getCategoryById(id)
+    fun loadCategories(): LiveData<List<Category>>
 
-    fun loadPresets(categoryId: Long) =
-        database.presetDao().getPresetForCategoryId(categoryId)
+    fun loadCategoryById(id: Long): LiveData<Category>
 
-    fun getMaxCategoryId() = database.categoryDao().getMaxCategoryId()
+    fun loadPresets(categoryId: Long): LiveData<List<Preset>>
 
-    fun getMaxPresetId() = database.presetDao().getMaxPresetId()
+    fun getMaxCategoryId(): Long?
 
-    suspend fun insertCategory(category: Category) =
-        database.categoryDao().insert(category)
+    fun getMaxPresetId(): Long?
 
-    suspend fun insertPreset(preset: Preset) =
-        database.presetDao().insert(preset)
+    suspend fun insertCategory(category: Category)
 
-    suspend fun deleteCategories(categoriesId: List<Long>, categories: List<Category>) {
-        database.categoryDao().delete(categories)
-        database.presetDao().deleteByCategoriesId(categoriesId)
-    }
+    suspend fun insertPreset(preset: Preset)
 
+    suspend fun deleteCategories(
+        categoriesId: List<Long>,
+        categories: List<Category>
+    )
 
-    suspend fun deletePresets(presets: List<Preset>) =
-        database.presetDao().delete(presets)
+    suspend fun deletePresets(presets: List<Preset>)
 
-    suspend fun updatePreset(preset: Preset) =
-        database.presetDao().update(preset)
+    suspend fun updatePreset(preset: Preset)
 
-    suspend fun updateCategory(category: Category) =
-        database.categoryDao().update(category)
+    suspend fun updateCategory(category: Category)
 }

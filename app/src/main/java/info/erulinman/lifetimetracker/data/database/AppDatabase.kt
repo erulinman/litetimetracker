@@ -29,11 +29,8 @@ abstract class AppDatabase : RoomDatabase() {
 
         @Synchronized
         fun getInstance(context: Context, scope: CoroutineScope): AppDatabase =
-            INSTANCE ?: Room.databaseBuilder(
-                context.applicationContext,
-                AppDatabase::class.java,
-                DATABASE_NAME
-            )
+            INSTANCE ?: Room
+                .databaseBuilder(context, AppDatabase::class.java, DATABASE_NAME)
                 .addCallback(Callback(context, scope))
                 .build()
                 .also { INSTANCE = it }
@@ -50,7 +47,7 @@ abstract class AppDatabase : RoomDatabase() {
             }
 
             private fun prepopulate(fileName: String) {
-                context.applicationContext.assets.open(fileName).use {
+                context.assets.open(fileName).use {
                     JsonReader(it.reader()).use { jsonReader -> when (fileName) {
                         CATEGORIES -> {
                             val type = object : TypeToken<List<Category>>() {}.type

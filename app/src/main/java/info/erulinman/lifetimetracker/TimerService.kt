@@ -14,6 +14,7 @@ import info.erulinman.lifetimetracker.data.entity.Preset
 import info.erulinman.lifetimetracker.utilities.Constants
 import info.erulinman.lifetimetracker.utilities.toListHHMMSS
 import info.erulinman.lifetimetracker.utilities.toStringHHMMSS
+import javax.inject.Inject
 
 class TimerService: Service() {
     private val presets = mutableListOf<Preset>()
@@ -28,7 +29,8 @@ class TimerService: Service() {
     private var currentPresetRemaining: Long? = null
     private var currentPresetIndex: Int = ZERO_PRESET_INDEX
 
-    private lateinit var notificationHelper: NotificationHelper
+    @Inject lateinit var notificationHelper: NotificationHelper
+
     private lateinit var binder: LocalBinder
 
     val time: LiveData<String>
@@ -41,14 +43,16 @@ class TimerService: Service() {
         get() = _canSkip
 
     override fun onCreate() {
-        super.onCreate()
         Log.d(Constants.DEBUG_TAG, "TimerService.onCreate()")
+        (applicationContext as MainApplication)
+            .appComponent
+            .inject(this)
         binder = LocalBinder()
-        notificationHelper = NotificationHelper(this)
         startForeground(
             NotificationHelper.NOTIFICATION_ID,
             notificationHelper.getStartedNotificationBuilder().build()
         )
+        super.onCreate()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
