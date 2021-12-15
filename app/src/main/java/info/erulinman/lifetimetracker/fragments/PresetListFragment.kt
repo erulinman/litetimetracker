@@ -19,7 +19,6 @@ import info.erulinman.lifetimetracker.adapters.PresetAdapter
 import info.erulinman.lifetimetracker.data.entity.Category
 import info.erulinman.lifetimetracker.data.entity.Preset
 import info.erulinman.lifetimetracker.databinding.FragmentPresetListBinding
-import info.erulinman.lifetimetracker.di.AppComponent
 import info.erulinman.lifetimetracker.fragments.dialogs.CategoryEditorFragment
 import info.erulinman.lifetimetracker.selection.PresetItemDetailsLookup
 import info.erulinman.lifetimetracker.selection.PresetItemKeyProvider
@@ -109,8 +108,8 @@ class PresetListFragment : Fragment(), Selection {
             if (getInt(PresetEditorFragment.RESPONSE_KEY) == DialogInterface.BUTTON_POSITIVE) {
                 val presetName = getString(PresetEditorFragment.PRESET_NAME) ?: throw NullPointerException("null name's value as a result of editing")
                 val presetTime = getLong(PresetEditorFragment.PRESET_TIME)
-                if (getBoolean(PresetEditorFragment.UPDATE)) {
-                    val presetId = getLong(PresetEditorFragment.PRESET_ID)
+                val presetId = getLong(PresetEditorFragment.PRESET_ID, EMPTY)
+                if (presetId != EMPTY) {
                     val categoryId = getLong(PresetEditorFragment.CATEGORY_ID)
                     val updatedPreset = Preset(presetId, categoryId, presetName, presetTime)
                     viewModel.updatePreset(updatedPreset)
@@ -204,6 +203,7 @@ class PresetListFragment : Fragment(), Selection {
     }
 
     companion object {
+        private const val EMPTY = -1L
         const val SELECTION_TRACKER_ID = "PresetListFragment.SELECTION_TRACKER_ID"
         const val ARG_CATEGORY_ID = "PresetListFragment.ARG_CATEGORY_ID"
 
