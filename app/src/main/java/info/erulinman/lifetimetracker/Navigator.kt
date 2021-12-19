@@ -32,7 +32,7 @@ interface Navigator {
 
     fun disableBroadcast()
 
-    fun setServiceConnection(presets: List<Preset>)
+    fun setServiceConnection(presets: List<Preset>?)
 
     fun getTimerService(): TimerService?
 

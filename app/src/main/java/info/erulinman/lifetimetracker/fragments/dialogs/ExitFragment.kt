@@ -13,10 +13,19 @@ import androidx.fragment.app.FragmentManager
 import info.erulinman.lifetimetracker.databinding.FragmentExitBinding
 
 class ExitFragment: DialogFragment() {
-    lateinit var binding: FragmentExitBinding
-    lateinit var dialog: AlertDialog
-    private val isShowing: Boolean
-        get() = if (this::dialog.isInitialized) dialog.isShowing else false
+
+    private var _binding: FragmentExitBinding? = null
+    private val binding: FragmentExitBinding
+        get() {
+            checkNotNull(_binding)
+            return _binding as FragmentExitBinding
+        }
+
+    private lateinit var dialog: AlertDialog
+
+    val isShowing: Boolean
+        get() = if (this::dialog.isInitialized)
+            dialog.isShowing else false
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val positiveButtonClickListener = DialogInterface.OnClickListener { dialog, which ->
@@ -25,7 +34,7 @@ class ExitFragment: DialogFragment() {
             ))
         }
 
-        binding = FragmentExitBinding.inflate(LayoutInflater.from(context)).apply {
+        _binding = FragmentExitBinding.inflate(LayoutInflater.from(context)).apply {
             positiveButton.setOnClickListener {
                 positiveButtonClickListener.onClick(dialog, DialogInterface.BUTTON_POSITIVE)
                 dismiss()
@@ -42,19 +51,16 @@ class ExitFragment: DialogFragment() {
         return dialog
     }
 
-    companion object {
-        private const val TAG = "ExitFragment.TAG"
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
+    }
 
+    companion object {
+        const val TAG = "ExitFragment.TAG"
         const val REQUEST_KEY = "ExitFragment.REQUEST_KEY"
         const val RESPONSE_KEY = "ExitFragment.RESPONSE_KEY"
 
-        private val dialogFragment = ExitFragment()
-
-        val isShowing: Boolean
-            get() = dialogFragment.isShowing
-
-        fun close() = dialogFragment.dismiss()
-
-        fun show(manager: FragmentManager) = dialogFragment.show(manager, TAG)
+        fun show(manager: FragmentManager) = ExitFragment().show(manager, TAG)
     }
 }

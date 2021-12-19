@@ -22,8 +22,16 @@ import info.erulinman.lifetimetracker.utilities.toListHHMMSS
 import java.util.concurrent.TimeUnit
 
 class PresetEditorFragment : DialogFragment() {
-    private lateinit var binding: FragmentPresetEditorBinding
+
+    private var _binding: FragmentPresetEditorBinding? = null
+    private val binding: FragmentPresetEditorBinding
+        get() {
+            checkNotNull(_binding)
+            return _binding as FragmentPresetEditorBinding
+        }
+
     private lateinit var dialog: AlertDialog
+
     private var preset: Preset? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,7 +40,8 @@ class PresetEditorFragment : DialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        binding = FragmentPresetEditorBinding.inflate(LayoutInflater.from(context))
+        _binding = FragmentPresetEditorBinding.inflate(LayoutInflater.from(context))
+
         preset?.let { preset ->
             binding.apply {
                 editPresetName.setText(preset.name)
@@ -167,6 +176,11 @@ class PresetEditorFragment : DialogFragment() {
         return if (time != 0L) time else DEFAULT_TIME
     }
 
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
+    }
+
     companion object {
         private const val MINUTES = 1
         private const val HOURS = 2
@@ -182,7 +196,6 @@ class PresetEditorFragment : DialogFragment() {
         const val CATEGORY_ID = "PresetEditorFragment.CATEGORY_ID"
         const val PRESET_NAME = "PresetEditorFragment.PRESET_NAME"
         const val PRESET_TIME = "PresetEditorFragment.PRESET_TIME"
-        const val UPDATE = "PresetEditorFragment.UPDATE"
 
         fun show(manager: FragmentManager, preset: Preset? = null) {
             val dialogFragment = PresetEditorFragment()

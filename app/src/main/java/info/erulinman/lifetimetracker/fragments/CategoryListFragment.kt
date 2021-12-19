@@ -3,9 +3,7 @@ package info.erulinman.lifetimetracker.fragments
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.lifecycle.ViewModelProvider
@@ -13,11 +11,10 @@ import androidx.recyclerview.selection.SelectionPredicates
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.selection.StorageStrategy
 import dagger.Lazy
-import info.erulinman.lifetimetracker.MainApplication
 import info.erulinman.lifetimetracker.R
 import info.erulinman.lifetimetracker.adapters.CategoryAdapter
 import info.erulinman.lifetimetracker.databinding.FragmentCategoryListBinding
-import info.erulinman.lifetimetracker.di.AppComponent
+import info.erulinman.lifetimetracker.di.appComponent
 import info.erulinman.lifetimetracker.selection.CategoryItemDetailsLookup
 import info.erulinman.lifetimetracker.selection.CategoryItemKeyProvider
 import info.erulinman.lifetimetracker.fragments.dialogs.CategoryEditorFragment
@@ -26,7 +23,21 @@ import info.erulinman.lifetimetracker.viewmodels.CategoryListViewModelFactory
 import java.lang.NullPointerException
 import javax.inject.Inject
 
-class CategoryListFragment : Fragment(), Selection {
+class CategoryListFragment : Fragment(R.layout.fragment_category_list), Selection {
+
+    private var _adapter: CategoryAdapter? = null
+    private val adapter: CategoryAdapter
+        get() {
+            checkNotNull(_adapter)
+            return _adapter as CategoryAdapter
+        }
+
+    private var _binding: FragmentCategoryListBinding? = null
+    private val binding: FragmentCategoryListBinding
+        get() {
+            checkNotNull(_binding)
+            return _binding as FragmentCategoryListBinding
+        }
 
     @Inject lateinit var viewModelFactory: Lazy<CategoryListViewModelFactory>
 
@@ -37,8 +48,6 @@ class CategoryListFragment : Fragment(), Selection {
 
     private var tracker: SelectionTracker<Long>? = null
 
-    private lateinit var binding: FragmentCategoryListBinding
-
     override val hasSelection: Boolean
         get() = tracker?.hasSelection() ?: false
 
@@ -47,37 +56,39 @@ class CategoryListFragment : Fragment(), Selection {
     }
 
     override fun onAttach(context: Context) {
-        (context.applicationContext as MainApplication)
-            .appComponent
-            .inject(this)
+        appComponent.inject(this)
         super.onAttach(context)
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentCategoryListBinding.inflate(inflater, container, false)
-        val categoryAdapter = CategoryAdapter { category -> categoryOnClick(category.id) }
-        binding.recyclerView.adapter = categoryAdapter
-        observeViewModel(categoryAdapter)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        _adapter = CategoryAdapter { category -> categoryOnClick(category.id) }
 
+        _binding = FragmentCategoryListBinding.bind(view).apply {
+            recyclerView.adapter = adapter
+        }
+
+        observeViewModel()
+
+        setSelectionTracker()
+        setTrackerObserver()
+
+        setCategoryEditorFragmentListener()
+
+        super.onViewCreated(view, savedInstanceState)
+    }
+
+    private fun setSelectionTracker() {
         tracker = SelectionTracker.Builder(
             SELECTION_TRACKER_ID,
             binding.recyclerView,
-            CategoryItemKeyProvider(categoryAdapter),
+            CategoryItemKeyProvider(adapter),
             CategoryItemDetailsLookup(binding.recyclerView),
             StorageStrategy.createLongStorage()
         ).withSelectionPredicate(
             SelectionPredicates.createSelectAnything()
         ).build()
 
-        categoryAdapter.setTracker(tracker)
-        setTrackerObserver()
-        setCategoryEditorFragmentListener()
-
-        return binding.root
+        adapter.setTracker(tracker)
     }
 
     private fun setTrackerObserver() {
@@ -121,9 +132,9 @@ class CategoryListFragment : Fragment(), Selection {
         }
     }
 
-    private fun observeViewModel(categoryAdapter: CategoryAdapter) = viewModel.apply {
+    private fun observeViewModel() = viewModel.apply {
         categories.observe(viewLifecycleOwner) {
-            it?.let {categoryAdapter.submitList(it)}
+            it?.let {adapter.submitList(it)}
         }
         hasSelection.observe(viewLifecycleOwner) { hasSelection ->
             if (!hasSelection) {
@@ -154,9 +165,11 @@ class CategoryListFragment : Fragment(), Selection {
         tracker?.onRestoreInstanceState(savedInstanceState)
     }
 
-    override fun onDestroy() {
+    override fun onDestroyView() {
+        _adapter = null
+        _binding = null
         tracker = null
-        super.onDestroy()
+        super.onDestroyView()
     }
 
     companion object {

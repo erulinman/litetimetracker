@@ -11,43 +11,41 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import info.erulinman.lifetimetracker.data.entity.Preset
+import info.erulinman.lifetimetracker.di.appComponent
 import info.erulinman.lifetimetracker.utilities.Constants
 import info.erulinman.lifetimetracker.utilities.toListHHMMSS
 import info.erulinman.lifetimetracker.utilities.toStringHHMMSS
 import javax.inject.Inject
 
 class TimerService: Service() {
+    private val binder = LocalBinder()
+
     private val presets = mutableListOf<Preset>()
 
-    private val _time = MutableLiveData<String>()
-    private val _presetName = MutableLiveData<String>()
-    private val _state = MutableLiveData(INITIALIZED)
-    private val _canSkip = MutableLiveData(false)
-
-    private var timer: Timer? = null
     private var currentPresetDuration: Long = ZERO_PRESET_DURATION
     private var currentPresetRemaining: Long? = null
     private var currentPresetIndex: Int = ZERO_PRESET_INDEX
 
+    private val _time = MutableLiveData<String>()
+    val time: LiveData<String> get() = _time
+
+    private val _presetName = MutableLiveData<String>()
+    val presetName: LiveData<String> get() = _presetName
+
+    private val _state = MutableLiveData(INITIALIZED)
+    val state: LiveData<String> get() = _state
+
+    private val _canSkip = MutableLiveData(false)
+    val canSkip: LiveData<Boolean> get() = _canSkip
+
+    private var timer: Timer? = null
+
     @Inject lateinit var notificationHelper: NotificationHelper
-
-    private lateinit var binder: LocalBinder
-
-    val time: LiveData<String>
-        get() = _time
-    val presetName: LiveData<String>
-        get() = _presetName
-    val state: LiveData<String>
-        get() = _state
-    val canSkip: LiveData<Boolean>
-        get() = _canSkip
 
     override fun onCreate() {
         Log.d(Constants.DEBUG_TAG, "TimerService.onCreate()")
-        (applicationContext as MainApplication)
-            .appComponent
-            .inject(this)
-        binder = LocalBinder()
+        binder.set(this) // manual setter because getting memory leak from inner LocalBinder
+        appComponent.inject(this)
         startForeground(
             NotificationHelper.NOTIFICATION_ID,
             notificationHelper.getStartedNotificationBuilder().build()
@@ -57,7 +55,6 @@ class TimerService: Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.d(Constants.DEBUG_TAG, "TimerService.onStartCommand()")
-        super.onStartCommand(intent, flags, startId)
         intent?.let {
             when (it.action) {
                 START -> startTimer()
@@ -136,10 +133,6 @@ class TimerService: Service() {
         Log.d(Constants.DEBUG_TAG, "TimerService.runNextPreset()")
         currentPresetIndex++
         presets.getOrNull(currentPresetIndex)?.let { nextPreset ->
-            Log.d(
-                Constants.DEBUG_TAG,
-                "TimerService.runNextPreset(): there is new preset: $nextPreset"
-            )
             currentPresetDuration = nextPreset.time
             _presetName.value = nextPreset.name
             startTimer()
@@ -149,7 +142,6 @@ class TimerService: Service() {
         _canSkip.value = false
         _time.value = getString(R.string.text_view_timer_finished)
         notificationHelper.notifyWhenFinished()
-        Log.d(Constants.DEBUG_TAG, "TimerService.runNextPreset(): there is no new preset")
     }
 
     fun closeService(sendBroadcast: Boolean = false) {
@@ -157,11 +149,28 @@ class TimerService: Service() {
         stopTimer()
         stopForeground(true)
         stopSelf()
-        if (sendBroadcast) LocalBroadcastManager.getInstance(this).sendBroadcast(Intent(CLOSE))
+        if (sendBroadcast) {
+            Log.d(Constants.DEBUG_TAG, "TimerService.sendBroadcast()")
+            LocalBroadcastManager.getInstance(this).sendBroadcast(Intent(CLOSE))
+        }
     }
 
-    inner class LocalBinder: Binder() {
-        fun getService(): TimerService = this@TimerService
+    override fun onDestroy() {
+        Log.d(Constants.DEBUG_TAG, "TimerService.onDestroy()")
+        binder.set(null)
+        super.onDestroy()
+    }
+
+    class LocalBinder: Binder() {
+        private var service: TimerService? = null
+
+        fun set(service: TimerService?) {
+            this.service = service
+        }
+
+        fun getService(): TimerService {
+            return service ?: throw NullPointerException("Got null value from bound service")
+        }
     }
 
     private inner class Timer(millisInFuture: Long) : CountDownTimer(millisInFuture, ONE_SECOND_INTERVAL) {

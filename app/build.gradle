@@ -49,6 +49,9 @@ android {
 
 dependencies {
 
+    // LeakCanary
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'
+
     // Dagger
     implementation "com.google.dagger:dagger:2.40.4"
     kapt "com.google.dagger:dagger-compiler:2.40.4"

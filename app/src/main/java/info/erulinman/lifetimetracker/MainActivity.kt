@@ -22,10 +22,22 @@ class MainActivity: AppCompatActivity(), Navigator {
     private val currentFragment: Fragment
         get() = supportFragmentManager.findFragmentById(R.id.mainFragmentContainer)!!
 
-    private var broadcastManager: LocalBroadcastManager? = null
+    private val broadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            Log.d(Constants.DEBUG_TAG, "MainActivity.broadcastReceiver.onReceive()")
+            intent?.let { it ->
+                if (it.action == TimerService.CLOSE)
+                    needToCloseTimerFragment = true
+            }
+        }
+    }
+
     private var serviceConnection: ServiceConnection? = null
+
     private var timerService: TimerService? = null
+
     private var bound = false
+
     private var needToCloseTimerFragment = false
 
     private lateinit var binding: ActivityMainBinding
@@ -107,35 +119,28 @@ class MainActivity: AppCompatActivity(), Navigator {
             Log.d(Constants.DEBUG_TAG, "MainActivity.unbindTimerService()")
             serviceConnection?.let { unbindService(it) }
             bound = false
+            timerService = null
         }
     }
 
     override fun enableBroadcast() {
         Log.d(Constants.DEBUG_TAG, "MainActivity.enableBroadcast(): $currentFragment")
-        val broadcastReceiver = object : BroadcastReceiver() {
-            override fun onReceive(context: Context?, intent: Intent?) {
-                Log.d(Constants.DEBUG_TAG, "MainActivity.broadcastReceiver.onReceive()")
-                intent?.let {
-                    if (it.action == TimerService.CLOSE) {
-                        needToCloseTimerFragment = true
-                        if (ExitFragment.isShowing) ExitFragment.close()
-                    }
-                }
-            }
-        }
-        broadcastManager = LocalBroadcastManager.getInstance(this).apply {
-            registerReceiver(broadcastReceiver, IntentFilter(TimerService.CLOSE))
-        }
+        LocalBroadcastManager.getInstance(this)
+            .registerReceiver(broadcastReceiver, IntentFilter(TimerService.CLOSE))
     }
 
     override fun disableBroadcast() {
         Log.d(Constants.DEBUG_TAG, "MainActivity.disableBroadcast()")
-        broadcastManager = null
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver)
         needToCloseTimerFragment = false
     }
 
-    override fun setServiceConnection(presets: List<Preset>) {
+    override fun setServiceConnection(presets: List<Preset>?) {
         Log.d(Constants.DEBUG_TAG, "MainActivity.setServiceConnection()")
+        if (presets == null) {
+            serviceConnection = null
+            return
+        }
         serviceConnection = object : ServiceConnection {
             override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
                 Log.d(Constants.DEBUG_TAG, "MainActivity.setServiceConnection().onServiceConnected()")
@@ -144,8 +149,8 @@ class MainActivity: AppCompatActivity(), Navigator {
                     if (currentFragment is TimerFragment) {
                         (currentFragment as TimerFragment).setObservers(this)
                     }
+                    bound = true
                 }
-                bound = true
             }
 
             override fun onServiceDisconnected(name: ComponentName?) {
@@ -154,7 +159,9 @@ class MainActivity: AppCompatActivity(), Navigator {
                     Log.d(Constants.DEBUG_TAG, "")
                     supportFragmentManager.popBackStack()
                 }
-                bound = false
+                val exitFragment = supportFragmentManager.findFragmentByTag(ExitFragment.TAG)
+                    ?: return
+                if ((exitFragment as ExitFragment).isShowing) exitFragment.dismiss()
             }
         }
     }
@@ -191,6 +198,11 @@ class MainActivity: AppCompatActivity(), Navigator {
         getString(stringRes),
         Toast.LENGTH_SHORT
     ).show()
+
+    override fun onDestroy() {
+        Log.d(Constants.DEBUG_TAG, "MainActivity.onDestroy()")
+        super.onDestroy()
+    }
 
     override fun setExitFragmentListener() {
         supportFragmentManager.setFragmentResultListener(

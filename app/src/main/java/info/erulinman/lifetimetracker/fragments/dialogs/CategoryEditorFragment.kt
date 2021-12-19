@@ -19,8 +19,16 @@ import info.erulinman.lifetimetracker.data.entity.Category
 import info.erulinman.lifetimetracker.databinding.FragmentAddCategoryBinding
 
 class CategoryEditorFragment: DialogFragment() {
-    private lateinit var binding: FragmentAddCategoryBinding
+
+    private var _binding: FragmentAddCategoryBinding? = null
+    private val binding: FragmentAddCategoryBinding
+        get() {
+            checkNotNull(_binding)
+            return _binding as FragmentAddCategoryBinding
+        }
+
     private lateinit var dialog: AlertDialog
+
     private var category: Category? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,7 +37,8 @@ class CategoryEditorFragment: DialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        binding = FragmentAddCategoryBinding.inflate(LayoutInflater.from(context))
+        _binding = FragmentAddCategoryBinding.inflate(LayoutInflater.from(context))
+
         category?.let {
             binding.editCategoryName.setText(it.name)
         }
@@ -43,12 +52,7 @@ class CategoryEditorFragment: DialogFragment() {
                 bundleOf(
                     RESPONSE_KEY to which,
                     CATEGORY_NAME to currentCategoryName,
-                    CATEGORY_ID to categoryId,
-                    /*
-                    UPDATE boolean flag is not used as in PresetEditorFragment
-                    because calling this fragment to update the category
-                    unique and expecting only from PresetListFragment
-                    */
+                    CATEGORY_ID to categoryId
                 )
             )
         }
@@ -117,6 +121,11 @@ class CategoryEditorFragment: DialogFragment() {
                 }
             )
         }
+    }
+
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
     }
 
     companion object {
