@@ -8,24 +8,26 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.selection.SelectionPredicates
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.selection.StorageStrategy
+import androidx.recyclerview.widget.ConcatAdapter
 import info.erulinman.lifetimetracker.R
+import info.erulinman.lifetimetracker.adapters.AddButtonAdapter
 import info.erulinman.lifetimetracker.adapters.PresetAdapter
 import info.erulinman.lifetimetracker.data.entity.Category
 import info.erulinman.lifetimetracker.data.entity.Preset
-import info.erulinman.lifetimetracker.databinding.FragmentPresetListBinding
+import info.erulinman.lifetimetracker.databinding.FragmentRecyclerViewBinding
 import info.erulinman.lifetimetracker.di.appComponent
 import info.erulinman.lifetimetracker.fragments.dialogs.CategoryEditorFragment
 import info.erulinman.lifetimetracker.selection.PresetItemDetailsLookup
 import info.erulinman.lifetimetracker.selection.PresetItemKeyProvider
 import info.erulinman.lifetimetracker.fragments.dialogs.PresetEditorFragment
+import info.erulinman.lifetimetracker.selection.PresetSelectionPredicate
 import info.erulinman.lifetimetracker.viewmodels.PresetListViewModel
 import info.erulinman.lifetimetracker.viewmodels.PresetListViewModelFactory
 import javax.inject.Inject
 
-class PresetListFragment : Fragment(R.layout.fragment_preset_list), Selection {
+class PresetListFragment : Fragment(R.layout.fragment_recycler_view), Selection {
 
     private var _adapter: PresetAdapter? = null
     private val adapter: PresetAdapter
@@ -34,11 +36,11 @@ class PresetListFragment : Fragment(R.layout.fragment_preset_list), Selection {
             return _adapter as PresetAdapter
         }
 
-    private var _binding: FragmentPresetListBinding? = null
-    private val binding: FragmentPresetListBinding
+    private var _binding: FragmentRecyclerViewBinding? = null
+    private val binding: FragmentRecyclerViewBinding
         get() {
             checkNotNull(_binding)
-            return _binding as FragmentPresetListBinding
+            return _binding as FragmentRecyclerViewBinding
         }
 
     @Inject lateinit var viewModelFactory: PresetListViewModelFactory.Factory
@@ -63,10 +65,11 @@ class PresetListFragment : Fragment(R.layout.fragment_preset_list), Selection {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         _adapter = PresetAdapter { preset -> editPreset(preset) }
+        val addButtonImplAdapter = AddButtonAdapter { addPreset() }
+        val concatAdapter = ConcatAdapter(adapter, addButtonImplAdapter)
 
-        _binding = FragmentPresetListBinding.bind(view).apply {
-            addNewPresetButton.setOnClickListener { addPreset() }
-            recyclerView.adapter = adapter
+        _binding = FragmentRecyclerViewBinding.bind(view).apply {
+            recyclerView.adapter = concatAdapter
         }
 
         observeViewModel()
@@ -88,7 +91,8 @@ class PresetListFragment : Fragment(R.layout.fragment_preset_list), Selection {
             PresetItemDetailsLookup(binding.recyclerView),
             StorageStrategy.createLongStorage()
         ).withSelectionPredicate(
-            SelectionPredicates.createSelectAnything()
+            // Used a custom predicate to exclude selection of AddButtonAdapter element
+            PresetSelectionPredicate()
         ).build()
 
         adapter.setTracker(tracker)

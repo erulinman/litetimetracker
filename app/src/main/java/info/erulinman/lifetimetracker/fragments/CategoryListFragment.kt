@@ -13,7 +13,7 @@ import androidx.recyclerview.selection.StorageStrategy
 import dagger.Lazy
 import info.erulinman.lifetimetracker.R
 import info.erulinman.lifetimetracker.adapters.CategoryAdapter
-import info.erulinman.lifetimetracker.databinding.FragmentCategoryListBinding
+import info.erulinman.lifetimetracker.databinding.FragmentRecyclerViewBinding
 import info.erulinman.lifetimetracker.di.appComponent
 import info.erulinman.lifetimetracker.selection.CategoryItemDetailsLookup
 import info.erulinman.lifetimetracker.selection.CategoryItemKeyProvider
@@ -23,7 +23,7 @@ import info.erulinman.lifetimetracker.viewmodels.CategoryListViewModelFactory
 import java.lang.NullPointerException
 import javax.inject.Inject
 
-class CategoryListFragment : Fragment(R.layout.fragment_category_list), Selection {
+class CategoryListFragment : Fragment(R.layout.fragment_recycler_view), Selection {
 
     private var _adapter: CategoryAdapter? = null
     private val adapter: CategoryAdapter
@@ -32,11 +32,11 @@ class CategoryListFragment : Fragment(R.layout.fragment_category_list), Selectio
             return _adapter as CategoryAdapter
         }
 
-    private var _binding: FragmentCategoryListBinding? = null
-    private val binding: FragmentCategoryListBinding
+    private var _binding: FragmentRecyclerViewBinding? = null
+    private val binding: FragmentRecyclerViewBinding
         get() {
             checkNotNull(_binding)
-            return _binding as FragmentCategoryListBinding
+            return _binding as FragmentRecyclerViewBinding
         }
 
     @Inject lateinit var viewModelFactory: Lazy<CategoryListViewModelFactory>
@@ -63,7 +63,7 @@ class CategoryListFragment : Fragment(R.layout.fragment_category_list), Selectio
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         _adapter = CategoryAdapter { category -> categoryOnClick(category.id) }
 
-        _binding = FragmentCategoryListBinding.bind(view).apply {
+        _binding = FragmentRecyclerViewBinding.bind(view).apply {
             recyclerView.adapter = adapter
         }
 
