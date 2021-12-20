@@ -19,6 +19,7 @@ import info.erulinman.lifetimetracker.data.entity.Preset
 import info.erulinman.lifetimetracker.databinding.FragmentPresetEditorBinding
 import info.erulinman.lifetimetracker.utilities.Constants
 import info.erulinman.lifetimetracker.utilities.toListHHMMSS
+import info.erulinman.lifetimetracker.utilities.toStringOfTwoChar
 import java.util.concurrent.TimeUnit
 
 class PresetEditorFragment : DialogFragment() {
@@ -75,7 +76,7 @@ class PresetEditorFragment : DialogFragment() {
         }
 
         val focusChangeListener = View.OnFocusChangeListener { view, hasFocus ->
-            if (hasFocus)  (view as EditText).text.clear()
+            if (hasFocus) (view as EditText).text.clear()
         }
 
         binding.apply {
@@ -136,7 +137,8 @@ class PresetEditorFragment : DialogFragment() {
                         var minutes = binding.minutesInput.text.toString().toLongOrNull() ?: 0
                         minutes++
                         binding.minutesInput.setText(minutes.toString())
-                        binding.secondsInput.setText(ZERO_TIME_VALUE)
+                        val remainder = seconds - default
+                        binding.secondsInput.setText(remainder.toStringOfTwoChar())
                         setSelection(SELECTION)
                     }
                 }
@@ -146,7 +148,8 @@ class PresetEditorFragment : DialogFragment() {
                         var hours = binding.hoursInput.text.toString().toLongOrNull() ?: 0
                         hours++
                         binding.hoursInput.setText(hours.toString())
-                        binding.minutesInput.setText(ZERO_TIME_VALUE)
+                        val remainder = minutes - default
+                        binding.minutesInput.setText(remainder.toStringOfTwoChar())
                         setSelection(SELECTION)
                     }
                 }
@@ -185,7 +188,6 @@ class PresetEditorFragment : DialogFragment() {
         private const val MINUTES = 1
         private const val HOURS = 2
         private const val SELECTION: Int = 2
-        private const val ZERO_TIME_VALUE = "00"
         private const val ARG_PRESET = "PresetEditorFragment.ARG_PRESET"
         private const val TAG = "PresetEditorFragment.TAG"
         private const val DEFAULT_TIME = 1500000L
