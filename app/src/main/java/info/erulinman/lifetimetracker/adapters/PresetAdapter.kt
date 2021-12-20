@@ -1,19 +1,15 @@
 package info.erulinman.lifetimetracker.adapters
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.recyclerview.selection.ItemDetailsLookup
 import androidx.recyclerview.selection.SelectionTracker
-
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-
 import info.erulinman.lifetimetracker.data.entity.Preset
 import info.erulinman.lifetimetracker.databinding.RvItemPresetBinding
-import info.erulinman.lifetimetracker.utilities.Constants
 import info.erulinman.lifetimetracker.utilities.toListHHMMSS
 import info.erulinman.lifetimetracker.utilities.toStringHHMMSS
 
@@ -66,8 +62,8 @@ class PresetAdapter(private val onClick: (Preset) -> Unit) :
 
         fun getItemDetails(): ItemDetailsLookup.ItemDetails<Long> =
             object : ItemDetailsLookup.ItemDetails<Long>() {
+
                 override fun getPosition(): Int {
-                    Log.d(Constants.DEBUG_TAG, bindingAdapterPosition.toString())
                     return bindingAdapterPosition
                 }
 

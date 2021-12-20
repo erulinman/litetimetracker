@@ -16,15 +16,16 @@ import info.erulinman.lifetimetracker.fragments.Selection
 import info.erulinman.lifetimetracker.fragments.CategoryListFragment
 import info.erulinman.lifetimetracker.fragments.TimerFragment
 import info.erulinman.lifetimetracker.fragments.dialogs.ExitFragment
-import info.erulinman.lifetimetracker.utilities.Constants
+import info.erulinman.lifetimetracker.utilities.DEBUG_TAG
 
 class MainActivity: AppCompatActivity(), Navigator {
+
     private val currentFragment: Fragment
         get() = supportFragmentManager.findFragmentById(R.id.mainFragmentContainer)!!
 
     private val broadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            Log.d(Constants.DEBUG_TAG, "MainActivity.broadcastReceiver.onReceive()")
+            Log.d(DEBUG_TAG, "MainActivity.broadcastReceiver.onReceive()")
             intent?.let { it ->
                 if (it.action == TimerService.CLOSE)
                     needToCloseTimerFragment = true
@@ -43,7 +44,7 @@ class MainActivity: AppCompatActivity(), Navigator {
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Log.d(Constants.DEBUG_TAG, "MainActivity.onCreate()")
+        Log.d(DEBUG_TAG, "MainActivity.onCreate()")
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -64,9 +65,9 @@ class MainActivity: AppCompatActivity(), Navigator {
 
     override fun onStart() {
         super.onStart()
-        Log.d(Constants.DEBUG_TAG, "MainActivity.onStart(): $currentFragment")
+        Log.d(DEBUG_TAG, "MainActivity.onStart(): $currentFragment")
         if (needToCloseTimerFragment && currentFragment is TimerFragment) {
-            Log.d(Constants.DEBUG_TAG, "MainActivity.onStart(): close TimerFragment")
+            Log.d(DEBUG_TAG, "MainActivity.onStart(): close TimerFragment")
             supportFragmentManager.popBackStack()
         }
     }
@@ -106,7 +107,7 @@ class MainActivity: AppCompatActivity(), Navigator {
 
     override fun bindTimerService() {
         if (needToCloseTimerFragment) return
-        Log.d(Constants.DEBUG_TAG, "MainActivity.bindTimerService()")
+        Log.d(DEBUG_TAG, "MainActivity.bindTimerService()")
         val intent = Intent(this, TimerService::class.java)
         startForegroundService(intent)
         serviceConnection?.let {
@@ -116,7 +117,7 @@ class MainActivity: AppCompatActivity(), Navigator {
 
     override fun unbindTimerService() {
         if (bound) {
-            Log.d(Constants.DEBUG_TAG, "MainActivity.unbindTimerService()")
+            Log.d(DEBUG_TAG, "MainActivity.unbindTimerService()")
             serviceConnection?.let { unbindService(it) }
             bound = false
             timerService = null
@@ -124,26 +125,26 @@ class MainActivity: AppCompatActivity(), Navigator {
     }
 
     override fun enableBroadcast() {
-        Log.d(Constants.DEBUG_TAG, "MainActivity.enableBroadcast(): $currentFragment")
+        Log.d(DEBUG_TAG, "MainActivity.enableBroadcast(): $currentFragment")
         LocalBroadcastManager.getInstance(this)
             .registerReceiver(broadcastReceiver, IntentFilter(TimerService.CLOSE))
     }
 
     override fun disableBroadcast() {
-        Log.d(Constants.DEBUG_TAG, "MainActivity.disableBroadcast()")
+        Log.d(DEBUG_TAG, "MainActivity.disableBroadcast()")
         LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver)
         needToCloseTimerFragment = false
     }
 
     override fun setServiceConnection(presets: List<Preset>?) {
-        Log.d(Constants.DEBUG_TAG, "MainActivity.setServiceConnection()")
+        Log.d(DEBUG_TAG, "MainActivity.setServiceConnection()")
         if (presets == null) {
             serviceConnection = null
             return
         }
         serviceConnection = object : ServiceConnection {
             override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-                Log.d(Constants.DEBUG_TAG, "MainActivity.setServiceConnection().onServiceConnected()")
+                Log.d(DEBUG_TAG, "MainActivity.setServiceConnection().onServiceConnected()")
                 timerService = (service as TimerService.LocalBinder).getService().apply {
                     loadPresets(presets)
                     if (currentFragment is TimerFragment) {
@@ -154,9 +155,8 @@ class MainActivity: AppCompatActivity(), Navigator {
             }
 
             override fun onServiceDisconnected(name: ComponentName?) {
-                Log.d(Constants.DEBUG_TAG, "MainActivity.setServiceConnection().onServiceDisconnected()")
+                Log.d(DEBUG_TAG, "MainActivity.setServiceConnection().onServiceDisconnected()")
                 if (currentFragment is TimerFragment) {
-                    Log.d(Constants.DEBUG_TAG, "")
                     supportFragmentManager.popBackStack()
                 }
                 val exitFragment = supportFragmentManager.findFragmentByTag(ExitFragment.TAG)
@@ -167,12 +167,12 @@ class MainActivity: AppCompatActivity(), Navigator {
     }
 
     override fun getTimerService(): TimerService? {
-        Log.d(Constants.DEBUG_TAG, "MainActivity.getTimerService()")
+        Log.d(DEBUG_TAG, "MainActivity.getTimerService()")
         return timerService
     }
 
     override fun onBackPressed() {
-        Log.d(Constants.DEBUG_TAG, "MainActivity.onBackPressed()")
+        Log.d(DEBUG_TAG, "MainActivity.onBackPressed()")
         when (currentFragment) {
             is Selection -> (currentFragment as Selection).run {
                 if (hasSelection) {
@@ -200,7 +200,7 @@ class MainActivity: AppCompatActivity(), Navigator {
     ).show()
 
     override fun onDestroy() {
-        Log.d(Constants.DEBUG_TAG, "MainActivity.onDestroy()")
+        Log.d(DEBUG_TAG, "MainActivity.onDestroy()")
         super.onDestroy()
     }
 

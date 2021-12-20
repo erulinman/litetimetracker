@@ -12,7 +12,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import info.erulinman.lifetimetracker.data.entity.Preset
 import info.erulinman.lifetimetracker.di.appComponent
-import info.erulinman.lifetimetracker.utilities.Constants
+import info.erulinman.lifetimetracker.utilities.DEBUG_TAG
 import info.erulinman.lifetimetracker.utilities.toListHHMMSS
 import info.erulinman.lifetimetracker.utilities.toStringHHMMSS
 import javax.inject.Inject
@@ -43,7 +43,7 @@ class TimerService: Service() {
     @Inject lateinit var notificationHelper: NotificationHelper
 
     override fun onCreate() {
-        Log.d(Constants.DEBUG_TAG, "TimerService.onCreate()")
+        Log.d(DEBUG_TAG, "TimerService.onCreate()")
         binder.set(this) // manual setter because getting memory leak from inner LocalBinder
         appComponent.inject(this)
         startForeground(
@@ -54,7 +54,7 @@ class TimerService: Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        Log.d(Constants.DEBUG_TAG, "TimerService.onStartCommand()")
+        Log.d(DEBUG_TAG, "TimerService.onStartCommand()")
         intent?.let {
             when (it.action) {
                 START -> startTimer()
@@ -70,13 +70,13 @@ class TimerService: Service() {
     override fun onBind(intent: Intent?): IBinder = binder
 
     override fun onTaskRemoved(rootIntent: Intent?) {
-        Log.d(Constants.DEBUG_TAG, "TimerService.onTaskRemoved()")
+        Log.d(DEBUG_TAG, "TimerService.onTaskRemoved()")
         closeService()
     }
 
     fun loadPresets(_presets: List<Preset>) {
         if (state.value == INITIALIZED && _presets.isNotEmpty()) {
-            Log.d(Constants.DEBUG_TAG, "TimerService.loadPresets()")
+            Log.d(DEBUG_TAG, "TimerService.loadPresets()")
             presets.apply {
                 addAll(_presets)
                 first().let { firstPreset ->
@@ -90,7 +90,7 @@ class TimerService: Service() {
     }
 
     fun startTimer() {
-        Log.d(Constants.DEBUG_TAG, "TimerService.startTimer()")
+        Log.d(DEBUG_TAG, "TimerService.startTimer()")
         if (timer == null) {
             timer = Timer(
                 currentPresetRemaining ?: (currentPresetDuration + TIME_COMPENSATION)
@@ -102,7 +102,7 @@ class TimerService: Service() {
     }
 
     fun stopTimer() {
-        Log.d(Constants.DEBUG_TAG, "TimerService.stopTimer()")
+        Log.d(DEBUG_TAG, "TimerService.stopTimer()")
         timer?.cancel()
         timer = null
         _state.value = STOPPED
@@ -110,7 +110,7 @@ class TimerService: Service() {
     }
 
     fun skipPreset() {
-        Log.d(Constants.DEBUG_TAG, "TimerService.skipPreset()")
+        Log.d(DEBUG_TAG, "TimerService.skipPreset()")
         stopTimer()
         currentPresetRemaining = null
         runNextPreset()
@@ -130,7 +130,7 @@ class TimerService: Service() {
     }
 
     private fun runNextPreset() {
-        Log.d(Constants.DEBUG_TAG, "TimerService.runNextPreset()")
+        Log.d(DEBUG_TAG, "TimerService.runNextPreset()")
         currentPresetIndex++
         presets.getOrNull(currentPresetIndex)?.let { nextPreset ->
             currentPresetDuration = nextPreset.time
@@ -145,18 +145,18 @@ class TimerService: Service() {
     }
 
     fun closeService(sendBroadcast: Boolean = false) {
-        Log.d(Constants.DEBUG_TAG, "TimerService.closeService()")
+        Log.d(DEBUG_TAG, "TimerService.closeService()")
         stopTimer()
         stopForeground(true)
         stopSelf()
         if (sendBroadcast) {
-            Log.d(Constants.DEBUG_TAG, "TimerService.sendBroadcast()")
+            Log.d(DEBUG_TAG, "TimerService.sendBroadcast()")
             LocalBroadcastManager.getInstance(this).sendBroadcast(Intent(CLOSE))
         }
     }
 
     override fun onDestroy() {
-        Log.d(Constants.DEBUG_TAG, "TimerService.onDestroy()")
+        Log.d(DEBUG_TAG, "TimerService.onDestroy()")
         binder.set(null)
         super.onDestroy()
     }
@@ -180,7 +180,7 @@ class TimerService: Service() {
             } else {
                 val timeInString = millisUntilFinished.toListHHMMSS().toStringHHMMSS()
                 Log.d(
-                    Constants.DEBUG_TAG,
+                    DEBUG_TAG,
                     "TimerService.Timer.onTick(): on string - $timeInString, on long - $millisUntilFinished}"
                 )
                 _time.value = timeInString

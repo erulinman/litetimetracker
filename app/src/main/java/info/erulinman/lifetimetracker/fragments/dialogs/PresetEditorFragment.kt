@@ -5,7 +5,6 @@ import android.content.DialogInterface
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.EditText
@@ -17,7 +16,6 @@ import androidx.fragment.app.FragmentManager
 import info.erulinman.lifetimetracker.R
 import info.erulinman.lifetimetracker.data.entity.Preset
 import info.erulinman.lifetimetracker.databinding.FragmentPresetEditorBinding
-import info.erulinman.lifetimetracker.utilities.Constants
 import info.erulinman.lifetimetracker.utilities.toListHHMMSS
 import info.erulinman.lifetimetracker.utilities.toStringOfTwoChar
 import java.util.concurrent.TimeUnit
@@ -166,7 +164,6 @@ class PresetEditorFragment : DialogFragment() {
         val hours = binding.hoursInput.text.toString().toLongOrNull()?.let {
             TimeUnit.HOURS.toMillis(it)
         } ?: 0
-        Log.d(Constants.DEBUG_TAG, "hours: $hours")
         val minutes = binding.minutesInput.text.toString().toLongOrNull()?.let {
             TimeUnit.MINUTES.toMillis(it)
         } ?: 0

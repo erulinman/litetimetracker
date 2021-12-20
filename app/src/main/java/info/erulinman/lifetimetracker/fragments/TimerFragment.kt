@@ -10,7 +10,7 @@ import info.erulinman.lifetimetracker.R
 import info.erulinman.lifetimetracker.TimerService
 import info.erulinman.lifetimetracker.data.entity.Preset
 import info.erulinman.lifetimetracker.databinding.FragmentTimerBinding
-import info.erulinman.lifetimetracker.utilities.Constants
+import info.erulinman.lifetimetracker.utilities.DEBUG_TAG
 
 class TimerFragment : Fragment(R.layout.fragment_timer) {
 
@@ -22,7 +22,7 @@ class TimerFragment : Fragment(R.layout.fragment_timer) {
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Log.d(Constants.DEBUG_TAG, "TimerFragment.onCreate()")
+        Log.d(DEBUG_TAG, "TimerFragment.onCreate()")
 
         requireArguments().getParcelableArrayList<Preset>(ARG_PRESET_LIST)?.let { presets ->
             navigator().setServiceConnection(presets)
@@ -45,7 +45,7 @@ class TimerFragment : Fragment(R.layout.fragment_timer) {
     }
 
     fun setObservers(timerService: TimerService) {
-        Log.d(Constants.DEBUG_TAG, "TimerFragment.setObservers()")
+        Log.d(DEBUG_TAG, "TimerFragment.setObservers()")
         timerService.apply {
             presetName.observe(viewLifecycleOwner) { presetName ->
                 navigator().updateAppBarTitle(presetName)
@@ -76,7 +76,7 @@ class TimerFragment : Fragment(R.layout.fragment_timer) {
     }
 
     override fun onStart() {
-        Log.d(Constants.DEBUG_TAG, "TimerFragment.onStart()")
+        Log.d(DEBUG_TAG, "TimerFragment.onStart()")
 
         navigator().bindTimerService()
         navigator().setExitFragmentListener()
@@ -85,7 +85,7 @@ class TimerFragment : Fragment(R.layout.fragment_timer) {
     }
 
     override fun onStop() {
-        Log.d(Constants.DEBUG_TAG, "TimerFragment.onStop()")
+        Log.d(DEBUG_TAG, "TimerFragment.onStop()")
 
         navigator().unbindTimerService()
 
@@ -93,7 +93,7 @@ class TimerFragment : Fragment(R.layout.fragment_timer) {
     }
 
     override fun onDestroy() {
-        Log.d(Constants.DEBUG_TAG, "TimerFragment.onDestroy()")
+        Log.d(DEBUG_TAG, "TimerFragment.onDestroy()")
 
         navigator().disableBroadcast()
         navigator().setServiceConnection(null)
@@ -105,7 +105,6 @@ class TimerFragment : Fragment(R.layout.fragment_timer) {
         const val ARG_PRESET_LIST = "ARG_PRESET_LIST"
 
         fun newInstance(presets: List<Preset>) = TimerFragment().apply {
-            Log.d(Constants.DEBUG_TAG, "TimerFragment.newInstance()")
             arguments = bundleOf(
                 ARG_PRESET_LIST to ArrayList(presets)
             )
