@@ -30,36 +30,33 @@
         android:layout_gravity="end|bottom"
         android:contentDescription="@string/fab_content_description"
         android:backgroundTint="?attr/colorPrimary"
+        android:src="@drawable/ic_pause"
         app:fabCustomSize="72dp"
         app:maxImageSize="42dp"
         app:tint="?attr/colorOnPrimary"
         app:layout_constraintTop_toBottomOf="@id/timer"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:src="@drawable/ic_play"/>
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabSkip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_skip"
-        android:visibility="gone"
         android:contentDescription="@string/skip_button_content_description"
         android:backgroundTint="?attr/colorPrimary"
         app:tint="?attr/colorOnPrimary"
         app:layout_constraintTop_toTopOf="@id/fabMain"
         app:layout_constraintBottom_toBottomOf="@id/fabMain"
         app:layout_constraintStart_toEndOf="@id/fabMain"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:visibility="visible"/>
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabRestartCurrent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_restart"
-        android:visibility="visible"
         android:contentDescription="@string/skip_button_content_description"
         android:backgroundTint="?attr/colorPrimary"
         app:tint="?attr/colorOnPrimary"
