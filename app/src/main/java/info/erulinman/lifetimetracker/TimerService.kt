@@ -59,7 +59,8 @@ class TimerService: Service() {
             when (it.action) {
                 START -> startTimer()
                 STOP -> stopTimer()
-                RESTART -> restartPresets()
+                RESTART_ALL -> restartPresets()
+                RESTART_CURRENT -> restartCurrentPreset()
                 SKIP -> skipPreset()
                 CLOSE -> closeService(true)
             }
@@ -127,6 +128,13 @@ class TimerService: Service() {
                 startTimer()
             }
         }
+    }
+
+    fun restartCurrentPreset() {
+        if (state.value == INITIALIZED || state.value == FINISHED) return
+        if (state.value != STOPPED) stopTimer()
+        currentPresetRemaining = null
+        startTimer()
     }
 
     private fun runNextPreset() {
@@ -203,15 +211,16 @@ class TimerService: Service() {
         const val ZERO_PRESET_INDEX = 0
 
         const val INITIALIZED = "info.erulinman.lifetimetracker.TIMER.INITIALIZED"
-        const val STARTED     = "info.erulinman.lifetimetracker.TIMER.STARTED"
-        const val STOPPED     = "info.erulinman.lifetimetracker.TIMER.STOPPED"
-        const val FINISHED    = "info.erulinman.lifetimetracker.TIMER.FINISHED"
+        const val STARTED = "info.erulinman.lifetimetracker.TIMER.STARTED"
+        const val STOPPED = "info.erulinman.lifetimetracker.TIMER.STOPPED"
+        const val FINISHED = "info.erulinman.lifetimetracker.TIMER.FINISHED"
 
-        const val START   = "info.erulinman.lifetimetracker.TIMER.START"
-        const val STOP    = "info.erulinman.lifetimetracker.TIMER.STOP"
-        const val RESTART = "info.erulinman.lifetimetracker.TIMER.RESTART"
-        const val SKIP    = "info.erulinman.lifetimetracker.TIMER.SKIP"
-        const val CLOSE   = "info.erulinman.lifetimetracker.TIMER.CLOSE"
+        const val START = "info.erulinman.lifetimetracker.TIMER.START"
+        const val STOP = "info.erulinman.lifetimetracker.TIMER.STOP"
+        const val RESTART_ALL = "info.erulinman.lifetimetracker.TIMER.RESTART_ALL"
+        const val RESTART_CURRENT = "info.erulinman.lifetimetracker.TIMER.RESTART_CURRENT"
+        const val SKIP = "info.erulinman.lifetimetracker.TIMER.SKIP"
+        const val CLOSE = "info.erulinman.lifetimetracker.TIMER.CLOSE"
 
         private const val ONE_SECOND_INTERVAL: Long = 1000
         private const val TIME_COMPENSATION: Long = 999

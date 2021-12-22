@@ -112,8 +112,8 @@ class NotificationHelper @Inject constructor(context: Context) : ContextWrapper(
     private fun buildRestartAction(context: Context): NotificationCompat.Action {
         val pendingIntent = PendingIntent.getService(
             context,
-            ACTION_RESTART_ID,
-            ActionIntent(context, TimerService::class.java, TimerService.RESTART),
+            ACTION_RESTART_ALL_ID,
+            ActionIntent(context, TimerService::class.java, TimerService.RESTART_ALL),
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
         val title = getString(R.string.notification_action_title_restart)
@@ -161,7 +161,7 @@ class NotificationHelper @Inject constructor(context: Context) : ContextWrapper(
     companion object {
         private const val ACTION_START_ID = 51
         private const val ACTION_STOP_ID = 52
-        private const val ACTION_RESTART_ID = 53
+        private const val ACTION_RESTART_ALL_ID = 53
         private const val ACTION_SKIP_ID = 54
         private const val ACTION_CLOSE_ID = 55
 

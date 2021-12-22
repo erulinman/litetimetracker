@@ -50,7 +50,7 @@ class TimerFragment : Fragment(R.layout.fragment_timer) {
         Log.d(DEBUG_TAG, "TimerFragment.setObservers()")
         binding.fabSkip.setOnClickListener { timerService.skipPreset() }
         binding.fabRestartCurrent.setOnClickListener {
-            // TODO("Implement timerService.restartCurrentPreset()")
+            timerService.restartCurrentPreset()
         }
         timerService.apply {
             presetName.observe(viewLifecycleOwner) { presetName ->
