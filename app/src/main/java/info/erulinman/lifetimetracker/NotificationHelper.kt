@@ -42,7 +42,7 @@ class NotificationHelper @Inject constructor(context: Context) : ContextWrapper(
     fun getStartedNotificationBuilder(): NotificationCompat.Builder = notification
         .clearActions()
         .addAction(buildStopAction(this))
-        .addAction(buildSkipAction(this))
+        //.addAction(buildSkipAction(this))
         .addAction(buildCloseAction(this))
 
     fun updateStartedNotification(time: String) {
@@ -61,7 +61,7 @@ class NotificationHelper @Inject constructor(context: Context) : ContextWrapper(
                 .clearActions()
                 .setContentText(time)
                 .addAction(buildStartAction(this))
-                .addAction(buildSkipAction(this))
+                //.addAction(buildSkipAction(this))
                 .addAction(buildCloseAction(this))
                 .build()
         )
