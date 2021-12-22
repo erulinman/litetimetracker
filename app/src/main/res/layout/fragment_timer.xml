@@ -12,7 +12,6 @@
         android:id="@+id/timer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="?attr/actionBarSize"
         android:background="?attr/backgroundColor"
         android:textColor="?attr/colorOnBackground"
         android:textSize="@dimen/text_size_timer"
