@@ -4,9 +4,9 @@ import android.content.*
 import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
-import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
@@ -57,12 +57,6 @@ class MainActivity: AppCompatActivity(), Navigator {
         }
     }
 
-    /**
-     * Implementation of navigator interface functions
-     *
-     * TODO(description)
-     */
-
     override fun onStart() {
         super.onStart()
         Log.d(DEBUG_TAG, "MainActivity.onStart(): $currentFragment")
@@ -72,37 +66,50 @@ class MainActivity: AppCompatActivity(), Navigator {
         }
     }
 
-    override fun updateAppBar(iconRes: Int, title: String, action: () -> Unit) {
-        binding.apply {
-            appBarTitle.text = title
-            fab.setImageResource(iconRes)
-            fab.setOnClickListener {
-                action()
+    override fun onBackPressed() {
+        Log.d(DEBUG_TAG, "MainActivity.onBackPressed()")
+        when (currentFragment) {
+            is Selection -> (currentFragment as Selection).run {
+                if (hasSelection) {
+                    cancelSelection()
+                    return
+                }
+            }
+            is TimerFragment -> {
+                timerService?.let { timer ->
+                    if (timer.state.value != TimerService.FINISHED) {
+                        ExitFragment.show(supportFragmentManager)
+                        return
+                    }
+                    timer.closeService()
+                }
             }
         }
+        super.onBackPressed()
     }
 
-    override fun updateAppBarTitle(title: String) {
-        binding.appBarTitle.text = title
+    /**
+     * Implementation of navigator interface functions
+     *
+     * TODO(description)
+     */
+
+    override fun updateToolbar(title: String, actionIconRes: Int, action: () -> Unit) {
+        binding.title.text = title
+        binding.btnAction.setImageResource(actionIconRes)
+        binding.btnAction.setOnClickListener { action() }
     }
 
-    override fun updateAppBarTitle(visibility: Boolean) {
-        binding.appBarTitle.visibility = if (visibility) View.VISIBLE else View.GONE
+    override fun setToolbarActionVisibility(visibility: Boolean) {
+        binding.btnAction.isVisible = visibility
     }
 
-    override fun updateFabOnAppBar(iconRes: Int, action: () -> Unit) {
-        binding.fab.setImageResource(iconRes)
-        binding.fab.setOnClickListener {
-            action()
-        }
+    override fun updateTitle(title: String) {
+        binding.title.text = title
     }
 
-    override fun setOnClickListenerToAppBarTitle(actionOnClick: (() -> Unit)?) {
-        binding.appBarTitle.setOnClickListener(
-            actionOnClick?.let {
-                View.OnClickListener { it() }
-            }
-        )
+    override fun updateTitle(visibility: Boolean) {
+        binding.title.isVisible = visibility
     }
 
     override fun bindTimerService() {
@@ -171,38 +178,11 @@ class MainActivity: AppCompatActivity(), Navigator {
         return timerService
     }
 
-    override fun onBackPressed() {
-        Log.d(DEBUG_TAG, "MainActivity.onBackPressed()")
-        when (currentFragment) {
-            is Selection -> (currentFragment as Selection).run {
-                if (hasSelection) {
-                    cancelSelection()
-                    return
-                }
-            }
-            is TimerFragment -> {
-                timerService?.let { timer ->
-                    if (timer.state.value != TimerService.FINISHED) {
-                        ExitFragment.show(supportFragmentManager)
-                        return
-                    }
-                    timer.closeService()
-                }
-            }
-        }
-        super.onBackPressed()
-    }
-
     override fun showToast(stringRes: Int) = Toast.makeText(
         this,
         getString(stringRes),
         Toast.LENGTH_SHORT
     ).show()
-
-    override fun onDestroy() {
-        Log.d(DEBUG_TAG, "MainActivity.onDestroy()")
-        super.onDestroy()
-    }
 
     override fun setExitFragmentListener() {
         supportFragmentManager.setFragmentResultListener(

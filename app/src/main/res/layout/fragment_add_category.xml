@@ -2,7 +2,6 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@drawable/shape_dialog">
@@ -20,7 +19,7 @@
         android:textCursorDrawable="@drawable/shape_edit_text_cursor"
         android:textSize="@dimen/text_size_edit_preset_name"
         android:textColor="?attr/colorOnSecondary"
-        android:maxLength="30"
+        android:maxLength="@integer/maxCategoryNameLength"
         android:lines="1"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"

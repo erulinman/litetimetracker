@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.selection.ItemDetailsLookup
 import androidx.recyclerview.widget.RecyclerView
 import info.erulinman.lifetimetracker.databinding.RvItemAddButtonBinding
-import info.erulinman.lifetimetracker.selection.PresetSelectionPredicate.Companion.UNSELECTED
+import info.erulinman.lifetimetracker.utilities.UNSELECTED
 
 class AddButtonAdapter(
     private val onClick: () -> Unit

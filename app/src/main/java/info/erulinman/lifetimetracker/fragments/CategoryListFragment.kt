@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.lifecycle.ViewModelProvider
@@ -65,6 +66,8 @@ class CategoryListFragment : Fragment(R.layout.fragment_recycler_view), Selectio
 
         _binding = FragmentRecyclerViewBinding.bind(view).apply {
             recyclerView.adapter = adapter
+            fab.setImageResource(R.drawable.ic_plus)
+            fab.setOnClickListener { CategoryEditorFragment.show(parentFragmentManager) }
         }
 
         observeViewModel()
@@ -137,19 +140,20 @@ class CategoryListFragment : Fragment(R.layout.fragment_recycler_view), Selectio
             it?.let {adapter.submitList(it)}
         }
         hasSelection.observe(viewLifecycleOwner) { hasSelection ->
+            binding.fab.isVisible = !hasSelection
+            navigator().setToolbarActionVisibility(hasSelection)
+
             if (!hasSelection) {
-                navigator().updateAppBar(R.drawable.ic_plus, getString(R.string.app_name)) {
-                    CategoryEditorFragment.show(parentFragmentManager)
+                navigator().updateToolbar(getString(R.string.app_name), R.drawable.ic_plus) {
+                    // TODO("Create fragment to show some HELP information)
                 }
-                navigator().setOnClickListenerToAppBarTitle(null)
             } else {
                 tracker?.let { tracker ->
                     val counter = tracker.selection.size()
                     val title = "${getString(R.string.app_bar_title_counter)} $counter"
-                    navigator().updateAppBar(R.drawable.ic_delete, title) {
+                    navigator().updateToolbar(title, R.drawable.ic_delete) {
                         viewModel.deleteSelectedCategories(tracker.selection.toList())
                     }
-                    navigator().setOnClickListenerToAppBarTitle(null)
                 }
             }
         }

@@ -5,6 +5,7 @@ import android.content.DialogInterface
 import android.os.Bundle
 import android.view.View
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
@@ -65,11 +66,15 @@ class PresetListFragment : Fragment(R.layout.fragment_recycler_view), Selection 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         _adapter = PresetAdapter { preset -> editPreset(preset) }
-        val addButtonImplAdapter = AddButtonAdapter { addPreset() }
-        val concatAdapter = ConcatAdapter(adapter, addButtonImplAdapter)
+        val addButtonAdapter = AddButtonAdapter { addPreset() }
+        val concatAdapter = ConcatAdapter(adapter, addButtonAdapter)
+
+        navigator().setToolbarActionVisibility(true)
 
         _binding = FragmentRecyclerViewBinding.bind(view).apply {
             recyclerView.adapter = concatAdapter
+            fab.setImageResource(R.drawable.ic_play)
+            fab.setOnClickListener { runTimerFragment() }
         }
 
         observeViewModel()
@@ -183,21 +188,21 @@ class PresetListFragment : Fragment(R.layout.fragment_recycler_view), Selection 
             it?.let { hasSelection.refresh() }
         }
         hasSelection.observe(viewLifecycleOwner) { hasSelection ->
+            binding.fab.isVisible = !hasSelection
+
             if (!hasSelection) {
                 category.value?.let{ category ->
-                    navigator().updateAppBar(R.drawable.ic_play, category.name) {
-                        runTimerFragment()
+                    navigator().updateToolbar(category.name, R.drawable.ic_edit) {
+                        editCategory(category)
                     }
-                    navigator().setOnClickListenerToAppBarTitle { editCategory(category) }
                 }
             } else {
                 tracker?.let { tracker ->
                     val counter = tracker.selection.size()
                     val title = "${getString(R.string.app_bar_title_counter)} $counter"
-                    navigator().updateAppBar(R.drawable.ic_delete, title) {
+                    navigator().updateToolbar(title, R.drawable.ic_delete) {
                         viewModel.deleteSelectedPresets(tracker.selection.toList())
                     }
-                    navigator().setOnClickListenerToAppBarTitle(null)
                 }
             }
         }

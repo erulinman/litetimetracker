@@ -4,25 +4,13 @@ import info.erulinman.lifetimetracker.data.entity.Preset
 
 interface Navigator {
 
-    /**
-     * Used to set default state of bar.
-     *
-     * Default state:
-     *  - visible title without onClickListener
-     *  - fab with icon and action
-     */
-    fun updateAppBar(iconRes: Int, title: String, action: () -> Unit)
+    fun updateToolbar(title: String, actionIconRes: Int, action: () -> Unit)
 
-    fun updateAppBarTitle(title: String)
+    fun setToolbarActionVisibility(visibility: Boolean)
 
-    fun updateAppBarTitle(visibility: Boolean = false)
+    fun updateTitle(title: String)
 
-    /**
-     * Used in TimerFragment to set icon and fab action when timer state changes.
-     */
-    fun updateFabOnAppBar(iconRes: Int, action: () -> Unit)
-
-    fun setOnClickListenerToAppBarTitle(actionOnClick: (() -> Unit)?)
+    fun updateTitle(visibility: Boolean)
 
     fun bindTimerService()
 
@@ -35,10 +23,6 @@ interface Navigator {
     fun setServiceConnection(presets: List<Preset>?)
 
     fun getTimerService(): TimerService?
-
-    fun onStart()
-
-    fun onBackPressed()
 
     fun showToast(stringRes: Int)
 
