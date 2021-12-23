@@ -10,7 +10,7 @@ android {
     buildToolsVersion "30.0.3"
 
     defaultConfig {
-        applicationId "info.erulinman.lifetimetracker"
+        applicationId "info.erulinman.litetimetracker"
         minSdkVersion 26
         targetSdkVersion 30
         versionCode 1

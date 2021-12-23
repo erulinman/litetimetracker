@@ -1,5 +1,5 @@
 <resources>
-    <style name="Theme.LifeTimeTracker" parent="Theme.MaterialComponents.NoActionBar">
+    <style name="Theme.LiteTimeTracker" parent="Theme.MaterialComponents.NoActionBar">
         <item name="backgroundColor">@color/white</item>
         <item name="colorOnBackground">@color/black_hole</item>
         <item name="colorPrimary">@color/black_night</item>
