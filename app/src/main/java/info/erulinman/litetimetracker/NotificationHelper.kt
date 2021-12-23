@@ -22,7 +22,7 @@ class NotificationHelper @Inject constructor(context: Context) : ContextWrapper(
     )
     private val notification = NotificationCompat.Builder(context, CHANNEL_ID)
         .setCategory(NotificationCompat.CATEGORY_PROGRESS)
-        .setSmallIcon(R.drawable.ic_timer)
+        .setSmallIcon(R.drawable.ic_notification)
         .setVisibility(VISIBILITY_PUBLIC)
         .setOngoing(true)
         .setShowWhen(false)
@@ -41,14 +41,15 @@ class NotificationHelper @Inject constructor(context: Context) : ContextWrapper(
 
     fun getStartedNotificationBuilder(): NotificationCompat.Builder = notification
         .clearActions()
-        .addAction(buildStopAction(this))
+        //.addAction(buildStopAction(this))
         //.addAction(buildSkipAction(this))
-        .addAction(buildCloseAction(this))
+        //.addAction(buildCloseAction(this))
 
-    fun updateStartedNotification(time: String) {
+    fun updateStartedNotification(time: String, preset: String) {
         manager.notify(
             NOTIFICATION_ID,
             getStartedNotificationBuilder()
+                .setContentTitle(preset)
                 .setContentText(time)
                 .build()
         )
@@ -60,9 +61,9 @@ class NotificationHelper @Inject constructor(context: Context) : ContextWrapper(
             notification
                 .clearActions()
                 .setContentText(time)
-                .addAction(buildStartAction(this))
+                //.addAction(buildStartAction(this))
                 //.addAction(buildSkipAction(this))
-                .addAction(buildCloseAction(this))
+                //.addAction(buildCloseAction(this))
                 .build()
         )
     }
@@ -72,8 +73,9 @@ class NotificationHelper @Inject constructor(context: Context) : ContextWrapper(
             NOTIFICATION_ID,
             notification
                 .clearActions()
+                .setContentTitle(null)
                 .setContentText(getString(R.string.text_view_timer_finished))
-                .addAction(buildRestartAction(this))
+                //.addAction(buildRestartAction(this))
                 .addAction(buildCloseAction(this))
                 .build()
         )

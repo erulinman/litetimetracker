@@ -193,7 +193,7 @@ class TimerService: Service() {
                 )
                 _time.value = timeInString
                 currentPresetRemaining = millisUntilFinished
-                notificationHelper.updateStartedNotification(timeInString)
+                notificationHelper.updateStartedNotification(timeInString, presetName.value!!)
             }
         }
 
