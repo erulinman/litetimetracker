@@ -155,7 +155,7 @@ class MainActivity: AppCompatActivity(), Navigator {
                 timerService = (service as TimerService.LocalBinder).getService().apply {
                     loadPresets(presets)
                     if (currentFragment is TimerFragment) {
-                        (currentFragment as TimerFragment).setObservers(this)
+                        (currentFragment as TimerFragment).onBindService(this)
                     }
                     bound = true
                 }
@@ -169,13 +169,10 @@ class MainActivity: AppCompatActivity(), Navigator {
                 val exitFragment = supportFragmentManager.findFragmentByTag(ExitFragment.TAG)
                     ?: return
                 if ((exitFragment as ExitFragment).isShowing) exitFragment.dismiss()
+
+                unbindTimerService()
             }
         }
-    }
-
-    override fun getTimerService(): TimerService? {
-        Log.d(DEBUG_TAG, "MainActivity.getTimerService()")
-        return timerService
     }
 
     override fun showToast(stringRes: Int) = Toast.makeText(

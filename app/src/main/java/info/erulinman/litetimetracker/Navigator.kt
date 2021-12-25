@@ -22,8 +22,6 @@ interface Navigator {
 
     fun setServiceConnection(presets: List<Preset>?)
 
-    fun getTimerService(): TimerService?
-
     fun showToast(stringRes: Int)
 
     fun setExitFragmentListener()

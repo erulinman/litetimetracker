@@ -12,13 +12,20 @@ import info.erulinman.litetimetracker.data.entity.Preset
 import info.erulinman.litetimetracker.databinding.FragmentTimerBinding
 import info.erulinman.litetimetracker.utilities.DEBUG_TAG
 
-class TimerFragment : Fragment(R.layout.fragment_timer) {
+class TimerFragment : Fragment(R.layout.fragment_timer), TimerService.OnBindService {
 
     private var _binding: FragmentTimerBinding? = null
     private val binding: FragmentTimerBinding
         get() {
             checkNotNull(_binding)
             return _binding as FragmentTimerBinding
+        }
+
+    private var _service: TimerService? = null
+    private val service: TimerService
+        get() {
+            checkNotNull(_service)
+            return _service as TimerService
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,6 +41,8 @@ class TimerFragment : Fragment(R.layout.fragment_timer) {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        Log.d(DEBUG_TAG, "TimerFragment.onViewCreated()")
+
         _binding = FragmentTimerBinding.bind(view)
 
         navigator().setToolbarActionVisibility(false)
@@ -42,47 +51,52 @@ class TimerFragment : Fragment(R.layout.fragment_timer) {
     }
 
     override fun onDestroyView() {
+        Log.d(DEBUG_TAG, "TimerFragment.onDestroyView()")
         _binding = null
         super.onDestroyView()
     }
 
-    fun setObservers(timerService: TimerService) {
-        Log.d(DEBUG_TAG, "TimerFragment.setObservers()")
-        binding.fabSkip.setOnClickListener { timerService.skipPreset() }
+    override fun onBindService(service: TimerService) {
+        Log.d(DEBUG_TAG, "TimerFragment.onBindService()")
+        _service = service
+        observeTimerService()
+    }
+
+    private fun observeTimerService() {
+        Log.d(DEBUG_TAG, "TimerFragment.observeTimerService()")
+        binding.fabSkip.setOnClickListener { service.skipPreset() }
         binding.fabRestartCurrent.setOnClickListener {
-            timerService.restartCurrentPreset()
+            service.restartCurrentPreset()
         }
-        timerService.apply {
-            presetName.observe(viewLifecycleOwner) { presetName ->
-                navigator().updateTitle(presetName)
+        service.presetName.observe(viewLifecycleOwner) { presetName ->
+            navigator().updateTitle(presetName)
+        }
+        service.time.observe(viewLifecycleOwner) { time ->
+            binding.timer.text = time
+        }
+        service.state.observe(viewLifecycleOwner) { state -> when (state) {
+            TimerService.INITIALIZED -> service.startTimer()
+            TimerService.STOPPED -> {
+                binding.fabMain.setImageResource(R.drawable.ic_play)
+                binding.fabMain.setOnClickListener { service.startTimer() }
+                binding.fabRestartCurrent.isVisible = true
+                navigator().updateTitle(true)
             }
-            time.observe(viewLifecycleOwner) { time ->
-                binding.timer.text = time
+            TimerService.STARTED -> {
+                binding.fabMain.setImageResource(R.drawable.ic_pause)
+                binding.fabMain.setOnClickListener { service.stopTimer() }
+                binding.fabRestartCurrent.isVisible = true
+                navigator().updateTitle(true)
             }
-            state.observe(viewLifecycleOwner) { state -> when (state) {
-                TimerService.INITIALIZED -> startTimer()
-                TimerService.STOPPED -> {
-                    binding.fabMain.setImageResource(R.drawable.ic_play)
-                    binding.fabMain.setOnClickListener { startTimer() }
-                    binding.fabRestartCurrent.isVisible = true
-                    navigator().updateTitle(true)
-                }
-                TimerService.STARTED -> {
-                    binding.fabMain.setImageResource(R.drawable.ic_pause)
-                    binding.fabMain.setOnClickListener { stopTimer() }
-                    binding.fabRestartCurrent.isVisible = true
-                    navigator().updateTitle(true)
-                }
-                TimerService.FINISHED -> {
-                    binding.fabMain.setImageResource(R.drawable.ic_restart)
-                    binding.fabMain.setOnClickListener { restartPresets() }
-                    binding.fabRestartCurrent.isVisible = false
-                    navigator().updateTitle(false)
-                }
-            }}
-            canSkip.observe(viewLifecycleOwner) { canSkip ->
-                binding.fabSkip.isVisible = canSkip
+            TimerService.FINISHED -> {
+                binding.fabMain.setImageResource(R.drawable.ic_restart)
+                binding.fabMain.setOnClickListener { service.restartPresets() }
+                binding.fabRestartCurrent.isVisible = false
+                navigator().updateTitle(false)
             }
+        }}
+        service.canSkip.observe(viewLifecycleOwner) { canSkip ->
+            binding.fabSkip.isVisible = canSkip
         }
     }
 
@@ -99,6 +113,8 @@ class TimerFragment : Fragment(R.layout.fragment_timer) {
         Log.d(DEBUG_TAG, "TimerFragment.onStop()")
 
         navigator().unbindTimerService()
+
+        _service = null
 
         super.onStop()
     }

@@ -18,6 +18,11 @@ import info.erulinman.litetimetracker.utilities.toStringHHMMSS
 import javax.inject.Inject
 
 class TimerService: Service() {
+
+    interface OnBindService {
+        fun onBindService(service: TimerService)
+    }
+
     private val binder = LocalBinder()
 
     private val presets = mutableListOf<Preset>()
