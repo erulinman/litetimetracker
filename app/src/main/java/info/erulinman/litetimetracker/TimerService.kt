@@ -153,7 +153,7 @@ class TimerService: Service() {
         }
         _state.value = FINISHED
         _canSkip.value = false
-        _time.value = getString(R.string.text_view_timer_finished)
+        _time.value = getString(R.string.tv_timer_finish)
         notificationHelper.notifyWhenFinished()
     }
 

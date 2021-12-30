@@ -34,7 +34,7 @@ class NotificationHelper @Inject constructor(context: Context) : ContextWrapper(
     }
 
     private fun initChannel(): NotificationChannel {
-        val name = getString(R.string.notification_channel_name)
+        val name = getString(R.string.app_name)
         val importance = NotificationManager.IMPORTANCE_LOW
         return NotificationChannel(CHANNEL_ID, name, importance)
     }
@@ -74,7 +74,7 @@ class NotificationHelper @Inject constructor(context: Context) : ContextWrapper(
             notification
                 .clearActions()
                 .setContentTitle(null)
-                .setContentText(getString(R.string.text_view_timer_finished))
+                .setContentText(getString(R.string.tv_timer_finish))
                 //.addAction(buildRestartAction(this))
                 .addAction(buildCloseAction(this))
                 .build()
@@ -88,7 +88,7 @@ class NotificationHelper @Inject constructor(context: Context) : ContextWrapper(
             ActionIntent(context, TimerService::class.java, TimerService.STOP),
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
-        val title = getString(R.string.notification_action_title_stop)
+        val title = getString(R.string.btn_stop)
         return NotificationCompat.Action.Builder(
             R.drawable.ic_pause,
             title,
@@ -103,7 +103,7 @@ class NotificationHelper @Inject constructor(context: Context) : ContextWrapper(
             ActionIntent(context, TimerService::class.java, TimerService.START),
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
-        val title = getString(R.string.notification_action_title_start)
+        val title = getString(R.string.btn_start)
         return NotificationCompat.Action.Builder(
             R.drawable.ic_play,
             title,
@@ -118,7 +118,7 @@ class NotificationHelper @Inject constructor(context: Context) : ContextWrapper(
             ActionIntent(context, TimerService::class.java, TimerService.RESTART_ALL),
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
-        val title = getString(R.string.notification_action_title_restart)
+        val title = getString(R.string.btn_restart)
         return NotificationCompat.Action.Builder(
             R.drawable.ic_restart,
             title,
@@ -133,7 +133,7 @@ class NotificationHelper @Inject constructor(context: Context) : ContextWrapper(
             ActionIntent(context, TimerService::class.java, TimerService.SKIP),
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
-        val title = getString(R.string.notification_action_title_skip)
+        val title = getString(R.string.btn_skip)
         return NotificationCompat.Action.Builder(
             R.drawable.ic_skip,
             title,
@@ -148,7 +148,7 @@ class NotificationHelper @Inject constructor(context: Context) : ContextWrapper(
             ActionIntent(context, TimerService::class.java, TimerService.CLOSE),
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
-        val title = getString(R.string.notification_action_title_close)
+        val title = getString(R.string.btn_close)
         return NotificationCompat.Action.Builder(
             R.drawable.ic_close,
             title,

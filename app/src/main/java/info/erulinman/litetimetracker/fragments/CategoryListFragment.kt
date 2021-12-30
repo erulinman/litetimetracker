@@ -144,13 +144,13 @@ class CategoryListFragment : Fragment(R.layout.fragment_recycler_view), Selectio
             navigator().setToolbarActionVisibility(hasSelection)
 
             if (!hasSelection) {
-                navigator().updateToolbar(getString(R.string.app_name), R.drawable.ic_plus) {
+                navigator().updateToolbar(getString(R.string.app_name), R.drawable.ic_edit) {
                     // TODO("Create fragment to show some HELP information)
                 }
             } else {
                 tracker?.let { tracker ->
                     val counter = tracker.selection.size()
-                    val title = "${getString(R.string.app_bar_title_counter)} $counter"
+                    val title = "${getString(R.string.tv_toolbar_selection)} $counter"
                     navigator().updateToolbar(title, R.drawable.ic_delete) {
                         viewModel.deleteSelectedCategories(tracker.selection.toList())
                     }

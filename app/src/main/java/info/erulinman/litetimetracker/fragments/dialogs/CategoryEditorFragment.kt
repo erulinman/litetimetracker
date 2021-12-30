@@ -63,7 +63,7 @@ class CategoryEditorFragment: DialogFragment() {
                 if (categoryName.isEmpty()) {
                     Snackbar.make(
                         binding.root,
-                        R.string.snackbar_message_empty_category_name,
+                        R.string.snackbar_empty_category_name,
                         Snackbar.LENGTH_SHORT
                     ).show()
                 } else {

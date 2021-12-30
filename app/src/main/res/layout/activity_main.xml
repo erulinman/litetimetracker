@@ -36,10 +36,10 @@
         android:visibility="gone"
         android:scaleType="fitCenter"
         android:backgroundTint="?attr/colorPrimary"
+        android:contentDescription="@string/btn_edit"
         app:layout_constraintEnd_toEndOf="@id/toolbar"
         app:layout_constraintTop_toTopOf="@id/toolbar"
         app:layout_constraintBottom_toBottomOf="@id/toolbar"
-        tool:src="@drawable/ic_delete"
         tool:visibility="visible"/>
 
     <androidx.fragment.app.FragmentContainerView android:id="@+id/mainFragmentContainer"

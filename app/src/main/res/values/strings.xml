@@ -1,46 +1,35 @@
 <resources>
-    <string name="app_bar_title_counter">"Selected:"</string>
     <string name="app_name">Lite Time Tracker</string>
-    <string name="dialog_button_cancel">Cancel</string>
-    <string name="dialog_button_save">Save</string>
-    <string name="edit_text_hours_input_hint">Hr</string>
-    <string name="edit_text_minutes_input_hint">Min</string>
-    <string name="edit_text_seconds_input_hint">Sec</string>
-    <string name="edit_text_preset_name_hint">Preset name</string>
-    <string name="edit_text_hint_category_description">category description</string>
-    <string name="edit_text_hint_category_name">Category name</string>
-    <string name="fab_content_description">Main fab</string>
-    <string name="image_button_content_description">Image button</string>
-    <string name="image_button_content_description_add_new_preset">Add new preset</string>
-    <string name="image_view_content_description">Image view</string>
-    <string name="notification_action_title_close">Close</string>
-    <string name="notification_action_title_restart">Restart</string>
-    <string name="notification_action_title_restart_all">Restart All</string>
-    <string name="notification_action_title_skip">Skip</string>
-    <string name="notification_action_title_start">Start</string>
-    <string name="notification_action_title_stop">Stop</string>
-    <string name="notification_channel_name">Lite Time Tracker</string>
-    <string name="skip_button_content_description">Skip preset</string>
-    <string name="snackbar_message_empty_category_name">
+    <string name="btn_add">Add</string>
+    <string name="btn_cancel">Cancel</string>
+    <string name="btn_close">Close</string>
+    <string name="btn_delete">Delete</string>
+    <string name="btn_edit">Edit</string>
+    <string name="btn_pause">Pause</string>
+    <string name="btn_play">Play</string>
+    <string name="btn_restart">Restart</string>
+    <string name="btn_restart_all">Restart all</string>
+    <string name="btn_save">Save</string>
+    <string name="btn_skip">Skip</string>
+    <string name="btn_start">Start</string>
+    <string name="btn_stop">Stop</string>
+    <string name="default_category_name">New category</string>
+    <string name="default_preset_name">New preset</string>
+    <string name="et_hint_category_name">Category name</string>
+    <string name="et_hint_hour">Hr</string>
+    <string name="et_hint_min">Min</string>
+    <string name="et_hint_preset_name">Preset name</string>
+    <string name="et_hint_sec">Sec</string>
+    <string name="img_colon">Colon</string>
+    <string name="img_tick_point">Selected</string>
+    <string name="snackbar_empty_category_name">
         Cannot save with empty category name
     </string>
-    <string name="text_view_timer_finished">Finished</string>
-    <string name="tick_point_image">Tick point image</string>
-    <string name="toast_message_no_presets">No presets</string>
-    <string name="exit_fragment_positive">Yes</string>
-    <string name="exit_fragment_negative">Cancel</string>
-    <string name="text_view_exit_fragment">
+    <string name="toast_no_presets">No presets</string>
+    <string name="tv_exit_dialog">
         Progress will be lost.\nAre you sure you want to close the timer?
     </string>
-
-    <!--Default value-->
-    <string name="default_category_name">New category</string>
-    <string name="default_category_description" />
-    <string name="default_preset_name">New preset</string>
-
-    <!--Tool Namespace-->
-    <string name="tool_item_category_name">Category</string>
-    <string name="tool_item_preset_name">Work</string>
-    <string name="tool_item_preset_time">00:25:00</string>
-    <string name="tool_text_view_timer_time">01:25:15</string>
+    <string name="tv_timer_base">00:00:00</string>
+    <string name="tv_timer_finish">Finished</string>
+    <string name="tv_toolbar_selection">"Selected:"</string>
 </resources>

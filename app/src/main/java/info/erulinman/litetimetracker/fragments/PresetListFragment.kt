@@ -112,7 +112,7 @@ class PresetListFragment : Fragment(R.layout.fragment_recycler_view), Selection 
                     replace(R.id.mainFragmentContainer, fragment)
                 }
             } else {
-                navigator().showToast(R.string.toast_message_no_presets)
+                navigator().showToast(R.string.toast_no_presets)
             }
         }
     }
@@ -199,7 +199,7 @@ class PresetListFragment : Fragment(R.layout.fragment_recycler_view), Selection 
             } else {
                 tracker?.let { tracker ->
                     val counter = tracker.selection.size()
-                    val title = "${getString(R.string.app_bar_title_counter)} $counter"
+                    val title = "${getString(R.string.tv_toolbar_selection)} $counter"
                     navigator().updateToolbar(title, R.drawable.ic_delete) {
                         viewModel.deleteSelectedPresets(tracker.selection.toList())
                     }

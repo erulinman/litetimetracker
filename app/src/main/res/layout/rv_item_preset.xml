@@ -21,7 +21,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tool:text="@string/tool_text_view_timer_time"/>
+        tool:text="@string/tv_timer_base"/>
 
     <TextView
         android:id="@+id/presetName"
@@ -38,7 +38,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/presetTime"
         app:layout_constraintEnd_toStartOf="@+id/tickPointImage"
-        tool:text="@string/tool_item_preset_name"/>
+        tool:text="@string/default_preset_name"/>
 
     <ImageView
         android:id="@+id/tickPointImage"
@@ -47,11 +47,11 @@
         android:layout_marginEnd="8dp"
         android:src="@drawable/ic_tick_point"
         android:visibility="gone"
+        android:contentDescription="@string/img_tick_point"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:tint="?attr/colorPrimary"
-        tool:visibility="visible"
-        android:contentDescription="@string/image_view_content_description" />
+        tool:visibility="visible"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

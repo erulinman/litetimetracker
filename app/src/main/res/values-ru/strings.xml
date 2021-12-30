@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">Lite Time Tracker</string>
+    <string name="btn_add">Добавить</string>
+    <string name="btn_cancel">Отмена</string>
+    <string name="btn_close">Закрыть</string>
+    <string name="btn_delete">Удалить</string>
+    <string name="btn_edit">Изменить</string>
+    <string name="btn_pause">Пауза</string>
+    <string name="btn_play">Запустить</string>
+    <string name="btn_restart">Перезапустить</string>
+    <string name="btn_restart_all">Перезапустить все</string>
+    <string name="btn_save">Сохранить</string>
+    <string name="btn_skip">Пропустить</string>
+    <string name="btn_start">Старт</string>
+    <string name="btn_stop">Стоп</string>
+    <string name="default_category_name">Новая категория</string>
+    <string name="default_preset_name">Новый пресет</string>
+    <string name="et_hint_category_name">Имя категории</string>
+    <string name="et_hint_hour">Час</string>
+    <string name="et_hint_min">Мин</string>
+    <string name="et_hint_preset_name">Имя пресета</string>
+    <string name="et_hint_sec">Сек</string>
+    <string name="img_colon">Двоеточие</string>
+    <string name="img_tick_point">Выделено</string>
+    <string name="snackbar_empty_category_name">
+        Невозможно создать с пустым именем
+    </string>
+    <string name="toast_no_presets">Нет пресетов</string>
+    <string name="tv_exit_dialog">
+        Прогресс будет потерян.\nВы уверены, что хотите закрыть таймер?
+    </string>
+    <string name="tv_timer_base">00:00:00</string>
+    <string name="tv_timer_finish">Финиш</string>
+    <string name="tv_toolbar_selection">"Выделено:"</string>
+</resources>
