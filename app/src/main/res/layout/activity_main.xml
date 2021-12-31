@@ -2,7 +2,6 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tool="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/backgroundColor">
@@ -27,8 +26,7 @@
         app:layout_constraintStart_toStartOf="@id/toolbar"
         app:layout_constraintEnd_toStartOf="@+id/btnAction"
         app:layout_constraintTop_toTopOf="@id/toolbar"
-        app:layout_constraintBottom_toBottomOf="@id/toolbar"
-        tool:text="@string/app_name"/>
+        app:layout_constraintBottom_toBottomOf="@id/toolbar"/>
 
     <ImageButton android:id="@+id/btnAction"
         android:layout_width="?attr/actionBarSize"
@@ -39,8 +37,7 @@
         android:contentDescription="@string/btn_edit"
         app:layout_constraintEnd_toEndOf="@id/toolbar"
         app:layout_constraintTop_toTopOf="@id/toolbar"
-        app:layout_constraintBottom_toBottomOf="@id/toolbar"
-        tool:visibility="visible"/>
+        app:layout_constraintBottom_toBottomOf="@id/toolbar"/>
 
     <androidx.fragment.app.FragmentContainerView android:id="@+id/mainFragmentContainer"
         android:layout_width="0dp"

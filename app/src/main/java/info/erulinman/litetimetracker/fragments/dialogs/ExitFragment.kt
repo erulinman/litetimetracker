@@ -28,7 +28,7 @@ class ExitFragment: DialogFragment() {
             dialog.isShowing else false
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val positiveButtonClickListener = DialogInterface.OnClickListener { dialog, which ->
+        val positiveButtonClickListener = DialogInterface.OnClickListener { _, which ->
             parentFragmentManager.setFragmentResult(REQUEST_KEY, bundleOf(
                 RESPONSE_KEY to which
             ))

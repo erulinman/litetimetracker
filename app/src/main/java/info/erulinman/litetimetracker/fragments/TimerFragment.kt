@@ -1,7 +1,6 @@
 package info.erulinman.litetimetracker.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
@@ -10,7 +9,6 @@ import info.erulinman.litetimetracker.R
 import info.erulinman.litetimetracker.TimerService
 import info.erulinman.litetimetracker.data.entity.Preset
 import info.erulinman.litetimetracker.databinding.FragmentTimerBinding
-import info.erulinman.litetimetracker.utilities.DEBUG_TAG
 
 class TimerFragment : Fragment(R.layout.fragment_timer), TimerService.OnBindService {
 
@@ -29,8 +27,6 @@ class TimerFragment : Fragment(R.layout.fragment_timer), TimerService.OnBindServ
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Log.d(DEBUG_TAG, "TimerFragment.onCreate()")
-
         requireArguments().getParcelableArrayList<Preset>(ARG_PRESET_LIST)?.let { presets ->
             navigator().setServiceConnection(presets)
         }
@@ -41,8 +37,6 @@ class TimerFragment : Fragment(R.layout.fragment_timer), TimerService.OnBindServ
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        Log.d(DEBUG_TAG, "TimerFragment.onViewCreated()")
-
         _binding = FragmentTimerBinding.bind(view)
 
         navigator().setToolbarActionVisibility(false)
@@ -51,19 +45,16 @@ class TimerFragment : Fragment(R.layout.fragment_timer), TimerService.OnBindServ
     }
 
     override fun onDestroyView() {
-        Log.d(DEBUG_TAG, "TimerFragment.onDestroyView()")
         _binding = null
         super.onDestroyView()
     }
 
     override fun onBindService(service: TimerService) {
-        Log.d(DEBUG_TAG, "TimerFragment.onBindService()")
         _service = service
         observeTimerService()
     }
 
     private fun observeTimerService() {
-        Log.d(DEBUG_TAG, "TimerFragment.observeTimerService()")
         binding.fabSkip.setOnClickListener { service.skipPreset() }
         binding.fabRestartCurrent.setOnClickListener {
             service.restartCurrentPreset()
@@ -101,8 +92,6 @@ class TimerFragment : Fragment(R.layout.fragment_timer), TimerService.OnBindServ
     }
 
     override fun onStart() {
-        Log.d(DEBUG_TAG, "TimerFragment.onStart()")
-
         navigator().bindTimerService()
         navigator().setExitFragmentListener()
 
@@ -110,8 +99,6 @@ class TimerFragment : Fragment(R.layout.fragment_timer), TimerService.OnBindServ
     }
 
     override fun onStop() {
-        Log.d(DEBUG_TAG, "TimerFragment.onStop()")
-
         navigator().unbindTimerService()
 
         _service = null
@@ -120,8 +107,6 @@ class TimerFragment : Fragment(R.layout.fragment_timer), TimerService.OnBindServ
     }
 
     override fun onDestroy() {
-        Log.d(DEBUG_TAG, "TimerFragment.onDestroy()")
-
         navigator().disableBroadcast()
         navigator().setServiceConnection(null)
 

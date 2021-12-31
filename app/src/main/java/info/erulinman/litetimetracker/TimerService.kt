@@ -6,13 +6,11 @@ import android.content.Intent
 import android.os.Binder
 import android.os.CountDownTimer
 import android.os.IBinder
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import info.erulinman.litetimetracker.data.entity.Preset
 import info.erulinman.litetimetracker.di.appComponent
-import info.erulinman.litetimetracker.utilities.DEBUG_TAG
 import info.erulinman.litetimetracker.utilities.toListHHMMSS
 import info.erulinman.litetimetracker.utilities.toStringHHMMSS
 import javax.inject.Inject
@@ -48,7 +46,6 @@ class TimerService: Service() {
     @Inject lateinit var notificationHelper: NotificationHelper
 
     override fun onCreate() {
-        Log.d(DEBUG_TAG, "TimerService.onCreate()")
         binder.set(this) // manual setter because getting memory leak from inner LocalBinder
         appComponent.inject(this)
         startForeground(
@@ -59,7 +56,6 @@ class TimerService: Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        Log.d(DEBUG_TAG, "TimerService.onStartCommand()")
         intent?.let {
             when (it.action) {
                 START -> startTimer()
@@ -76,13 +72,11 @@ class TimerService: Service() {
     override fun onBind(intent: Intent?): IBinder = binder
 
     override fun onTaskRemoved(rootIntent: Intent?) {
-        Log.d(DEBUG_TAG, "TimerService.onTaskRemoved()")
         closeService()
     }
 
     fun loadPresets(_presets: List<Preset>) {
         if (state.value == INITIALIZED && _presets.isNotEmpty()) {
-            Log.d(DEBUG_TAG, "TimerService.loadPresets()")
             presets.apply {
                 addAll(_presets)
                 first().let { firstPreset ->
@@ -96,7 +90,6 @@ class TimerService: Service() {
     }
 
     fun startTimer() {
-        Log.d(DEBUG_TAG, "TimerService.startTimer()")
         if (timer == null) {
             timer = Timer(
                 currentPresetRemaining ?: (currentPresetDuration + TIME_COMPENSATION)
@@ -108,7 +101,6 @@ class TimerService: Service() {
     }
 
     fun stopTimer() {
-        Log.d(DEBUG_TAG, "TimerService.stopTimer()")
         timer?.cancel()
         timer = null
         _state.value = STOPPED
@@ -116,7 +108,6 @@ class TimerService: Service() {
     }
 
     fun skipPreset() {
-        Log.d(DEBUG_TAG, "TimerService.skipPreset()")
         stopTimer()
         currentPresetRemaining = null
         runNextPreset()
@@ -143,7 +134,6 @@ class TimerService: Service() {
     }
 
     private fun runNextPreset() {
-        Log.d(DEBUG_TAG, "TimerService.runNextPreset()")
         currentPresetIndex++
         presets.getOrNull(currentPresetIndex)?.let { nextPreset ->
             currentPresetDuration = nextPreset.time
@@ -158,18 +148,15 @@ class TimerService: Service() {
     }
 
     fun closeService(sendBroadcast: Boolean = false) {
-        Log.d(DEBUG_TAG, "TimerService.closeService()")
         stopTimer()
         stopForeground(true)
         stopSelf()
         if (sendBroadcast) {
-            Log.d(DEBUG_TAG, "TimerService.sendBroadcast()")
             LocalBroadcastManager.getInstance(this).sendBroadcast(Intent(CLOSE))
         }
     }
 
     override fun onDestroy() {
-        Log.d(DEBUG_TAG, "TimerService.onDestroy()")
         binder.set(null)
         super.onDestroy()
     }
@@ -192,10 +179,6 @@ class TimerService: Service() {
                 onFinish()
             } else {
                 val timeInString = millisUntilFinished.toListHHMMSS().toStringHHMMSS()
-                Log.d(
-                    DEBUG_TAG,
-                    "TimerService.Timer.onTick(): on string - $timeInString, on long - $millisUntilFinished}"
-                )
                 _time.value = timeInString
                 currentPresetRemaining = millisUntilFinished
                 notificationHelper.updateStartedNotification(timeInString, presetName.value!!)
