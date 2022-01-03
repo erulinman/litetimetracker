@@ -36,7 +36,7 @@ class NotificationHelper @Inject constructor(context: Context) : ContextWrapper(
     private fun initChannel(): NotificationChannel {
         val name = getString(R.string.app_name)
         val importance = NotificationManager.IMPORTANCE_LOW
-        return NotificationChannel(CHANNEL_ID, name, importance)
+        return NotificationChannel(CHANNEL_ID, name, importance).apply { setShowBadge(false) }
     }
 
     fun getStartedNotificationBuilder(): NotificationCompat.Builder = notification
