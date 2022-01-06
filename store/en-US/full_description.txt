@@ -1,0 +1,1 @@
+You can create different categories and run any sequence of time intervals in them.
