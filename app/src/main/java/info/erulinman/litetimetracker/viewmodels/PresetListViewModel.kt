@@ -11,8 +11,11 @@ class PresetListViewModel(
     private val repository: DatabaseRepository,
     private val categoryId: Long
 ) : ViewModel() {
+
     val presets = repository.loadPresets(categoryId)
+
     val category = repository.loadCategoryById(categoryId)
+
     val hasSelection = MutableLiveData(false)
 
     fun MutableLiveData<Boolean>.refresh() {
@@ -30,7 +33,7 @@ class PresetListViewModel(
         repository.insertPreset(newPreset)
     }
 
-    fun deleteSelectedPresets(idList: List<Long>) = viewModelScope.launch {
+    fun deleteSelectedPresets(idList: List<Long>) = viewModelScope.launch(Dispatchers.IO) {
         val listForDelete = mutableListOf<Preset>()
         presets.value?.forEach {
             if (idList.contains(it.id))
