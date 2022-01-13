@@ -26,6 +26,7 @@
         Невозможно создать с пустым именем
     </string>
     <string name="toast_no_presets">Нет пресетов</string>
+    <string name="tv_empty_message">Список пуст</string>
     <string name="tv_exit_dialog">
         Прогресс будет потерян. Закрыть таймер?
     </string>

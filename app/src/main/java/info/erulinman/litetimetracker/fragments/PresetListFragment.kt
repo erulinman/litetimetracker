@@ -17,7 +17,7 @@ import info.erulinman.litetimetracker.adapters.AddButtonAdapter
 import info.erulinman.litetimetracker.adapters.PresetAdapter
 import info.erulinman.litetimetracker.data.entity.Category
 import info.erulinman.litetimetracker.data.entity.Preset
-import info.erulinman.litetimetracker.databinding.FragmentRecyclerViewBinding
+import info.erulinman.litetimetracker.databinding.FragmentPresetListBinding
 import info.erulinman.litetimetracker.di.appComponent
 import info.erulinman.litetimetracker.fragments.dialogs.CategoryEditorFragment
 import info.erulinman.litetimetracker.selection.PresetItemDetailsLookup
@@ -28,7 +28,7 @@ import info.erulinman.litetimetracker.viewmodels.PresetListViewModel
 import info.erulinman.litetimetracker.viewmodels.PresetListViewModelFactory
 import javax.inject.Inject
 
-class PresetListFragment : Fragment(R.layout.fragment_recycler_view), Selection {
+class PresetListFragment : Fragment(R.layout.fragment_preset_list), Selection {
 
     private var _adapter: PresetAdapter? = null
     private val adapter: PresetAdapter
@@ -37,11 +37,11 @@ class PresetListFragment : Fragment(R.layout.fragment_recycler_view), Selection 
             return _adapter as PresetAdapter
         }
 
-    private var _binding: FragmentRecyclerViewBinding? = null
-    private val binding: FragmentRecyclerViewBinding
+    private var _binding: FragmentPresetListBinding? = null
+    private val binding: FragmentPresetListBinding
         get() {
             checkNotNull(_binding)
-            return _binding as FragmentRecyclerViewBinding
+            return _binding as FragmentPresetListBinding
         }
 
     @Inject lateinit var viewModelFactory: PresetListViewModelFactory.Factory
@@ -71,7 +71,7 @@ class PresetListFragment : Fragment(R.layout.fragment_recycler_view), Selection 
 
         navigator().setToolbarActionVisibility(true)
 
-        _binding = FragmentRecyclerViewBinding.bind(view).apply {
+        _binding = FragmentPresetListBinding.bind(view).apply {
             recyclerView.adapter = concatAdapter
             fab.setImageResource(R.drawable.ic_play)
             fab.setOnClickListener { runTimerFragment() }

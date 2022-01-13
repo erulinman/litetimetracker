@@ -9,6 +9,7 @@
     <dimen name="text_size_timer">82sp</dimen>
     <dimen name="text_size_edit_preset_name">32sp</dimen>
     <dimen name="text_size_edit_preset_time">32sp</dimen>
+    <dimen name="text_size_empty_message">18sp</dimen>
     <dimen name="text_size_hint">18sp</dimen>
 
     <!--Padding-->

@@ -26,6 +26,7 @@
         Cannot save with empty category name
     </string>
     <string name="toast_no_presets">No presets</string>
+    <string name="tv_empty_message">List is empty</string>
     <string name="tv_exit_dialog">
         Progress will be lost. Close the timer?
     </string>

@@ -14,7 +14,7 @@ import androidx.recyclerview.selection.StorageStrategy
 import dagger.Lazy
 import info.erulinman.litetimetracker.R
 import info.erulinman.litetimetracker.adapters.CategoryAdapter
-import info.erulinman.litetimetracker.databinding.FragmentRecyclerViewBinding
+import info.erulinman.litetimetracker.databinding.FragmentCategoryListBinding
 import info.erulinman.litetimetracker.di.appComponent
 import info.erulinman.litetimetracker.selection.CategoryItemDetailsLookup
 import info.erulinman.litetimetracker.selection.CategoryItemKeyProvider
@@ -24,7 +24,7 @@ import info.erulinman.litetimetracker.viewmodels.CategoryListViewModelFactory
 import java.lang.NullPointerException
 import javax.inject.Inject
 
-class CategoryListFragment : Fragment(R.layout.fragment_recycler_view), Selection {
+class CategoryListFragment : Fragment(R.layout.fragment_category_list), Selection {
 
     private var _adapter: CategoryAdapter? = null
     private val adapter: CategoryAdapter
@@ -33,11 +33,11 @@ class CategoryListFragment : Fragment(R.layout.fragment_recycler_view), Selectio
             return _adapter as CategoryAdapter
         }
 
-    private var _binding: FragmentRecyclerViewBinding? = null
-    private val binding: FragmentRecyclerViewBinding
+    private var _binding: FragmentCategoryListBinding? = null
+    private val binding: FragmentCategoryListBinding
         get() {
             checkNotNull(_binding)
-            return _binding as FragmentRecyclerViewBinding
+            return _binding as FragmentCategoryListBinding
         }
 
     @Inject lateinit var viewModelFactory: Lazy<CategoryListViewModelFactory>
@@ -64,7 +64,7 @@ class CategoryListFragment : Fragment(R.layout.fragment_recycler_view), Selectio
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         _adapter = CategoryAdapter { category -> categoryOnClick(category.id) }
 
-        _binding = FragmentRecyclerViewBinding.bind(view).apply {
+        _binding = FragmentCategoryListBinding.bind(view).apply {
             recyclerView.adapter = adapter
             fab.setImageResource(R.drawable.ic_plus)
             fab.setOnClickListener { CategoryEditorFragment.show(parentFragmentManager) }
@@ -136,8 +136,10 @@ class CategoryListFragment : Fragment(R.layout.fragment_recycler_view), Selectio
     }
 
     private fun observeViewModel() = viewModel.apply {
-        categories.observe(viewLifecycleOwner) {
-            it?.let {adapter.submitList(it)}
+        categories.observe(viewLifecycleOwner) { categories ->
+            if (categories == null) return@observe
+            binding.emptyMessage.isVisible = categories.isEmpty()
+            adapter.submitList(categories)
         }
         hasSelection.observe(viewLifecycleOwner) { hasSelection ->
             binding.fab.isVisible = !hasSelection
