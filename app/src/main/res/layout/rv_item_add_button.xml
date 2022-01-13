@@ -5,7 +5,7 @@
     android:layout_height="50dp"
     android:layout_marginHorizontal="5dp"
     android:layout_marginVertical="5dp"
-    android:background="@drawable/shape_button_new_preset"
+    android:background="@drawable/ripple_btn_new_preset"
     android:id="@+id/addNewPresetButton"
     android:src="@drawable/ic_plus"
     android:tint="?attr/colorPrimaryVariant"
