@@ -1,4 +1,4 @@
-package info.erulinman.litetimetracker
+package info.erulinman.litetimetracker.timer
 
 
 import android.app.Service
@@ -9,13 +9,14 @@ import android.os.IBinder
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import info.erulinman.litetimetracker.R
 import info.erulinman.litetimetracker.data.entity.Preset
 import info.erulinman.litetimetracker.di.appComponent
-import info.erulinman.litetimetracker.utilities.toListHHMMSS
-import info.erulinman.litetimetracker.utilities.toStringHHMMSS
+import info.erulinman.litetimetracker.utils.toListHHMMSS
+import info.erulinman.litetimetracker.utils.toStringHHMMSS
 import javax.inject.Inject
 
-class TimerService: Service() {
+class TimerService : Service() {
 
     interface OnBindService {
         fun onBindService(service: TimerService)
@@ -43,7 +44,8 @@ class TimerService: Service() {
 
     private var timer: Timer? = null
 
-    @Inject lateinit var notificationHelper: NotificationHelper
+    @Inject
+    lateinit var notificationHelper: NotificationHelper
 
     override fun onCreate() {
         binder.set(this) // manual setter because getting memory leak from inner LocalBinder
@@ -90,14 +92,10 @@ class TimerService: Service() {
     }
 
     fun startTimer() {
-        if (timer == null) {
-            timer = Timer(
-                currentPresetRemaining ?: (currentPresetDuration + TIME_COMPENSATION)
-            ).apply { start() }
-            _state.value = STARTED
-        } else {
-            throw IllegalStateException("There is old timer")
-        }
+        if (timer != null) throw IllegalStateException("There is old timer")
+        timer = Timer(currentPresetRemaining ?: (currentPresetDuration + TIME_COMPENSATION))
+            .apply { start() }
+        _state.value = STARTED
     }
 
     fun stopTimer() {
@@ -161,7 +159,7 @@ class TimerService: Service() {
         super.onDestroy()
     }
 
-    class LocalBinder: Binder() {
+    class LocalBinder : Binder() {
         private var service: TimerService? = null
 
         fun set(service: TimerService?) {
@@ -173,7 +171,8 @@ class TimerService: Service() {
         }
     }
 
-    private inner class Timer(millisInFuture: Long) : CountDownTimer(millisInFuture, ONE_SECOND_INTERVAL) {
+    private inner class Timer(millisInFuture: Long) :
+        CountDownTimer(millisInFuture, ONE_SECOND_INTERVAL) {
         override fun onTick(millisUntilFinished: Long) {
             if (millisUntilFinished < ONE_SECOND_INTERVAL) {
                 onFinish()

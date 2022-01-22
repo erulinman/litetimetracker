@@ -12,7 +12,9 @@ import info.erulinman.litetimetracker.data.dao.CategoryDao
 import info.erulinman.litetimetracker.data.dao.PresetDao
 import info.erulinman.litetimetracker.data.entity.Category
 import info.erulinman.litetimetracker.data.entity.Preset
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @Database(entities = [Category::class, Preset::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
@@ -48,23 +50,29 @@ abstract class AppDatabase : RoomDatabase() {
 
             private fun prepopulate(fileName: String) {
                 context.assets.open(fileName).use {
-                    JsonReader(it.reader()).use { jsonReader -> when (fileName) {
-                        CATEGORIES -> {
-                            val type = object : TypeToken<List<Category>>() {}.type
-                            val list: List<Category> = Gson().fromJson(jsonReader, type)
-                            INSTANCE?.let { database -> scope.launch(Dispatchers.IO) {
-                                database.categoryDao().insertAll(list)
-                            }}
+                    JsonReader(it.reader()).use { jsonReader ->
+                        when (fileName) {
+                            CATEGORIES -> {
+                                val type = object : TypeToken<List<Category>>() {}.type
+                                val list: List<Category> = Gson().fromJson(jsonReader, type)
+                                INSTANCE?.let { database ->
+                                    scope.launch(Dispatchers.IO) {
+                                        database.categoryDao().insertAll(list)
+                                    }
+                                }
+                            }
+                            PRESETS -> {
+                                val type = object : TypeToken<List<Preset>>() {}.type
+                                val list: List<Preset> = Gson().fromJson(jsonReader, type)
+                                INSTANCE?.let { database ->
+                                    scope.launch(Dispatchers.IO) {
+                                        database.presetDao().insertAll(list)
+                                    }
+                                }
+                            }
+                            else -> return
                         }
-                        PRESETS -> {
-                            val type = object : TypeToken<List<Preset>>() {}.type
-                            val list: List<Preset> = Gson().fromJson(jsonReader, type)
-                            INSTANCE?.let { database -> scope.launch(Dispatchers.IO) {
-                                database.presetDao().insertAll(list)
-                            }}
-                        }
-                        else -> return
-                    }}
+                    }
                 }
             }
         }

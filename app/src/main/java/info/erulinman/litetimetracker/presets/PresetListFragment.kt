@@ -1,4 +1,4 @@
-package info.erulinman.litetimetracker.fragments
+package info.erulinman.litetimetracker.presets
 
 import android.content.Context
 import android.content.DialogInterface
@@ -13,19 +13,13 @@ import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.selection.StorageStrategy
 import androidx.recyclerview.widget.ConcatAdapter
 import info.erulinman.litetimetracker.R
-import info.erulinman.litetimetracker.adapters.AddButtonAdapter
-import info.erulinman.litetimetracker.adapters.PresetAdapter
+import info.erulinman.litetimetracker.Selection
 import info.erulinman.litetimetracker.data.entity.Category
 import info.erulinman.litetimetracker.data.entity.Preset
 import info.erulinman.litetimetracker.databinding.FragmentPresetListBinding
 import info.erulinman.litetimetracker.di.appComponent
-import info.erulinman.litetimetracker.fragments.dialogs.CategoryEditorFragment
-import info.erulinman.litetimetracker.selection.PresetItemDetailsLookup
-import info.erulinman.litetimetracker.selection.PresetItemKeyProvider
-import info.erulinman.litetimetracker.fragments.dialogs.PresetEditorFragment
-import info.erulinman.litetimetracker.selection.PresetSelectionPredicate
-import info.erulinman.litetimetracker.viewmodels.PresetListViewModel
-import info.erulinman.litetimetracker.viewmodels.PresetListViewModelFactory
+import info.erulinman.litetimetracker.timer.TimerFragment
+import info.erulinman.litetimetracker.utils.navigator
 import javax.inject.Inject
 
 class PresetListFragment : Fragment(R.layout.fragment_preset_list), Selection {
@@ -44,7 +38,8 @@ class PresetListFragment : Fragment(R.layout.fragment_preset_list), Selection {
             return _binding as FragmentPresetListBinding
         }
 
-    @Inject lateinit var viewModelFactory: PresetListViewModelFactory.Factory
+    @Inject
+    lateinit var viewModelFactory: PresetListViewModelFactory.Factory
 
     private val viewModel: PresetListViewModel by viewModels {
         viewModelFactory.create(requireArguments().getLong(ARG_CATEGORY_ID))
@@ -117,7 +112,8 @@ class PresetListFragment : Fragment(R.layout.fragment_preset_list), Selection {
         }
     }
 
-    private fun editPreset(preset: Preset) = PresetEditorFragment.show(parentFragmentManager, preset)
+    private fun editPreset(preset: Preset) =
+        PresetEditorFragment.show(parentFragmentManager, preset)
 
     private fun addPreset() = PresetEditorFragment.show(parentFragmentManager)
 
@@ -125,20 +121,23 @@ class PresetListFragment : Fragment(R.layout.fragment_preset_list), Selection {
         parentFragmentManager.setFragmentResultListener(
             PresetEditorFragment.REQUEST_KEY,
             viewLifecycleOwner
-        ) { _, result -> with(result) {
-            if (getInt(PresetEditorFragment.RESPONSE_KEY) == DialogInterface.BUTTON_POSITIVE) {
-                val presetName = getString(PresetEditorFragment.PRESET_NAME) ?: throw NullPointerException("null name's value as a result of editing")
-                val presetTime = getLong(PresetEditorFragment.PRESET_TIME)
-                val presetId = getLong(PresetEditorFragment.PRESET_ID, EMPTY)
-                if (presetId != EMPTY) {
-                    val categoryId = getLong(PresetEditorFragment.CATEGORY_ID)
-                    val updatedPreset = Preset(presetId, categoryId, presetName, presetTime)
-                    viewModel.updatePreset(updatedPreset)
-                    return@setFragmentResultListener
+        ) { _, result ->
+            with(result) {
+                if (getInt(PresetEditorFragment.RESPONSE_KEY) == DialogInterface.BUTTON_POSITIVE) {
+                    val presetName = getString(PresetEditorFragment.PRESET_NAME)
+                        ?: throw NullPointerException("null name's value as a result of editing")
+                    val presetTime = getLong(PresetEditorFragment.PRESET_TIME)
+                    val presetId = getLong(PresetEditorFragment.PRESET_ID, EMPTY)
+                    if (presetId != EMPTY) {
+                        val categoryId = getLong(PresetEditorFragment.CATEGORY_ID)
+                        val updatedPreset = Preset(presetId, categoryId, presetName, presetTime)
+                        viewModel.updatePreset(updatedPreset)
+                        return@setFragmentResultListener
+                    }
+                    viewModel.addNewPreset(presetName, presetTime)
                 }
-                viewModel.addNewPreset(presetName, presetTime)
             }
-        }}
+        }
     }
 
     private fun editCategory(category: Category) {
@@ -149,13 +148,16 @@ class PresetListFragment : Fragment(R.layout.fragment_preset_list), Selection {
         parentFragmentManager.setFragmentResultListener(
             CategoryEditorFragment.REQUEST_KEY,
             viewLifecycleOwner
-        ) { _, result -> with(result) {
-            if (getInt(CategoryEditorFragment.RESPONSE_KEY) == DialogInterface.BUTTON_POSITIVE) {
-                val categoryId = getLong(CategoryEditorFragment.CATEGORY_ID)
-                val categoryName = getString(CategoryEditorFragment.CATEGORY_NAME)!! // null check in CategoryEditorFragment
-                viewModel.updateCategory(Category(categoryId, categoryName))
+        ) { _, result ->
+            with(result) {
+                if (getInt(CategoryEditorFragment.RESPONSE_KEY) == DialogInterface.BUTTON_POSITIVE) {
+                    val categoryId = getLong(CategoryEditorFragment.CATEGORY_ID)
+                    val categoryName =
+                        getString(CategoryEditorFragment.CATEGORY_NAME)!! // null check in CategoryEditorFragment
+                    viewModel.updateCategory(Category(categoryId, categoryName))
+                }
             }
-        }}
+        }
     }
 
     private fun setTrackerObserver() {
@@ -191,7 +193,7 @@ class PresetListFragment : Fragment(R.layout.fragment_preset_list), Selection {
             binding.fab.isVisible = !hasSelection
 
             if (!hasSelection) {
-                category.value?.let{ category ->
+                category.value?.let { category ->
                     navigator().updateToolbar(category.name, R.drawable.ic_edit) {
                         editCategory(category)
                     }

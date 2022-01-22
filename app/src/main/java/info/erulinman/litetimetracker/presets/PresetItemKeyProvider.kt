@@ -1,11 +1,10 @@
-package info.erulinman.litetimetracker.selection
+package info.erulinman.litetimetracker.presets
 
 import androidx.recyclerview.selection.ItemKeyProvider
-import info.erulinman.litetimetracker.adapters.PresetAdapter
-import info.erulinman.litetimetracker.utilities.UNSELECTED
+import info.erulinman.litetimetracker.utils.UNSELECTED
 
-class PresetItemKeyProvider(private val adapter: PresetAdapter)
-    : ItemKeyProvider<Long>(SCOPE_CACHED) {
+class PresetItemKeyProvider(private val adapter: PresetAdapter) :
+    ItemKeyProvider<Long>(SCOPE_CACHED) {
 
     override fun getKey(position: Int): Long {
         // if, when you try to select several items with a

@@ -11,10 +11,10 @@ import androidx.fragment.app.commit
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import info.erulinman.litetimetracker.data.entity.Preset
 import info.erulinman.litetimetracker.databinding.ActivityMainBinding
-import info.erulinman.litetimetracker.fragments.Selection
-import info.erulinman.litetimetracker.fragments.CategoryListFragment
-import info.erulinman.litetimetracker.fragments.TimerFragment
-import info.erulinman.litetimetracker.fragments.dialogs.ExitFragment
+import info.erulinman.litetimetracker.categories.CategoryListFragment
+import info.erulinman.litetimetracker.timer.TimerFragment
+import info.erulinman.litetimetracker.timer.ExitFragment
+import info.erulinman.litetimetracker.timer.TimerService
 
 class MainActivity: AppCompatActivity(), Navigator {
 

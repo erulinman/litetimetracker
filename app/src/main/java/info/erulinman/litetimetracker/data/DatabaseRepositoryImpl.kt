@@ -9,7 +9,7 @@ import javax.inject.Singleton
 @Singleton
 class DatabaseRepositoryImpl @Inject constructor(
     private val database: AppDatabase
-): DatabaseRepository {
+) : DatabaseRepository {
 
     override fun loadCategories() = database.categoryDao().getCategoryList()
 

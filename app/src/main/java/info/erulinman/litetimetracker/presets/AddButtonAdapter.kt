@@ -1,15 +1,15 @@
-package info.erulinman.litetimetracker.adapters
+package info.erulinman.litetimetracker.presets
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.selection.ItemDetailsLookup
 import androidx.recyclerview.widget.RecyclerView
 import info.erulinman.litetimetracker.databinding.RvItemAddButtonBinding
-import info.erulinman.litetimetracker.utilities.UNSELECTED
+import info.erulinman.litetimetracker.utils.UNSELECTED
 
 class AddButtonAdapter(
     private val onClick: () -> Unit
-)  : RecyclerView.Adapter<AddButtonAdapter.AddButtonViewHolder>() {
+) : RecyclerView.Adapter<AddButtonAdapter.AddButtonViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AddButtonViewHolder {
         val binding = RvItemAddButtonBinding.inflate(

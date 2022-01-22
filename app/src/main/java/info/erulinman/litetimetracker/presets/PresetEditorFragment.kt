@@ -1,4 +1,4 @@
-package info.erulinman.litetimetracker.fragments.dialogs
+package info.erulinman.litetimetracker.presets
 
 import android.app.Dialog
 import android.content.DialogInterface
@@ -16,8 +16,8 @@ import androidx.fragment.app.FragmentManager
 import info.erulinman.litetimetracker.R
 import info.erulinman.litetimetracker.data.entity.Preset
 import info.erulinman.litetimetracker.databinding.FragmentPresetEditorBinding
-import info.erulinman.litetimetracker.utilities.toListHHMMSS
-import info.erulinman.litetimetracker.utilities.toStringOfTwoChar
+import info.erulinman.litetimetracker.utils.toListHHMMSS
+import info.erulinman.litetimetracker.utils.toStringOfTwoChar
 
 import java.util.concurrent.TimeUnit
 
@@ -125,7 +125,11 @@ class PresetEditorFragment : DialogFragment() {
         }
     }
 
-    private fun EditText.checkTimeExceeded(s: CharSequence?, default: Int, transferTo: Int? = null) {
+    private fun EditText.checkTimeExceeded(
+        s: CharSequence?,
+        default: Int,
+        transferTo: Int? = null
+    ) {
         val time = s.toString().toLongOrNull() ?: 0
 
         transferTo?.let {

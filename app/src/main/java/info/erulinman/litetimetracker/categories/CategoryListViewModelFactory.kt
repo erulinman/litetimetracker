@@ -1,4 +1,4 @@
-package info.erulinman.litetimetracker.viewmodels
+package info.erulinman.litetimetracker.categories
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

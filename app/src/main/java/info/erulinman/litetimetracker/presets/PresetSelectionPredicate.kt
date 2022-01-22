@@ -1,7 +1,7 @@
-package info.erulinman.litetimetracker.selection
+package info.erulinman.litetimetracker.presets
 
 import androidx.recyclerview.selection.SelectionTracker
-import info.erulinman.litetimetracker.utilities.UNSELECTED
+import info.erulinman.litetimetracker.utils.UNSELECTED
 
 class PresetSelectionPredicate : SelectionTracker.SelectionPredicate<Long>() {
 

@@ -14,7 +14,7 @@
         android:theme="@style/Theme.LiteTimeTracker">
 
         <service
-            android:name=".TimerService"
+            android:name=".timer.TimerService"
             android:enabled="true"
             android:exported="false" />
 

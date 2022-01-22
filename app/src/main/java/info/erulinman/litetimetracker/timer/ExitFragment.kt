@@ -1,4 +1,4 @@
-package info.erulinman.litetimetracker.fragments.dialogs
+package info.erulinman.litetimetracker.timer
 
 import android.app.AlertDialog
 import android.app.Dialog
@@ -29,7 +29,8 @@ class ExitFragment: DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val positiveButtonClickListener = DialogInterface.OnClickListener { _, which ->
-            parentFragmentManager.setFragmentResult(REQUEST_KEY, bundleOf(
+            parentFragmentManager.setFragmentResult(
+                REQUEST_KEY, bundleOf(
                 RESPONSE_KEY to which
             ))
         }

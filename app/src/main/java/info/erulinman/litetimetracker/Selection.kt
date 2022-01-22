@@ -1,4 +1,4 @@
-package info.erulinman.litetimetracker.fragments
+package info.erulinman.litetimetracker
 
 interface Selection {
     val hasSelection: Boolean

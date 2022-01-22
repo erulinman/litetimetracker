@@ -1,4 +1,4 @@
-package info.erulinman.litetimetracker.fragments
+package info.erulinman.litetimetracker.timer
 
 import android.os.Bundle
 import android.view.View
@@ -6,9 +6,9 @@ import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import info.erulinman.litetimetracker.R
-import info.erulinman.litetimetracker.TimerService
 import info.erulinman.litetimetracker.data.entity.Preset
 import info.erulinman.litetimetracker.databinding.FragmentTimerBinding
+import info.erulinman.litetimetracker.utils.navigator
 
 class TimerFragment : Fragment(R.layout.fragment_timer), TimerService.OnBindService {
 
@@ -65,27 +65,29 @@ class TimerFragment : Fragment(R.layout.fragment_timer), TimerService.OnBindServ
         service.time.observe(viewLifecycleOwner) { time ->
             binding.timer.text = time
         }
-        service.state.observe(viewLifecycleOwner) { state -> when (state) {
-            TimerService.INITIALIZED -> service.startTimer()
-            TimerService.STOPPED -> {
-                binding.fabMain.setImageResource(R.drawable.ic_play)
-                binding.fabMain.setOnClickListener { service.startTimer() }
-                binding.fabRestartCurrent.isVisible = true
-                navigator().updateTitle(true)
+        service.state.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                TimerService.INITIALIZED -> service.startTimer()
+                TimerService.STOPPED -> {
+                    binding.fabMain.setImageResource(R.drawable.ic_play)
+                    binding.fabMain.setOnClickListener { service.startTimer() }
+                    binding.fabRestartCurrent.isVisible = true
+                    navigator().updateTitle(true)
+                }
+                TimerService.STARTED -> {
+                    binding.fabMain.setImageResource(R.drawable.ic_pause)
+                    binding.fabMain.setOnClickListener { service.stopTimer() }
+                    binding.fabRestartCurrent.isVisible = true
+                    navigator().updateTitle(true)
+                }
+                TimerService.FINISHED -> {
+                    binding.fabMain.setImageResource(R.drawable.ic_restart)
+                    binding.fabMain.setOnClickListener { service.restartPresets() }
+                    binding.fabRestartCurrent.isVisible = false
+                    navigator().updateTitle(false)
+                }
             }
-            TimerService.STARTED -> {
-                binding.fabMain.setImageResource(R.drawable.ic_pause)
-                binding.fabMain.setOnClickListener { service.stopTimer() }
-                binding.fabRestartCurrent.isVisible = true
-                navigator().updateTitle(true)
-            }
-            TimerService.FINISHED -> {
-                binding.fabMain.setImageResource(R.drawable.ic_restart)
-                binding.fabMain.setOnClickListener { service.restartPresets() }
-                binding.fabRestartCurrent.isVisible = false
-                navigator().updateTitle(false)
-            }
-        }}
+        }
         service.canSkip.observe(viewLifecycleOwner) { canSkip ->
             binding.fabSkip.isVisible = canSkip
         }

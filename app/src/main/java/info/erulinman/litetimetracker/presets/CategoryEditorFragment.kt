@@ -1,4 +1,4 @@
-package info.erulinman.litetimetracker.fragments.dialogs
+package info.erulinman.litetimetracker.presets
 
 import android.app.Dialog
 import android.content.Context
@@ -18,7 +18,7 @@ import info.erulinman.litetimetracker.R
 import info.erulinman.litetimetracker.data.entity.Category
 import info.erulinman.litetimetracker.databinding.FragmentAddCategoryBinding
 
-class CategoryEditorFragment: DialogFragment() {
+class CategoryEditorFragment : DialogFragment() {
 
     private var _binding: FragmentAddCategoryBinding? = null
     private val binding: FragmentAddCategoryBinding
@@ -100,7 +100,8 @@ class CategoryEditorFragment: DialogFragment() {
         fun EditText.showTheKeyboardNow() {
             if (isFocused) {
                 post {
-                    val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                    val imm =
+                        context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                     imm.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)
                 }
             }
@@ -132,10 +133,10 @@ class CategoryEditorFragment: DialogFragment() {
         private const val ARG_CATEGORY = "CategoryEditorFragment.ARG_CATEGORY"
         private const val TAG = "CategoryEditorFragment.AddCategoryFragment"
 
-        const val REQUEST_KEY   = "CategoryEditorFragment.REQUEST_KEY"
-        const val RESPONSE_KEY  = "CategoryEditorFragment.RESPONSE_KEY"
+        const val REQUEST_KEY = "CategoryEditorFragment.REQUEST_KEY"
+        const val RESPONSE_KEY = "CategoryEditorFragment.RESPONSE_KEY"
         const val CATEGORY_NAME = "CategoryEditorFragment.CATEGORY_NAME"
-        const val CATEGORY_ID   = "CategoryEditorFragment.CATEGORY_ID"
+        const val CATEGORY_ID = "CategoryEditorFragment.CATEGORY_ID"
 
         fun show(manager: FragmentManager, category: Category? = null) {
             val dialogFragment = CategoryEditorFragment()

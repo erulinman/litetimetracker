@@ -1,10 +1,8 @@
-package info.erulinman.litetimetracker.selection
+package info.erulinman.litetimetracker.presets
 
 import android.view.MotionEvent
 import androidx.recyclerview.selection.ItemDetailsLookup
 import androidx.recyclerview.widget.RecyclerView
-import info.erulinman.litetimetracker.adapters.AddButtonAdapter
-import info.erulinman.litetimetracker.adapters.PresetAdapter
 
 class PresetItemDetailsLookup(private val recyclerView: RecyclerView) : ItemDetailsLookup<Long>() {
     override fun getItemDetails(event: MotionEvent): ItemDetails<Long>? {

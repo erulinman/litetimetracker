@@ -1,4 +1,4 @@
-package info.erulinman.litetimetracker.fragments
+package info.erulinman.litetimetracker.categories
 
 import android.content.Context
 import android.content.DialogInterface
@@ -13,15 +13,12 @@ import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.selection.StorageStrategy
 import dagger.Lazy
 import info.erulinman.litetimetracker.R
-import info.erulinman.litetimetracker.adapters.CategoryAdapter
 import info.erulinman.litetimetracker.databinding.FragmentCategoryListBinding
 import info.erulinman.litetimetracker.di.appComponent
-import info.erulinman.litetimetracker.selection.CategoryItemDetailsLookup
-import info.erulinman.litetimetracker.selection.CategoryItemKeyProvider
-import info.erulinman.litetimetracker.fragments.dialogs.CategoryEditorFragment
-import info.erulinman.litetimetracker.viewmodels.CategoryListViewModel
-import info.erulinman.litetimetracker.viewmodels.CategoryListViewModelFactory
-import java.lang.NullPointerException
+import info.erulinman.litetimetracker.Selection
+import info.erulinman.litetimetracker.presets.CategoryEditorFragment
+import info.erulinman.litetimetracker.presets.PresetListFragment
+import info.erulinman.litetimetracker.utils.navigator
 import javax.inject.Inject
 
 class CategoryListFragment : Fragment(R.layout.fragment_category_list), Selection {
@@ -40,7 +37,8 @@ class CategoryListFragment : Fragment(R.layout.fragment_category_list), Selectio
             return _binding as FragmentCategoryListBinding
         }
 
-    @Inject lateinit var viewModelFactory: Lazy<CategoryListViewModelFactory>
+    @Inject
+    lateinit var viewModelFactory: Lazy<CategoryListViewModelFactory>
 
     private val viewModel by lazy {
         ViewModelProvider(this, viewModelFactory.get())
@@ -112,13 +110,15 @@ class CategoryListFragment : Fragment(R.layout.fragment_category_list), Selectio
         parentFragmentManager.setFragmentResultListener(
             CategoryEditorFragment.REQUEST_KEY,
             viewLifecycleOwner
-        ) { _, result -> with(result) {
-            if (getInt(CategoryEditorFragment.RESPONSE_KEY) == DialogInterface.BUTTON_POSITIVE) {
-                val categoryName = getString(CategoryEditorFragment.CATEGORY_NAME) ?:
-                    throw NullPointerException("null name's value as a result of editing")
-                viewModel.addNewCategory(categoryName)
+        ) { _, result ->
+            with(result) {
+                if (getInt(CategoryEditorFragment.RESPONSE_KEY) == DialogInterface.BUTTON_POSITIVE) {
+                    val categoryName = getString(CategoryEditorFragment.CATEGORY_NAME)
+                        ?: throw NullPointerException("null name's value as a result of editing")
+                    viewModel.addNewCategory(categoryName)
+                }
             }
-        }}
+        }
     }
 
     private fun categoryOnClick(categoryId: Long) {

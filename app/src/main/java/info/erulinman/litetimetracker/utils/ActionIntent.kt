@@ -1,4 +1,4 @@
-package info.erulinman.litetimetracker.utilities
+package info.erulinman.litetimetracker.utils
 
 import android.content.Context
 import android.content.Intent

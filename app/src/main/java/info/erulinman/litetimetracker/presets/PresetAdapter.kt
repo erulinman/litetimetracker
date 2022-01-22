@@ -1,4 +1,4 @@
-package info.erulinman.litetimetracker.adapters
+package info.erulinman.litetimetracker.presets
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -10,8 +10,8 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import info.erulinman.litetimetracker.data.entity.Preset
 import info.erulinman.litetimetracker.databinding.RvItemPresetBinding
-import info.erulinman.litetimetracker.utilities.toListHHMMSS
-import info.erulinman.litetimetracker.utilities.toStringHHMMSS
+import info.erulinman.litetimetracker.utils.toListHHMMSS
+import info.erulinman.litetimetracker.utils.toStringHHMMSS
 
 class PresetAdapter(private val onClick: (Preset) -> Unit) :
     ListAdapter<Preset, PresetAdapter.PresetViewHolder>(PresetDiffCallback) {
@@ -74,7 +74,7 @@ class PresetAdapter(private val onClick: (Preset) -> Unit) :
     }
 }
 
-object PresetDiffCallback: DiffUtil.ItemCallback<Preset>() {
+object PresetDiffCallback : DiffUtil.ItemCallback<Preset>() {
     override fun areItemsTheSame(oldItem: Preset, newItem: Preset): Boolean =
         oldItem.id == newItem.id
 

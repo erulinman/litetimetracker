@@ -1,4 +1,4 @@
-package info.erulinman.litetimetracker
+package info.erulinman.litetimetracker.timer
 
 import android.app.*
 import android.content.Context
@@ -7,7 +7,9 @@ import android.content.Intent
 import android.media.MediaPlayer
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationCompat.VISIBILITY_PUBLIC
-import info.erulinman.litetimetracker.utilities.ActionIntent
+import info.erulinman.litetimetracker.MainActivity
+import info.erulinman.litetimetracker.R
+import info.erulinman.litetimetracker.utils.ActionIntent
 import javax.inject.Inject
 import javax.inject.Singleton
 
