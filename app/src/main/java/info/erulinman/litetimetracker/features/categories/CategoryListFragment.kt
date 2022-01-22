@@ -1,40 +1,33 @@
-package info.erulinman.litetimetracker.categories
+package info.erulinman.litetimetracker.features.categories
 
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.selection.SelectionPredicates
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.selection.StorageStrategy
 import dagger.Lazy
+import info.erulinman.litetimetracker.BaseFragment
 import info.erulinman.litetimetracker.R
+import info.erulinman.litetimetracker.Selection
 import info.erulinman.litetimetracker.databinding.FragmentCategoryListBinding
 import info.erulinman.litetimetracker.di.appComponent
-import info.erulinman.litetimetracker.Selection
-import info.erulinman.litetimetracker.presets.CategoryEditorFragment
-import info.erulinman.litetimetracker.presets.PresetListFragment
-import info.erulinman.litetimetracker.utils.navigator
+import info.erulinman.litetimetracker.features.presets.CategoryEditorFragment
+import info.erulinman.litetimetracker.features.presets.PresetListFragment
 import javax.inject.Inject
 
-class CategoryListFragment : Fragment(R.layout.fragment_category_list), Selection {
+class CategoryListFragment :
+    BaseFragment<FragmentCategoryListBinding>(R.layout.fragment_category_list), Selection {
 
     private var _adapter: CategoryAdapter? = null
     private val adapter: CategoryAdapter
         get() {
             checkNotNull(_adapter)
             return _adapter as CategoryAdapter
-        }
-
-    private var _binding: FragmentCategoryListBinding? = null
-    private val binding: FragmentCategoryListBinding
-        get() {
-            checkNotNull(_binding)
-            return _binding as FragmentCategoryListBinding
         }
 
     @Inject
@@ -47,16 +40,9 @@ class CategoryListFragment : Fragment(R.layout.fragment_category_list), Selectio
 
     private var tracker: SelectionTracker<Long>? = null
 
-    override val hasSelection: Boolean
-        get() = tracker?.hasSelection() ?: false
-
-    override fun cancelSelection() {
-        tracker?.clearSelection()
-    }
-
     override fun onAttach(context: Context) {
-        appComponent.inject(this)
         super.onAttach(context)
+        appComponent.inject(this)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -74,9 +60,25 @@ class CategoryListFragment : Fragment(R.layout.fragment_category_list), Selectio
         setTrackerObserver()
 
         setCategoryEditorFragmentListener()
-
-        super.onViewCreated(view, savedInstanceState)
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _adapter = null
+        tracker = null
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        tracker?.onSaveInstanceState(outState)
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        tracker?.onRestoreInstanceState(savedInstanceState)
+    }
+
+    override fun onBackPressed() = !cancelSelection()
 
     private fun setSelectionTracker() {
         tracker = SelectionTracker.Builder(
@@ -105,6 +107,8 @@ class CategoryListFragment : Fragment(R.layout.fragment_category_list), Selectio
             }
         )
     }
+
+    override fun cancelSelection() = tracker?.clearSelection() ?: false
 
     private fun setCategoryEditorFragmentListener() {
         parentFragmentManager.setFragmentResultListener(
@@ -143,39 +147,22 @@ class CategoryListFragment : Fragment(R.layout.fragment_category_list), Selectio
         }
         hasSelection.observe(viewLifecycleOwner) { hasSelection ->
             binding.fab.isVisible = !hasSelection
-            navigator().setToolbarActionVisibility(hasSelection)
+            toolbar.setToolbarActionVisibility(hasSelection)
 
             if (!hasSelection) {
-                navigator().updateToolbar(getString(R.string.app_name), R.drawable.ic_edit) {
+                toolbar.updateToolbar(getString(R.string.app_name), R.drawable.ic_edit) {
                     // TODO("Create fragment to show some HELP information)
                 }
             } else {
                 tracker?.let { tracker ->
                     val counter = tracker.selection.size()
                     val title = "${getString(R.string.tv_toolbar_selection)} $counter"
-                    navigator().updateToolbar(title, R.drawable.ic_delete) {
+                    toolbar.updateToolbar(title, R.drawable.ic_delete) {
                         viewModel.deleteSelectedCategories(tracker.selection.toList())
                     }
                 }
             }
         }
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        tracker?.onSaveInstanceState(outState)
-    }
-
-    override fun onViewStateRestored(savedInstanceState: Bundle?) {
-        super.onViewStateRestored(savedInstanceState)
-        tracker?.onRestoreInstanceState(savedInstanceState)
-    }
-
-    override fun onDestroyView() {
-        _adapter = null
-        _binding = null
-        tracker = null
-        super.onDestroyView()
     }
 
     companion object {

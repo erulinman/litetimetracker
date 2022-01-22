@@ -1,4 +1,4 @@
-package info.erulinman.litetimetracker.categories
+package info.erulinman.litetimetracker.features.categories
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

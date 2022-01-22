@@ -1,4 +1,4 @@
-package info.erulinman.litetimetracker.timer
+package info.erulinman.litetimetracker.features.timer
 
 
 import android.app.Service
@@ -17,10 +17,6 @@ import info.erulinman.litetimetracker.utils.toStringHHMMSS
 import javax.inject.Inject
 
 class TimerService : Service() {
-
-    interface OnBindService {
-        fun onBindService(service: TimerService)
-    }
 
     private val binder = LocalBinder()
 

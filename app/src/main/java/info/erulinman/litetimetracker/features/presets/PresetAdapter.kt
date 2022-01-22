@@ -1,29 +1,30 @@
-package info.erulinman.litetimetracker.presets
+package info.erulinman.litetimetracker.features.presets
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.recyclerview.selection.ItemDetailsLookup
 import androidx.recyclerview.selection.SelectionTracker
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import info.erulinman.litetimetracker.data.entity.Preset
 import info.erulinman.litetimetracker.databinding.RvItemPresetBinding
+import info.erulinman.litetimetracker.utils.DiffUtilCallback
 import info.erulinman.litetimetracker.utils.toListHHMMSS
 import info.erulinman.litetimetracker.utils.toStringHHMMSS
 
 class PresetAdapter(private val onClick: (Preset) -> Unit) :
-    ListAdapter<Preset, PresetAdapter.PresetViewHolder>(PresetDiffCallback) {
+    ListAdapter<Preset, PresetAdapter.PresetViewHolder>(DiffUtilCallback<Preset>()) {
+
     private var tracker: SelectionTracker<Long>? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PresetViewHolder {
-        val view = RvItemPresetBinding.inflate(
+        val binding = RvItemPresetBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
             false
         )
-        return PresetViewHolder(view, onClick)
+        return PresetViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: PresetViewHolder, position: Int) {
@@ -37,23 +38,12 @@ class PresetAdapter(private val onClick: (Preset) -> Unit) :
         this.tracker = tracker
     }
 
-    inner class PresetViewHolder(
-        private val binding: RvItemPresetBinding,
-        val onClick: (Preset) -> Unit
-    ) : RecyclerView.ViewHolder(binding.root) {
-        private var thisPreset: Preset? = null
-
-        init {
-            itemView.setOnClickListener {
-                thisPreset?.let {
-                    onClick(it)
-                }
-            }
-        }
+    inner class PresetViewHolder(private val binding: RvItemPresetBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
         fun bind(preset: Preset, isSelected: Boolean = false) {
-            thisPreset = preset
             binding.apply {
+                itemView.setOnClickListener { onClick(preset) }
                 presetName.text = preset.name
                 presetTime.text = preset.time.toListHHMMSS().toStringHHMMSS()
                 tickPointImage.isVisible = isSelected
@@ -72,12 +62,4 @@ class PresetAdapter(private val onClick: (Preset) -> Unit) :
 
             }
     }
-}
-
-object PresetDiffCallback : DiffUtil.ItemCallback<Preset>() {
-    override fun areItemsTheSame(oldItem: Preset, newItem: Preset): Boolean =
-        oldItem.id == newItem.id
-
-    override fun areContentsTheSame(oldItem: Preset, newItem: Preset): Boolean =
-        oldItem == newItem
 }

@@ -1,4 +1,4 @@
-package info.erulinman.litetimetracker.timer
+package info.erulinman.litetimetracker.features.timer
 
 import android.app.AlertDialog
 import android.app.Dialog

@@ -8,8 +8,8 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 @Entity(tableName = "presets")
 data class Preset(
-    @PrimaryKey val id: Long,
+    @PrimaryKey override val id: Long,
     val categoryId: Long,
     val name: String,
     val time: Long = 90000
-) : Parcelable
+) : Identifiable, Parcelable

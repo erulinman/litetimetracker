@@ -1,9 +1,10 @@
-package info.erulinman.litetimetracker.categories
+package info.erulinman.litetimetracker.features.categories
 
 import androidx.recyclerview.selection.ItemKeyProvider
 
 class CategoryItemKeyProvider(private val adapter: CategoryAdapter) :
     ItemKeyProvider<Long>(SCOPE_CACHED) {
+
     override fun getKey(position: Int): Long =
         adapter.currentList[position].id
 

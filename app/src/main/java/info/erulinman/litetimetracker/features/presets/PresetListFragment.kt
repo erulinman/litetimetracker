@@ -1,4 +1,4 @@
-package info.erulinman.litetimetracker.presets
+package info.erulinman.litetimetracker.features.presets
 
 import android.content.Context
 import android.content.DialogInterface
@@ -6,36 +6,29 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.selection.StorageStrategy
 import androidx.recyclerview.widget.ConcatAdapter
+import info.erulinman.litetimetracker.BaseFragment
 import info.erulinman.litetimetracker.R
 import info.erulinman.litetimetracker.Selection
 import info.erulinman.litetimetracker.data.entity.Category
 import info.erulinman.litetimetracker.data.entity.Preset
 import info.erulinman.litetimetracker.databinding.FragmentPresetListBinding
 import info.erulinman.litetimetracker.di.appComponent
-import info.erulinman.litetimetracker.timer.TimerFragment
-import info.erulinman.litetimetracker.utils.navigator
+import info.erulinman.litetimetracker.features.timer.TimerFragment
 import javax.inject.Inject
 
-class PresetListFragment : Fragment(R.layout.fragment_preset_list), Selection {
+class PresetListFragment :
+    BaseFragment<FragmentPresetListBinding>(R.layout.fragment_preset_list), Selection {
 
     private var _adapter: PresetAdapter? = null
     private val adapter: PresetAdapter
         get() {
             checkNotNull(_adapter)
             return _adapter as PresetAdapter
-        }
-
-    private var _binding: FragmentPresetListBinding? = null
-    private val binding: FragmentPresetListBinding
-        get() {
-            checkNotNull(_binding)
-            return _binding as FragmentPresetListBinding
         }
 
     @Inject
@@ -47,16 +40,9 @@ class PresetListFragment : Fragment(R.layout.fragment_preset_list), Selection {
 
     private var tracker: SelectionTracker<Long>? = null
 
-    override val hasSelection: Boolean
-        get() = tracker?.hasSelection() ?: false
-
-    override fun cancelSelection() {
-        tracker?.clearSelection()
-    }
-
     override fun onAttach(context: Context) {
-        appComponent.inject(this)
         super.onAttach(context)
+        appComponent.inject(this)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -64,7 +50,7 @@ class PresetListFragment : Fragment(R.layout.fragment_preset_list), Selection {
         val addButtonAdapter = AddButtonAdapter { addPreset() }
         val concatAdapter = ConcatAdapter(adapter, addButtonAdapter)
 
-        navigator().setToolbarActionVisibility(true)
+        toolbar.setToolbarActionVisibility(true)
 
         _binding = FragmentPresetListBinding.bind(view).apply {
             recyclerView.adapter = concatAdapter
@@ -79,9 +65,25 @@ class PresetListFragment : Fragment(R.layout.fragment_preset_list), Selection {
 
         setPresetEditorFragmentListener()
         setCategoryEditorFragmentListener()
-
-        super.onViewCreated(view, savedInstanceState)
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _adapter = null
+        tracker = null
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        tracker?.onSaveInstanceState(outState)
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        tracker?.onRestoreInstanceState(savedInstanceState)
+    }
+
+    override fun onBackPressed() = !cancelSelection()
 
     private fun setSelectionTracker() {
         tracker = SelectionTracker.Builder(
@@ -98,6 +100,22 @@ class PresetListFragment : Fragment(R.layout.fragment_preset_list), Selection {
         adapter.setTracker(tracker)
     }
 
+    private fun setTrackerObserver() {
+        tracker?.addObserver(
+            object : SelectionTracker.SelectionObserver<Long>() {
+                override fun onSelectionChanged() {
+                    notifyViewModelAboutSelectionStatus()
+                }
+
+                override fun onSelectionRestored() {
+                    notifyViewModelAboutSelectionStatus()
+                }
+            }
+        )
+    }
+
+    override fun cancelSelection() = tracker?.clearSelection() ?: false
+
     private fun runTimerFragment() {
         viewModel.presets.value?.let { presets ->
             if (presets.isNotEmpty()) {
@@ -107,7 +125,7 @@ class PresetListFragment : Fragment(R.layout.fragment_preset_list), Selection {
                     replace(R.id.mainFragmentContainer, fragment)
                 }
             } else {
-                navigator().showToast(R.string.toast_no_presets)
+                toolbar.showToast(R.string.toast_no_presets)
             }
         }
     }
@@ -160,20 +178,6 @@ class PresetListFragment : Fragment(R.layout.fragment_preset_list), Selection {
         }
     }
 
-    private fun setTrackerObserver() {
-        tracker?.addObserver(
-            object : SelectionTracker.SelectionObserver<Long>() {
-                override fun onSelectionChanged() {
-                    notifyViewModelAboutSelectionStatus()
-                }
-
-                override fun onSelectionRestored() {
-                    notifyViewModelAboutSelectionStatus()
-                }
-            }
-        )
-    }
-
     private fun notifyViewModelAboutSelectionStatus() {
         tracker?.selection?.let {
             viewModel.hasSelection.value = it.size() > 0
@@ -194,7 +198,7 @@ class PresetListFragment : Fragment(R.layout.fragment_preset_list), Selection {
 
             if (!hasSelection) {
                 category.value?.let { category ->
-                    navigator().updateToolbar(category.name, R.drawable.ic_edit) {
+                    toolbar.updateToolbar(category.name, R.drawable.ic_edit) {
                         editCategory(category)
                     }
                 }
@@ -202,29 +206,12 @@ class PresetListFragment : Fragment(R.layout.fragment_preset_list), Selection {
                 tracker?.let { tracker ->
                     val counter = tracker.selection.size()
                     val title = "${getString(R.string.tv_toolbar_selection)} $counter"
-                    navigator().updateToolbar(title, R.drawable.ic_delete) {
+                    toolbar.updateToolbar(title, R.drawable.ic_delete) {
                         viewModel.deleteSelectedPresets(tracker.selection.toList())
                     }
                 }
             }
         }
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        tracker?.onSaveInstanceState(outState)
-    }
-
-    override fun onViewStateRestored(savedInstanceState: Bundle?) {
-        super.onViewStateRestored(savedInstanceState)
-        tracker?.onRestoreInstanceState(savedInstanceState)
-    }
-
-    override fun onDestroyView() {
-        _adapter = null
-        _binding = null
-        tracker = null
-        super.onDestroyView()
     }
 
     companion object {

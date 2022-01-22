@@ -1,10 +1,8 @@
 package info.erulinman.litetimetracker.utils
 
 import androidx.fragment.app.Fragment
-import info.erulinman.litetimetracker.Navigator
+import info.erulinman.litetimetracker.Toolbar
 import java.util.concurrent.TimeUnit
-
-fun Fragment.navigator() = requireActivity() as Navigator
 
 fun Long.toStringOfTwoChar(): String {
     if (this > 99 || this < 0) error("Can accept only long value in range 0..99")
