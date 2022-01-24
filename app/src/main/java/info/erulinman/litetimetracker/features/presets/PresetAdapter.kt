@@ -2,21 +2,20 @@ package info.erulinman.litetimetracker.features.presets
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.view.isVisible
-import androidx.recyclerview.selection.ItemDetailsLookup
-import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import info.erulinman.litetimetracker.data.entity.Preset
 import info.erulinman.litetimetracker.databinding.RvItemPresetBinding
 import info.erulinman.litetimetracker.utils.DiffUtilCallback
+import info.erulinman.litetimetracker.utils.ItemTouchCallback
 import info.erulinman.litetimetracker.utils.toListHHMMSS
 import info.erulinman.litetimetracker.utils.toStringHHMMSS
 
-class PresetAdapter(private val onClick: (Preset) -> Unit) :
-    ListAdapter<Preset, PresetAdapter.PresetViewHolder>(DiffUtilCallback<Preset>()) {
-
-    private var tracker: SelectionTracker<Long>? = null
+class PresetAdapter(
+    private val viewModel: PresetListViewModel,
+    private val onClick: (Preset) -> Unit
+) : ListAdapter<Preset, PresetAdapter.PresetViewHolder>(DiffUtilCallback<Preset>()),
+    ItemTouchCallback.Adapter {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PresetViewHolder {
         val binding = RvItemPresetBinding.inflate(
@@ -28,38 +27,21 @@ class PresetAdapter(private val onClick: (Preset) -> Unit) :
     }
 
     override fun onBindViewHolder(holder: PresetViewHolder, position: Int) {
-        tracker?.let {
-            val item = getItem(position)
-            return holder.bind(item, it.isSelected(item.id))
-        }
+        holder.bind(currentList[position], onClick)
     }
 
-    fun setTracker(tracker: SelectionTracker<Long>?) {
-        this.tracker = tracker
-    }
-
-    inner class PresetViewHolder(private val binding: RvItemPresetBinding) :
+    class PresetViewHolder(private val binding: RvItemPresetBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(preset: Preset, isSelected: Boolean = false) {
-            binding.apply {
-                itemView.setOnClickListener { onClick(preset) }
-                presetName.text = preset.name
-                presetTime.text = preset.time.toListHHMMSS().toStringHHMMSS()
-                tickPointImage.isVisible = isSelected
-            }
+        fun bind(preset: Preset, onClick: (Preset) -> Unit) {
+            itemView.setOnClickListener { onClick(preset) }
+            binding.presetName.text = preset.name
+            binding.presetTime.text = preset.time.toListHHMMSS().toStringHHMMSS()
         }
+    }
 
-        fun getItemDetails(): ItemDetailsLookup.ItemDetails<Long> =
-            object : ItemDetailsLookup.ItemDetails<Long>() {
-
-                override fun getPosition(): Int {
-                    return bindingAdapterPosition
-                }
-
-                override fun getSelectionKey(): Long =
-                    (getItem(position) as Preset).id
-
-            }
+    override fun onItemSwipe(position: Int) {
+        val preset = currentList[position]
+        viewModel.deletePreset(preset)
     }
 }

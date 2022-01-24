@@ -1,7 +1,5 @@
 package info.erulinman.litetimetracker.utils
 
-import androidx.fragment.app.Fragment
-import info.erulinman.litetimetracker.Toolbar
 import java.util.concurrent.TimeUnit
 
 fun Long.toStringOfTwoChar(): String {

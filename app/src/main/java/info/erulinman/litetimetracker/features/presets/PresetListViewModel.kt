@@ -1,6 +1,5 @@
 package info.erulinman.litetimetracker.features.presets
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import info.erulinman.litetimetracker.data.DatabaseRepository
@@ -18,12 +17,6 @@ class PresetListViewModel(
 
     val category = repository.loadCategoryById(categoryId)
 
-    val hasSelection = MutableLiveData(false)
-
-    fun MutableLiveData<Boolean>.refresh() {
-        this.value = this.value
-    }
-
     fun addNewPreset(presetName: String, presetTime: Long) = viewModelScope.launch(Dispatchers.IO) {
         val newId = repository.getMaxPresetId()?.let { it + 1 } ?: 1
         val newPreset = Preset(
@@ -35,13 +28,8 @@ class PresetListViewModel(
         repository.insertPreset(newPreset)
     }
 
-    fun deleteSelectedPresets(idList: List<Long>) = viewModelScope.launch(Dispatchers.IO) {
-        val listForDelete = mutableListOf<Preset>()
-        presets.value?.forEach {
-            if (idList.contains(it.id))
-                listForDelete.add(it)
-        }
-        repository.deletePresets(listForDelete.toList())
+    fun deletePreset(preset: Preset) = viewModelScope.launch(Dispatchers.IO) {
+        repository.deletePreset(preset)
     }
 
     fun updatePreset(preset: Preset) = viewModelScope.launch(Dispatchers.IO) {

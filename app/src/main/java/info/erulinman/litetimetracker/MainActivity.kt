@@ -1,12 +1,11 @@
 package info.erulinman.litetimetracker
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.commit
-import info.erulinman.litetimetracker.features.categories.CategoryListFragment
 import info.erulinman.litetimetracker.databinding.ActivityMainBinding
+import info.erulinman.litetimetracker.features.categories.CategoryListFragment
 
 class MainActivity : AppCompatActivity(), Toolbar {
 
@@ -37,7 +36,7 @@ class MainActivity : AppCompatActivity(), Toolbar {
         binding.btnAction.setOnClickListener { action() }
     }
 
-    override fun setToolbarActionVisibility(visibility: Boolean) {
+    override fun setActionVisibility(visibility: Boolean) {
         binding.btnAction.isVisible = visibility
     }
 
@@ -45,13 +44,11 @@ class MainActivity : AppCompatActivity(), Toolbar {
         binding.title.text = title
     }
 
+    override fun updateTitle(stringResId: Int) {
+        binding.title.setText(stringResId)
+    }
+
     override fun updateTitle(visibility: Boolean) {
         binding.title.isVisible = visibility
     }
-
-    override fun showToast(stringRes: Int) = Toast.makeText(
-        this,
-        getString(stringRes),
-        Toast.LENGTH_SHORT
-    ).show()
 }

@@ -17,7 +17,7 @@ interface PresetDao {
     suspend fun insert(preset: Preset)
 
     @Delete
-    suspend fun delete(presets: List<Preset>)
+    suspend fun delete(preset: Preset)
 
     @Update
     suspend fun update(preset: Preset)
@@ -26,6 +26,6 @@ interface PresetDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(presets: List<Preset>)
 
-    @Query("DELETE FROM presets WHERE categoryId in (:categoriesId)")
-    suspend fun deleteByCategoriesId(categoriesId: List<Long>)
+    @Query("DELETE FROM presets WHERE categoryId = :id")
+    suspend fun deleteByCategoryId(id: Long)
 }

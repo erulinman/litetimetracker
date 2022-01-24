@@ -20,12 +20,9 @@ interface DatabaseRepository {
 
     suspend fun insertPreset(preset: Preset)
 
-    suspend fun deleteCategories(
-        categoriesId: List<Long>,
-        categories: List<Category>
-    )
+    suspend fun deleteCategory(category: Category)
 
-    suspend fun deletePresets(presets: List<Preset>)
+    suspend fun deletePreset(preset: Preset)
 
     suspend fun updatePreset(preset: Preset)
 

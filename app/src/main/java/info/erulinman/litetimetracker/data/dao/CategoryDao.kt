@@ -16,7 +16,7 @@ interface CategoryDao {
     fun getMaxCategoryId(): Long?
 
     @Delete
-    suspend fun delete(categories: List<Category>)
+    suspend fun deleteCategory(category: Category)
 
     @Update
     suspend fun update(category: Category)

@@ -4,11 +4,11 @@ interface Toolbar {
 
     fun updateToolbar(title: String, actionIconRes: Int, action: () -> Unit)
 
-    fun setToolbarActionVisibility(visibility: Boolean)
+    fun setActionVisibility(visibility: Boolean)
 
     fun updateTitle(title: String)
 
-    fun updateTitle(visibility: Boolean)
+    fun updateTitle(stringResId: Int)
 
-    fun showToast(stringRes: Int)
+    fun updateTitle(visibility: Boolean)
 }

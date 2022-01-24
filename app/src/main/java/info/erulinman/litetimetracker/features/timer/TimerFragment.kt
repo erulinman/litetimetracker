@@ -45,7 +45,7 @@ class TimerFragment : BaseFragment<FragmentTimerBinding>(R.layout.fragment_timer
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         _binding = FragmentTimerBinding.bind(view)
-        toolbar.setToolbarActionVisibility(false)
+        toolbar.setActionVisibility(false)
     }
 
     override fun onStart() {

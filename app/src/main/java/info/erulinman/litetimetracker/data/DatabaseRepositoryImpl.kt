@@ -28,16 +28,13 @@ class DatabaseRepositoryImpl @Inject constructor(
     override suspend fun insertPreset(preset: Preset) =
         database.presetDao().insert(preset)
 
-    override suspend fun deleteCategories(
-        categoriesId: List<Long>,
-        categories: List<Category>
-    ) {
-        database.categoryDao().delete(categories)
-        database.presetDao().deleteByCategoriesId(categoriesId)
+    override suspend fun deleteCategory(category: Category) {
+        database.categoryDao().deleteCategory(category)
+        database.presetDao().deleteByCategoryId(category.id)
     }
 
-    override suspend fun deletePresets(presets: List<Preset>) =
-        database.presetDao().delete(presets)
+    override suspend fun deletePreset(preset: Preset) =
+        database.presetDao().delete(preset)
 
     override suspend fun updatePreset(preset: Preset) =
         database.presetDao().update(preset)
