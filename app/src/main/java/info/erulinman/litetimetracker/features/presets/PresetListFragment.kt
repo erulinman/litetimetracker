@@ -3,7 +3,9 @@ package info.erulinman.litetimetracker.features.presets
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
@@ -19,14 +21,7 @@ import info.erulinman.litetimetracker.features.timer.TimerFragment
 import info.erulinman.litetimetracker.utils.ItemTouchCallback
 import javax.inject.Inject
 
-class PresetListFragment : BaseFragment<FragmentPresetListBinding>(R.layout.fragment_preset_list) {
-
-    private var _adapter: PresetAdapter? = null
-    private val adapter: PresetAdapter
-        get() {
-            checkNotNull(_adapter)
-            return _adapter as PresetAdapter
-        }
+class PresetListFragment : BaseFragment<FragmentPresetListBinding>() {
 
     @Inject
     lateinit var viewModelFactory: PresetListViewModelFactory.Factory
@@ -35,42 +30,42 @@ class PresetListFragment : BaseFragment<FragmentPresetListBinding>(R.layout.frag
         viewModelFactory.create(requireArguments().getLong(ARG_CATEGORY_ID))
     }
 
+    override fun initBinding(inflater: LayoutInflater, container: ViewGroup?) =
+        FragmentPresetListBinding.inflate(inflater, container, false)
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         appComponent.inject(this)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        _adapter = PresetAdapter(viewModel) { preset ->
+        toolbar.setActionVisibility(true)
+
+        val presetAdapter = PresetAdapter(viewModel) { preset ->
             navigator.showDialog(PresetEditorFragment.getInstanceWithArg(preset))
         }
         val addButtonAdapter = AddButtonAdapter {
             navigator.showDialog(PresetEditorFragment())
         }
-        val concatAdapter = ConcatAdapter(adapter, addButtonAdapter)
-        _binding = FragmentPresetListBinding.bind(view).apply {
-            fab.setImageResource(R.drawable.ic_play)
-            fab.setOnClickListener {
-                val fragment = TimerFragment.getInstanceWithArg(viewModel.presets.value!!)
-                navigator.navigateTo(fragment, true)
-            }
+        val concatAdapter = ConcatAdapter(presetAdapter, addButtonAdapter)
+
+        setupRecyclerView(concatAdapter, presetAdapter)
+        observeViewModel(presetAdapter)
+
+        binding.fab.setImageResource(R.drawable.ic_play)
+        binding.fab.setOnClickListener {
+            val fragment = TimerFragment.getInstanceWithArg(viewModel.presets.value!!)
+            navigator.navigateTo(fragment, true)
         }
-        toolbar.setActionVisibility(true)
-        setupRecyclerView(concatAdapter)
-        observeViewModel()
+
         setPresetEditorFragmentListener()
         setCategoryEditorFragmentListener()
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _adapter = null
-    }
-
-    private fun setupRecyclerView(concatAdapter: ConcatAdapter) =
+    private fun setupRecyclerView(concatAdapter: ConcatAdapter, presetAdapter: PresetAdapter) =
         binding.recyclerView.let { recyclerView ->
             recyclerView.adapter = concatAdapter
-            val callback = ItemTouchCallback(adapter)
+            val callback = ItemTouchCallback(presetAdapter)
             val itemTouchHelper = ItemTouchHelper(callback)
             itemTouchHelper.attachToRecyclerView(recyclerView)
         }
@@ -114,7 +109,7 @@ class PresetListFragment : BaseFragment<FragmentPresetListBinding>(R.layout.frag
         }
     }
 
-    private fun observeViewModel() = viewModel.apply {
+    private fun observeViewModel(adapter: PresetAdapter) = viewModel.apply {
         presets.observe(viewLifecycleOwner) { presets ->
             if (presets == null) return@observe
             adapter.submitList(presets)

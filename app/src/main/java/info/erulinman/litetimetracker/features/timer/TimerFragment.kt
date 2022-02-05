@@ -3,7 +3,9 @@ package info.erulinman.litetimetracker.features.timer
 import android.content.*
 import android.os.Bundle
 import android.os.IBinder
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
@@ -13,7 +15,7 @@ import info.erulinman.litetimetracker.R
 import info.erulinman.litetimetracker.data.entity.Preset
 import info.erulinman.litetimetracker.databinding.FragmentTimerBinding
 
-class TimerFragment : BaseFragment<FragmentTimerBinding>(R.layout.fragment_timer) {
+class TimerFragment : BaseFragment<FragmentTimerBinding>() {
 
     private val broadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -29,11 +31,10 @@ class TimerFragment : BaseFragment<FragmentTimerBinding>(R.layout.fragment_timer
     private var needToCloseTimerFragment = false
 
     private var _service: TimerService? = null
-    private val service: TimerService
-        get() {
-            checkNotNull(_service)
-            return _service as TimerService
-        }
+    private val service: TimerService get() = checkNotNull(_service)
+
+    override fun initBinding(inflater: LayoutInflater, container: ViewGroup?) =
+        FragmentTimerBinding.inflate(inflater, container, false)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,7 +45,6 @@ class TimerFragment : BaseFragment<FragmentTimerBinding>(R.layout.fragment_timer
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        _binding = FragmentTimerBinding.bind(view)
         toolbar.setActionVisibility(false)
     }
 
@@ -71,7 +71,7 @@ class TimerFragment : BaseFragment<FragmentTimerBinding>(R.layout.fragment_timer
 
     override fun onBackPressed(): Boolean {
         if (service.state.value != TimerService.FINISHED) {
-            ExitFragment.show(parentFragmentManager)
+            navigator.showDialog(ExitFragment())
             return false
         }
         service.closeService()

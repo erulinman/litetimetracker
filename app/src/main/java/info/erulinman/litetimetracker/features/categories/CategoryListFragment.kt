@@ -3,7 +3,9 @@ package info.erulinman.litetimetracker.features.categories
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -17,15 +19,7 @@ import info.erulinman.litetimetracker.features.presets.PresetListFragment
 import info.erulinman.litetimetracker.utils.ItemTouchCallback
 import javax.inject.Inject
 
-class CategoryListFragment :
-    BaseFragment<FragmentCategoryListBinding>(R.layout.fragment_category_list) {
-
-    private var _adapter: CategoryAdapter? = null
-    private val adapter: CategoryAdapter
-        get() {
-            checkNotNull(_adapter)
-            return _adapter as CategoryAdapter
-        }
+class CategoryListFragment : BaseFragment<FragmentCategoryListBinding>() {
 
     @Inject
     lateinit var viewModelFactory: Lazy<CategoryListViewModelFactory>
@@ -35,43 +29,43 @@ class CategoryListFragment :
             .get(CategoryListViewModel::class.java)
     }
 
+    override fun initBinding(inflater: LayoutInflater, container: ViewGroup?) =
+        FragmentCategoryListBinding.inflate(inflater, container, false)
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         appComponent.inject(this)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        _adapter = CategoryAdapter(viewModel) { category ->
+        toolbar.setActionVisibility(false)
+        toolbar.updateToolbar(getString(R.string.app_name), R.drawable.ic_edit) {
+            // TODO("Feature not implemented yet")
+        }
+
+        val adapter = CategoryAdapter(viewModel) { category ->
             navigator.navigateTo(
                 PresetListFragment.getInstanceWithArg(category.id),
                 true
             )
         }
-        _binding = FragmentCategoryListBinding.bind(view).apply {
-            fab.setImageResource(R.drawable.ic_plus)
-            fab.setOnClickListener {
-                navigator.showDialog(CategoryEditorFragment())
-            }
+
+        setupRecyclerView(adapter)
+        observeViewModel(adapter)
+
+        binding.fab.setImageResource(R.drawable.ic_plus)
+        binding.fab.setOnClickListener {
+            navigator.showDialog(CategoryEditorFragment())
         }
-        toolbar.updateToolbar(getString(R.string.app_name), R.drawable.ic_edit) {
-            // TODO("Feature not implemented yet")
-        }
-        toolbar.setActionVisibility(false)
-        setupRecyclerView()
-        observeViewModel()
+
         setCategoryEditorFragmentListener()
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _adapter = null
-    }
-
-    private fun setupRecyclerView() = binding.recyclerView.let { recyclerView ->
-        recyclerView.adapter = adapter
+    private fun setupRecyclerView(adapter: CategoryAdapter) {
+        binding.recyclerView.adapter = adapter
         val callback = ItemTouchCallback(adapter)
         val itemTouchHelper = ItemTouchHelper(callback)
-        itemTouchHelper.attachToRecyclerView(recyclerView)
+        itemTouchHelper.attachToRecyclerView(binding.recyclerView)
     }
 
     private fun setCategoryEditorFragmentListener() {
@@ -89,7 +83,7 @@ class CategoryListFragment :
         }
     }
 
-    private fun observeViewModel() = viewModel.apply {
+    private fun observeViewModel(adapter: CategoryAdapter) = viewModel.apply {
         categories.observe(viewLifecycleOwner) { categories ->
             if (categories == null) return@observe
             binding.emptyMessage.isVisible = categories.isEmpty()
