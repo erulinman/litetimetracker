@@ -182,7 +182,7 @@ class TimerFragment : BaseFragment<FragmentTimerBinding>(R.layout.fragment_timer
     companion object {
         const val ARG_PRESET_LIST = "ARG_PRESET_LIST"
 
-        fun newInstance(presets: List<Preset>) = TimerFragment().apply {
+        fun getInstanceWithArg(presets: List<Preset>) = TimerFragment().apply {
             arguments = bundleOf(
                 ARG_PRESET_LIST to ArrayList(presets)
             )

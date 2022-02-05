@@ -12,13 +12,11 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.FragmentManager
 import info.erulinman.litetimetracker.R
 import info.erulinman.litetimetracker.data.entity.Preset
 import info.erulinman.litetimetracker.databinding.FragmentPresetEditorBinding
 import info.erulinman.litetimetracker.utils.toListHHMMSS
 import info.erulinman.litetimetracker.utils.toStringOfTwoChar
-
 import java.util.concurrent.TimeUnit
 
 class PresetEditorFragment : DialogFragment() {
@@ -191,7 +189,6 @@ class PresetEditorFragment : DialogFragment() {
         private const val HOURS = 2
         private const val SELECTION: Int = 2
         private const val ARG_PRESET = "PresetEditorFragment.ARG_PRESET"
-        private const val TAG = "PresetEditorFragment.TAG"
         private const val DEFAULT_TIME = 1500000L
 
         const val REQUEST_KEY = "PresetEditorFragment.REQUEST_KEY"
@@ -201,12 +198,8 @@ class PresetEditorFragment : DialogFragment() {
         const val PRESET_NAME = "PresetEditorFragment.PRESET_NAME"
         const val PRESET_TIME = "PresetEditorFragment.PRESET_TIME"
 
-        fun show(manager: FragmentManager, preset: Preset? = null) {
-            val dialogFragment = PresetEditorFragment()
-            preset?.let {
-                dialogFragment.arguments = bundleOf(ARG_PRESET to it)
-            }
-            dialogFragment.show(manager, TAG)
+        fun getInstanceWithArg(preset: Preset) = PresetEditorFragment().apply {
+            arguments = bundleOf(ARG_PRESET to preset)
         }
     }
 }

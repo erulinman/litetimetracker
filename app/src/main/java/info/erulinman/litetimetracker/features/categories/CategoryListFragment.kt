@@ -3,10 +3,8 @@ package info.erulinman.litetimetracker.features.categories
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.core.view.isVisible
-import androidx.fragment.app.commit
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import dagger.Lazy
@@ -38,17 +36,22 @@ class CategoryListFragment :
     }
 
     override fun onAttach(context: Context) {
-        Log.d("CHECKING", "CategoryListFragment.onAttach()")
         super.onAttach(context)
         appComponent.inject(this)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        Log.d("CHECKING", "CategoryListFragment.onViewCreated()")
-        _adapter = CategoryAdapter(viewModel) { category -> categoryOnClick(category.id) }
+        _adapter = CategoryAdapter(viewModel) { category ->
+            navigator.navigateTo(
+                PresetListFragment.getInstanceWithArg(category.id),
+                true
+            )
+        }
         _binding = FragmentCategoryListBinding.bind(view).apply {
             fab.setImageResource(R.drawable.ic_plus)
-            fab.setOnClickListener { CategoryEditorFragment.show(parentFragmentManager) }
+            fab.setOnClickListener {
+                navigator.showDialog(CategoryEditorFragment())
+            }
         }
         toolbar.updateToolbar(getString(R.string.app_name), R.drawable.ic_edit) {
             // TODO("Feature not implemented yet")
@@ -60,7 +63,6 @@ class CategoryListFragment :
     }
 
     override fun onDestroyView() {
-        Log.d("CHECKING", "CategoryListFragment.onDestroyView()")
         super.onDestroyView()
         _adapter = null
     }
@@ -84,14 +86,6 @@ class CategoryListFragment :
                     viewModel.addNewCategory(categoryName)
                 }
             }
-        }
-    }
-
-    private fun categoryOnClick(categoryId: Long) {
-        val fragment = PresetListFragment.newInstance(categoryId)
-        parentFragmentManager.commit {
-            addToBackStack(null)
-            replace(R.id.mainFragmentContainer, fragment)
         }
     }
 

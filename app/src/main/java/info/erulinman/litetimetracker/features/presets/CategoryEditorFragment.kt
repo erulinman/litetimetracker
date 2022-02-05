@@ -6,13 +6,13 @@ import android.content.DialogInterface
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.ViewTreeObserver
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.FragmentManager
 import com.google.android.material.snackbar.Snackbar
 import info.erulinman.litetimetracker.R
 import info.erulinman.litetimetracker.data.entity.Category
@@ -131,19 +131,13 @@ class CategoryEditorFragment : DialogFragment() {
 
     companion object {
         private const val ARG_CATEGORY = "CategoryEditorFragment.ARG_CATEGORY"
-        private const val TAG = "CategoryEditorFragment.AddCategoryFragment"
-
         const val REQUEST_KEY = "CategoryEditorFragment.REQUEST_KEY"
         const val RESPONSE_KEY = "CategoryEditorFragment.RESPONSE_KEY"
         const val CATEGORY_NAME = "CategoryEditorFragment.CATEGORY_NAME"
         const val CATEGORY_ID = "CategoryEditorFragment.CATEGORY_ID"
 
-        fun show(manager: FragmentManager, category: Category? = null) {
-            val dialogFragment = CategoryEditorFragment()
-            category?.let {
-                dialogFragment.arguments = bundleOf(ARG_CATEGORY to it)
-            }
-            dialogFragment.show(manager, TAG)
+        fun getInstanceWithArg(category: Category) = CategoryEditorFragment().apply {
+            arguments = bundleOf(ARG_CATEGORY to category)
         }
     }
 }

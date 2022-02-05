@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
-import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -42,12 +41,19 @@ class PresetListFragment : BaseFragment<FragmentPresetListBinding>(R.layout.frag
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        _adapter = PresetAdapter(viewModel) { preset -> editPreset(preset) }
-        val addButtonAdapter = AddButtonAdapter { addPreset() }
+        _adapter = PresetAdapter(viewModel) { preset ->
+            navigator.showDialog(PresetEditorFragment.getInstanceWithArg(preset))
+        }
+        val addButtonAdapter = AddButtonAdapter {
+            navigator.showDialog(PresetEditorFragment())
+        }
         val concatAdapter = ConcatAdapter(adapter, addButtonAdapter)
         _binding = FragmentPresetListBinding.bind(view).apply {
             fab.setImageResource(R.drawable.ic_play)
-            fab.setOnClickListener { runTimerFragment() }
+            fab.setOnClickListener {
+                val fragment = TimerFragment.getInstanceWithArg(viewModel.presets.value!!)
+                navigator.navigateTo(fragment, true)
+            }
         }
         toolbar.setActionVisibility(true)
         setupRecyclerView(concatAdapter)
@@ -68,18 +74,6 @@ class PresetListFragment : BaseFragment<FragmentPresetListBinding>(R.layout.frag
             val itemTouchHelper = ItemTouchHelper(callback)
             itemTouchHelper.attachToRecyclerView(recyclerView)
         }
-
-    private fun runTimerFragment() = parentFragmentManager.commit {
-        val presets = viewModel.presets.value!!
-        val fragment = TimerFragment.newInstance(presets as ArrayList)
-        addToBackStack(null)
-        replace(R.id.mainFragmentContainer, fragment)
-    }
-
-    private fun editPreset(preset: Preset) =
-        PresetEditorFragment.show(parentFragmentManager, preset)
-
-    private fun addPreset() = PresetEditorFragment.show(parentFragmentManager)
 
     private fun setPresetEditorFragmentListener() {
         parentFragmentManager.setFragmentResultListener(
@@ -103,9 +97,6 @@ class PresetListFragment : BaseFragment<FragmentPresetListBinding>(R.layout.frag
             }
         }
     }
-
-    private fun editCategory(category: Category) =
-        CategoryEditorFragment.show(parentFragmentManager, category)
 
     private fun setCategoryEditorFragmentListener() {
         parentFragmentManager.setFragmentResultListener(
@@ -132,7 +123,7 @@ class PresetListFragment : BaseFragment<FragmentPresetListBinding>(R.layout.frag
         category.observe(viewLifecycleOwner) { category ->
             if (category == null) return@observe
             toolbar.updateToolbar(category.name, R.drawable.ic_edit) {
-                editCategory(category)
+                navigator.showDialog(CategoryEditorFragment.getInstanceWithArg(category))
             }
         }
     }
@@ -141,7 +132,7 @@ class PresetListFragment : BaseFragment<FragmentPresetListBinding>(R.layout.frag
         private const val EMPTY = -1L
         const val ARG_CATEGORY_ID = "PresetListFragment.ARG_CATEGORY_ID"
 
-        fun newInstance(categoryId: Long) = PresetListFragment().apply {
+        fun getInstanceWithArg(categoryId: Long) = PresetListFragment().apply {
             arguments = bundleOf(ARG_CATEGORY_ID to categoryId)
         }
     }

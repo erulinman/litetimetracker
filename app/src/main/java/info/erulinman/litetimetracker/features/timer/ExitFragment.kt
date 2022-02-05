@@ -9,10 +9,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.FragmentManager
 import info.erulinman.litetimetracker.databinding.FragmentExitBinding
 
-class ExitFragment: DialogFragment() {
+class ExitFragment : DialogFragment() {
 
     private var _binding: FragmentExitBinding? = null
     private val binding: FragmentExitBinding
@@ -30,9 +29,9 @@ class ExitFragment: DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val positiveButtonClickListener = DialogInterface.OnClickListener { _, which ->
             parentFragmentManager.setFragmentResult(
-                REQUEST_KEY, bundleOf(
-                RESPONSE_KEY to which
-            ))
+                REQUEST_KEY,
+                bundleOf(RESPONSE_KEY to which)
+            )
         }
 
         _binding = FragmentExitBinding.inflate(LayoutInflater.from(context)).apply {
@@ -61,7 +60,5 @@ class ExitFragment: DialogFragment() {
         const val TAG = "ExitFragment.TAG"
         const val REQUEST_KEY = "ExitFragment.REQUEST_KEY"
         const val RESPONSE_KEY = "ExitFragment.RESPONSE_KEY"
-
-        fun show(manager: FragmentManager) = ExitFragment().show(manager, TAG)
     }
 }
