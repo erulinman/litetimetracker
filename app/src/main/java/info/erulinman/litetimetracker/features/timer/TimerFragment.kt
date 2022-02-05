@@ -71,7 +71,7 @@ class TimerFragment : BaseFragment<FragmentTimerBinding>() {
 
     override fun onBackPressed(): Boolean {
         if (service.state.value != TimerService.FINISHED) {
-            navigator.showDialog(ExitFragment())
+            navigator.showDialog(ExitFragment(), ExitFragment.TAG)
             return false
         }
         service.closeService()

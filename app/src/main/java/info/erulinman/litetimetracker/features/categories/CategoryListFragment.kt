@@ -55,7 +55,7 @@ class CategoryListFragment : BaseFragment<FragmentCategoryListBinding>() {
 
         binding.fab.setImageResource(R.drawable.ic_plus)
         binding.fab.setOnClickListener {
-            navigator.showDialog(CategoryEditorFragment())
+            navigator.showDialog(CategoryEditorFragment(), CategoryEditorFragment.TAG)
         }
 
         setCategoryEditorFragmentListener()

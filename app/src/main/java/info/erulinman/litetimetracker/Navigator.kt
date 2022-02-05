@@ -7,5 +7,5 @@ interface Navigator {
 
     fun navigateTo(fragment: Fragment, addToBackStack: Boolean)
 
-    fun showDialog(fragment: DialogFragment)
+    fun showDialog(fragment: DialogFragment, tag: String)
 }

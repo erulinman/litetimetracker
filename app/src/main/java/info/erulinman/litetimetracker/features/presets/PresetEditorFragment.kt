@@ -191,6 +191,7 @@ class PresetEditorFragment : DialogFragment() {
         private const val ARG_PRESET = "PresetEditorFragment.ARG_PRESET"
         private const val DEFAULT_TIME = 1500000L
 
+        const val TAG = "PresetEditorFragment.TAG"
         const val REQUEST_KEY = "PresetEditorFragment.REQUEST_KEY"
         const val RESPONSE_KEY = "PresetEditorFragment.RESPONSE_KEY"
         const val PRESET_ID = "PresetEditorFragment.PRESET_ID"

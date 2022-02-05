@@ -42,10 +42,13 @@ class PresetListFragment : BaseFragment<FragmentPresetListBinding>() {
         toolbar.setActionVisibility(true)
 
         val presetAdapter = PresetAdapter(viewModel) { preset ->
-            navigator.showDialog(PresetEditorFragment.getInstanceWithArg(preset))
+            navigator.showDialog(
+                PresetEditorFragment.getInstanceWithArg(preset),
+                PresetEditorFragment.TAG
+            )
         }
         val addButtonAdapter = AddButtonAdapter {
-            navigator.showDialog(PresetEditorFragment())
+            navigator.showDialog(PresetEditorFragment(), PresetEditorFragment.TAG)
         }
         val concatAdapter = ConcatAdapter(presetAdapter, addButtonAdapter)
 
@@ -118,7 +121,10 @@ class PresetListFragment : BaseFragment<FragmentPresetListBinding>() {
         category.observe(viewLifecycleOwner) { category ->
             if (category == null) return@observe
             toolbar.updateToolbar(category.name, R.drawable.ic_edit) {
-                navigator.showDialog(CategoryEditorFragment.getInstanceWithArg(category))
+                navigator.showDialog(
+                    CategoryEditorFragment.getInstanceWithArg(category),
+                    CategoryEditorFragment.TAG
+                )
             }
         }
     }

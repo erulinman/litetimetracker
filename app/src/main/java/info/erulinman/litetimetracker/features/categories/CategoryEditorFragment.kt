@@ -131,6 +131,8 @@ class CategoryEditorFragment : DialogFragment() {
 
     companion object {
         private const val ARG_CATEGORY = "CategoryEditorFragment.ARG_CATEGORY"
+
+        const val TAG = "CategoryEditorFragment.TAG"
         const val REQUEST_KEY = "CategoryEditorFragment.REQUEST_KEY"
         const val RESPONSE_KEY = "CategoryEditorFragment.RESPONSE_KEY"
         const val CATEGORY_NAME = "CategoryEditorFragment.CATEGORY_NAME"

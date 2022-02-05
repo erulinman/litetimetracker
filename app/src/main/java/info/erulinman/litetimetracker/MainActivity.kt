@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity(), Toolbar, Navigator {
         }
     }
 
-    override fun showDialog(fragment: DialogFragment) {
-        fragment.show(supportFragmentManager, fragment.hashCode().toString())
+    override fun showDialog(fragment: DialogFragment, tag: String) {
+        fragment.show(supportFragmentManager, tag)
     }
 }
