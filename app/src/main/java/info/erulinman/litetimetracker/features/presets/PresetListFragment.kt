@@ -11,12 +11,13 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.ItemTouchHelper
-import info.erulinman.litetimetracker.BaseFragment
+import info.erulinman.litetimetracker.base.BaseFragment
 import info.erulinman.litetimetracker.R
 import info.erulinman.litetimetracker.data.entity.Category
 import info.erulinman.litetimetracker.data.entity.Preset
 import info.erulinman.litetimetracker.databinding.FragmentPresetListBinding
 import info.erulinman.litetimetracker.di.appComponent
+import info.erulinman.litetimetracker.features.categories.CategoryEditorFragment
 import info.erulinman.litetimetracker.features.timer.TimerFragment
 import info.erulinman.litetimetracker.utils.ItemTouchCallback
 import javax.inject.Inject
@@ -65,13 +66,12 @@ class PresetListFragment : BaseFragment<FragmentPresetListBinding>() {
         setCategoryEditorFragmentListener()
     }
 
-    private fun setupRecyclerView(concatAdapter: ConcatAdapter, presetAdapter: PresetAdapter) =
-        binding.recyclerView.let { recyclerView ->
-            recyclerView.adapter = concatAdapter
-            val callback = ItemTouchCallback(presetAdapter)
-            val itemTouchHelper = ItemTouchHelper(callback)
-            itemTouchHelper.attachToRecyclerView(recyclerView)
-        }
+    private fun setupRecyclerView(concatAdapter: ConcatAdapter, presetAdapter: PresetAdapter) {
+        binding.recyclerView.adapter = concatAdapter
+        val callback = ItemTouchCallback(presetAdapter)
+        val itemTouchHelper = ItemTouchHelper(callback)
+        itemTouchHelper.attachToRecyclerView(binding.recyclerView)
+    }
 
     private fun setPresetEditorFragmentListener() {
         parentFragmentManager.setFragmentResultListener(

@@ -6,6 +6,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
+import info.erulinman.litetimetracker.base.BaseFragment
 import info.erulinman.litetimetracker.databinding.ActivityMainBinding
 import info.erulinman.litetimetracker.features.categories.CategoryListFragment
 

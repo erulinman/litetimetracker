@@ -1,49 +1,37 @@
 package info.erulinman.litetimetracker.features.presets
 
-import android.app.Dialog
 import android.content.DialogInterface
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.EditText
-import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
 import androidx.core.widget.doOnTextChanged
-import androidx.fragment.app.DialogFragment
 import info.erulinman.litetimetracker.R
+import info.erulinman.litetimetracker.base.BaseDialogFragment
 import info.erulinman.litetimetracker.data.entity.Preset
 import info.erulinman.litetimetracker.databinding.FragmentPresetEditorBinding
 import info.erulinman.litetimetracker.utils.toListHHMMSS
 import info.erulinman.litetimetracker.utils.toStringOfTwoChar
 import java.util.concurrent.TimeUnit
 
-class PresetEditorFragment : DialogFragment() {
-
-    private var _binding: FragmentPresetEditorBinding? = null
-    private val binding: FragmentPresetEditorBinding
-        get() {
-            checkNotNull(_binding)
-            return _binding as FragmentPresetEditorBinding
-        }
-
-    private lateinit var dialog: AlertDialog
+class PresetEditorFragment : BaseDialogFragment<FragmentPresetEditorBinding>() {
 
     private var preset: Preset? = null
+
+    override fun initBinding() =
+        FragmentPresetEditorBinding.inflate(LayoutInflater.from(context))
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         preset = arguments?.getParcelable(ARG_PRESET)
     }
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        _binding = FragmentPresetEditorBinding.inflate(LayoutInflater.from(context))
-
+    override fun setupOnCreateDialog(savedInstanceState: Bundle?) {
         preset?.let { preset ->
+            val (hours, minutes, seconds) = preset.time.toListHHMMSS()
             binding.apply {
                 editPresetName.setText(preset.name)
-                val (hours, minutes, seconds) = preset.time.toListHHMMSS()
                 hoursInput.setText(hours)
                 minutesInput.setText(minutes)
                 secondsInput.setText(seconds)
@@ -103,14 +91,6 @@ class PresetEditorFragment : DialogFragment() {
                 }
             }
         }
-
-        dialog = AlertDialog.Builder(requireContext())
-            .setView(binding.root)
-            .create()
-
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-
-        return dialog
     }
 
     override fun onResume() {
@@ -177,11 +157,6 @@ class PresetEditorFragment : DialogFragment() {
         val time = hours + minutes + seconds
 
         return if (time != 0L) time else DEFAULT_TIME
-    }
-
-    override fun onDestroyView() {
-        _binding = null
-        super.onDestroyView()
     }
 
     companion object {

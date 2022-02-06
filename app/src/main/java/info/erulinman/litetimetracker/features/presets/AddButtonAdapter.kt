@@ -2,10 +2,8 @@ package info.erulinman.litetimetracker.features.presets
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.selection.ItemDetailsLookup
 import androidx.recyclerview.widget.RecyclerView
 import info.erulinman.litetimetracker.databinding.RvItemAddButtonBinding
-import info.erulinman.litetimetracker.utils.UNSELECTED
 
 class AddButtonAdapter(
     private val onClick: () -> Unit
@@ -34,13 +32,5 @@ class AddButtonAdapter(
         init {
             itemView.setOnClickListener { onClick() }
         }
-
-        fun getItemDetails(): ItemDetailsLookup.ItemDetails<Long> =
-            object : ItemDetailsLookup.ItemDetails<Long>() {
-
-                override fun getPosition(): Int = bindingAdapterPosition
-
-                override fun getSelectionKey(): Long = UNSELECTED
-            }
     }
 }

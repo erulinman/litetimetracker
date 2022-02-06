@@ -1,44 +1,32 @@
-package info.erulinman.litetimetracker.features.presets
+package info.erulinman.litetimetracker.features.categories
 
-import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewTreeObserver
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
-import androidx.fragment.app.DialogFragment
 import com.google.android.material.snackbar.Snackbar
 import info.erulinman.litetimetracker.R
+import info.erulinman.litetimetracker.base.BaseDialogFragment
 import info.erulinman.litetimetracker.data.entity.Category
 import info.erulinman.litetimetracker.databinding.FragmentAddCategoryBinding
 
-class CategoryEditorFragment : DialogFragment() {
-
-    private var _binding: FragmentAddCategoryBinding? = null
-    private val binding: FragmentAddCategoryBinding
-        get() {
-            checkNotNull(_binding)
-            return _binding as FragmentAddCategoryBinding
-        }
-
-    private lateinit var dialog: AlertDialog
+class CategoryEditorFragment : BaseDialogFragment<FragmentAddCategoryBinding>() {
 
     private var category: Category? = null
+
+    override fun initBinding() =
+        FragmentAddCategoryBinding.inflate(LayoutInflater.from(context))
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         category = arguments?.getParcelable(ARG_CATEGORY)
     }
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        _binding = FragmentAddCategoryBinding.inflate(LayoutInflater.from(context))
-
+    override fun setupOnCreateDialog(savedInstanceState: Bundle?) {
         category?.let {
             binding.editCategoryName.setText(it.name)
         }
@@ -75,14 +63,6 @@ class CategoryEditorFragment : DialogFragment() {
                 dismiss()
             }
         }
-
-        dialog = AlertDialog.Builder(requireContext())
-            .setView(binding.root)
-            .create()
-
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-
-        return dialog
     }
 
     override fun onResume() {
@@ -122,11 +102,6 @@ class CategoryEditorFragment : DialogFragment() {
                 }
             )
         }
-    }
-
-    override fun onDestroyView() {
-        _binding = null
-        super.onDestroyView()
     }
 
     companion object {

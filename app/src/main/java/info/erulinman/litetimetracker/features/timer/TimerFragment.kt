@@ -10,8 +10,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import info.erulinman.litetimetracker.BaseFragment
 import info.erulinman.litetimetracker.R
+import info.erulinman.litetimetracker.base.BaseFragment
 import info.erulinman.litetimetracker.data.entity.Preset
 import info.erulinman.litetimetracker.databinding.FragmentTimerBinding
 
@@ -160,6 +160,7 @@ class TimerFragment : BaseFragment<FragmentTimerBinding>() {
             return
         }
         serviceConnection = object : ServiceConnection {
+
             override fun onServiceConnected(name: ComponentName?, binder: IBinder?) {
                 _service = (binder as TimerService.LocalBinder).getService()
                 service.loadPresets(presets)
@@ -168,12 +169,9 @@ class TimerFragment : BaseFragment<FragmentTimerBinding>() {
             }
 
             override fun onServiceDisconnected(name: ComponentName?) {
+                val fragment = parentFragmentManager.findFragmentByTag(ExitFragment.TAG)
+                (fragment as? ExitFragment)?.dismiss()
                 parentFragmentManager.popBackStack()
-
-                val exitFragment = parentFragmentManager
-                    .findFragmentByTag(ExitFragment.TAG) as? ExitFragment ?: return
-                if (exitFragment.isShowing) exitFragment.dismiss()
-
                 unbindTimerService()
             }
         }

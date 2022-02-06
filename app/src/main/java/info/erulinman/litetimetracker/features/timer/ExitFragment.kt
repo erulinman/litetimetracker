@@ -1,32 +1,18 @@
 package info.erulinman.litetimetracker.features.timer
 
-import android.app.AlertDialog
-import android.app.Dialog
 import android.content.DialogInterface
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.core.os.bundleOf
-import androidx.fragment.app.DialogFragment
+import info.erulinman.litetimetracker.base.BaseDialogFragment
 import info.erulinman.litetimetracker.databinding.FragmentExitBinding
 
-class ExitFragment : DialogFragment() {
+class ExitFragment : BaseDialogFragment<FragmentExitBinding>() {
 
-    private var _binding: FragmentExitBinding? = null
-    private val binding: FragmentExitBinding
-        get() {
-            checkNotNull(_binding)
-            return _binding as FragmentExitBinding
-        }
+    override fun initBinding() =
+        FragmentExitBinding.inflate(LayoutInflater.from(context))
 
-    private lateinit var dialog: AlertDialog
-
-    val isShowing: Boolean
-        get() = if (this::dialog.isInitialized)
-            dialog.isShowing else false
-
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+    override fun setupOnCreateDialog(savedInstanceState: Bundle?) {
         val positiveButtonClickListener = DialogInterface.OnClickListener { _, which ->
             parentFragmentManager.setFragmentResult(
                 REQUEST_KEY,
@@ -34,26 +20,11 @@ class ExitFragment : DialogFragment() {
             )
         }
 
-        _binding = FragmentExitBinding.inflate(LayoutInflater.from(context)).apply {
-            positiveButton.setOnClickListener {
-                positiveButtonClickListener.onClick(dialog, DialogInterface.BUTTON_POSITIVE)
-                dismiss()
-            }
-            cancelButton.setOnClickListener { dismiss() }
+        binding.positiveButton.setOnClickListener {
+            positiveButtonClickListener.onClick(dialog, DialogInterface.BUTTON_POSITIVE)
+            dismiss()
         }
-
-        dialog = AlertDialog.Builder(requireContext())
-            .setView(binding.root)
-            .create()
-
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-
-        return dialog
-    }
-
-    override fun onDestroyView() {
-        _binding = null
-        super.onDestroyView()
+        binding.cancelButton.setOnClickListener { dismiss() }
     }
 
     companion object {
