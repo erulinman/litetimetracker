@@ -47,6 +47,7 @@ class PresetEditorFragment : BaseDialogFragment<FragmentPresetEditorBinding>() {
             // both null if fragment used for create new preset
             val presetId = preset?.id
             val categoryId = preset?.categoryId
+            val position = preset?.position
 
             parentFragmentManager.setFragmentResult(
                 REQUEST_KEY,
@@ -54,6 +55,7 @@ class PresetEditorFragment : BaseDialogFragment<FragmentPresetEditorBinding>() {
                     RESPONSE_KEY to which,
                     PRESET_ID to presetId,
                     CATEGORY_ID to categoryId,
+                    PRESET_POSITION to position,
                     PRESET_NAME to presetName,
                     PRESET_TIME to presetTime,
                 )
@@ -173,6 +175,7 @@ class PresetEditorFragment : BaseDialogFragment<FragmentPresetEditorBinding>() {
         const val CATEGORY_ID = "PresetEditorFragment.CATEGORY_ID"
         const val PRESET_NAME = "PresetEditorFragment.PRESET_NAME"
         const val PRESET_TIME = "PresetEditorFragment.PRESET_TIME"
+        const val PRESET_POSITION = "PresetEditorFragment.PRESET_POSITION"
 
         fun getInstanceWithArg(preset: Preset) = PresetEditorFragment().apply {
             arguments = bundleOf(ARG_PRESET to preset)

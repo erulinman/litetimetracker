@@ -16,7 +16,13 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-@Database(entities = [Category::class, Preset::class], version = 1)
+@Database(
+    version = 2,
+    entities = [
+        Category::class,
+        Preset::class
+    ]
+)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun categoryDao(): CategoryDao
 
@@ -34,6 +40,7 @@ abstract class AppDatabase : RoomDatabase() {
             INSTANCE ?: Room
                 .databaseBuilder(context, AppDatabase::class.java, DATABASE_NAME)
                 .addCallback(Callback(context, scope))
+                .addMigrations(MIGRATION_1_2)
                 .build()
                 .also { INSTANCE = it }
 

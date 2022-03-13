@@ -19,9 +19,11 @@ class PresetListViewModel(
 
     fun addNewPreset(presetName: String, presetTime: Long) = viewModelScope.launch(Dispatchers.IO) {
         val newId = repository.getMaxPresetId()?.let { it + 1 } ?: 1
+        val newPosition = presets.value?.size ?: 0
         val newPreset = Preset(
             id = newId,
             categoryId = categoryId,
+            position = newPosition,
             name = presetName,
             time = presetTime
         )
