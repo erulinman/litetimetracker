@@ -6,8 +6,11 @@ import info.erulinman.litetimetracker.data.entity.Category
 
 @Dao
 interface CategoryDao {
-    @Query("SELECT * FROM categories")
-    fun getCategoryList(): LiveData<List<Category>>
+    @Query("SELECT * FROM categories ORDER BY position")
+    fun getCategoriesStream(): LiveData<List<Category>>
+
+    @Query("SELECT * FROM categories ORDER BY position")
+    fun getCategoriesSync(): List<Category>?
 
     @Query("SELECT * FROM categories where id = :id")
     fun getCategoryById(id: Long): LiveData<Category>
@@ -16,10 +19,13 @@ interface CategoryDao {
     fun getMaxCategoryId(): Long?
 
     @Delete
-    suspend fun deleteCategory(category: Category)
+    suspend fun delete(category: Category)
 
     @Update
     suspend fun update(category: Category)
+
+    @Update
+    suspend fun update(categories: List<Category>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(category: Category)
@@ -27,4 +33,10 @@ interface CategoryDao {
     // Prepopulate database
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(categories: List<Category>)
+
+    @Transaction
+    suspend fun delete(category: Category, categories: List<Category>) {
+        delete(category)
+        update(categories)
+    }
 }
