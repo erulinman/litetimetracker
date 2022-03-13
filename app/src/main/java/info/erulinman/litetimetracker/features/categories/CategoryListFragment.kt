@@ -10,8 +10,8 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import dagger.Lazy
-import info.erulinman.litetimetracker.base.BaseFragment
 import info.erulinman.litetimetracker.R
+import info.erulinman.litetimetracker.base.BaseFragment
 import info.erulinman.litetimetracker.databinding.FragmentCategoryListBinding
 import info.erulinman.litetimetracker.di.appComponent
 import info.erulinman.litetimetracker.features.presets.PresetListFragment

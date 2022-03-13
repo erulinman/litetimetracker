@@ -53,11 +53,11 @@ class MigrationTest {
             MIGRATION_1_2
         ).use { db ->
             db.query("SELECT * FROM categories").apply { moveToFirst() }.use {
-                assertEquals(categories.lastIndex+1, it.columnCount)
+                assertEquals(categories.lastIndex + 1, it.columnCount)
                 assertEquals(categories.size, it.count)
             }
             db.query("SELECT * FROM presets").apply { moveToFirst() }.use {
-                assertEquals(presets.lastIndex+1, it.columnCount)
+                assertEquals(presets.lastIndex + 1, it.columnCount)
                 assertEquals(presets.size, it.count)
             }
             db.execSQL("INSERT INTO categories VALUES(4, 3, 'C4')")
