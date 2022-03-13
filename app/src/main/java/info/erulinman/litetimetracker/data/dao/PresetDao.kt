@@ -7,10 +7,10 @@ import info.erulinman.litetimetracker.data.entity.Preset
 
 @Dao
 interface PresetDao {
-    @Query("SELECT * FROM presets WHERE categoryId = :categoryId ORDER BY id")
+    @Query("SELECT * FROM presets WHERE categoryId = :categoryId ORDER BY position")
     fun getPresetsStream(categoryId: Long): LiveData<List<Preset>>
 
-    @Query("SELECT * FROM presets WHERE categoryId = :categoryId ORDER BY id")
+    @Query("SELECT * FROM presets WHERE categoryId = :categoryId ORDER BY position")
     suspend fun getPresetsSync(categoryId: Long): List<Preset>?
 
     @Query("SELECT MAX(id) FROM presets")
