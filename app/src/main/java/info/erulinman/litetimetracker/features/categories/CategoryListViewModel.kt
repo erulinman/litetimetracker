@@ -13,7 +13,8 @@ class CategoryListViewModel(private val repository: DatabaseRepository) : ViewMo
 
     fun addNewCategory(name: String) = viewModelScope.launch(Dispatchers.IO) {
         val newId = repository.getMaxCategoryId()?.let { it + 1 } ?: 1
-        repository.insertCategory(Category(newId, name))
+        val newPosition = categories.value?.size ?: 0
+        repository.insertCategory(Category(newId, newPosition, name))
     }
 
     fun deleteCategory(category: Category) = viewModelScope.launch(Dispatchers.IO) {

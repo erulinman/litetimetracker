@@ -11,12 +11,12 @@ class DatabaseRepositoryImpl @Inject constructor(
     private val database: AppDatabase
 ) : DatabaseRepository {
 
-    override fun loadCategories() = database.categoryDao().getCategoryList()
+    override fun loadCategories() = database.categoryDao().getCategoriesStream()
 
     override fun loadCategoryById(id: Long) = database.categoryDao().getCategoryById(id)
 
     override fun loadPresets(categoryId: Long) =
-        database.presetDao().getPresetForCategoryId(categoryId)
+        database.presetDao().getPresetsStream(categoryId)
 
     override fun getMaxCategoryId() = database.categoryDao().getMaxCategoryId()
 
@@ -29,12 +29,31 @@ class DatabaseRepositoryImpl @Inject constructor(
         database.presetDao().insert(preset)
 
     override suspend fun deleteCategory(category: Category) {
-        database.categoryDao().deleteCategory(category)
+        val oldList = database.categoryDao().getCategoriesSync() ?: return
+        val newList = mutableListOf<Category>()
+        var correctPosition = 0
+        oldList.forEach {
+            if (it == category) return@forEach
+            val newItem = Category(it.id, correctPosition, it.name)
+            newList.add(newItem)
+            correctPosition++
+        }
+        database.categoryDao().delete(category, newList)
         database.presetDao().deleteByCategoryId(category.id)
     }
 
-    override suspend fun deletePreset(preset: Preset) =
-        database.presetDao().delete(preset)
+    override suspend fun deletePreset(preset: Preset) {
+        val oldList = database.presetDao().getPresetsSync(preset.categoryId) ?: return
+        val newList = mutableListOf<Preset>()
+        var correctPosition = 0
+        oldList.forEach {
+            if (it == preset) return@forEach
+            val newItem = Preset(it.id, it.categoryId, correctPosition, it.name, it.time)
+            newList.add(newItem)
+            correctPosition++
+        }
+        database.presetDao().delete(preset, newList)
+    }
 
     override suspend fun updatePreset(preset: Preset) =
         database.presetDao().update(preset)

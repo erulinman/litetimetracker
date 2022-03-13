@@ -11,8 +11,8 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.ItemTouchHelper
-import info.erulinman.litetimetracker.base.BaseFragment
 import info.erulinman.litetimetracker.R
+import info.erulinman.litetimetracker.base.BaseFragment
 import info.erulinman.litetimetracker.data.entity.Category
 import info.erulinman.litetimetracker.data.entity.Preset
 import info.erulinman.litetimetracker.databinding.FragmentPresetListBinding
@@ -86,7 +86,9 @@ class PresetListFragment : BaseFragment<FragmentPresetListBinding>() {
                     val presetId = getLong(PresetEditorFragment.PRESET_ID, EMPTY)
                     if (presetId != EMPTY) {
                         val categoryId = getLong(PresetEditorFragment.CATEGORY_ID)
-                        val updatedPreset = Preset(presetId, categoryId, presetName, presetTime)
+                        val position = getInt(PresetEditorFragment.PRESET_POSITION)
+                        val updatedPreset =
+                            Preset(presetId, categoryId, position, presetName, presetTime)
                         viewModel.updatePreset(updatedPreset)
                         return@setFragmentResultListener
                     }
@@ -106,7 +108,8 @@ class PresetListFragment : BaseFragment<FragmentPresetListBinding>() {
                     val categoryId = getLong(CategoryEditorFragment.CATEGORY_ID)
                     val categoryName =
                         getString(CategoryEditorFragment.CATEGORY_NAME)!! // null check in CategoryEditorFragment
-                    viewModel.updateCategory(Category(categoryId, categoryName))
+                    val position = getInt(CategoryEditorFragment.CATEGORY_POSITION)
+                    viewModel.updateCategory(Category(categoryId, position, categoryName))
                 }
             }
         }

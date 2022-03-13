@@ -10,6 +10,7 @@ import kotlinx.parcelize.Parcelize
 data class Preset(
     @PrimaryKey override val id: Long,
     val categoryId: Long,
+    val position: Int,
     val name: String,
     val time: Long = 90000
 ) : Identifiable, Parcelable

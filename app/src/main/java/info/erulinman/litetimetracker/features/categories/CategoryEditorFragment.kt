@@ -34,13 +34,15 @@ class CategoryEditorFragment : BaseDialogFragment<FragmentAddCategoryBinding>() 
         val saveButtonClickListener = DialogInterface.OnClickListener { _, which ->
             val currentCategoryName = binding.editCategoryName.text.toString()
             val categoryId = category?.id // null if fragment used to add new category
+            val position = category?.position
 
             parentFragmentManager.setFragmentResult(
                 REQUEST_KEY,
                 bundleOf(
                     RESPONSE_KEY to which,
                     CATEGORY_NAME to currentCategoryName,
-                    CATEGORY_ID to categoryId
+                    CATEGORY_ID to categoryId,
+                    CATEGORY_POSITION to position
                 )
             )
         }
@@ -112,6 +114,7 @@ class CategoryEditorFragment : BaseDialogFragment<FragmentAddCategoryBinding>() 
         const val RESPONSE_KEY = "CategoryEditorFragment.RESPONSE_KEY"
         const val CATEGORY_NAME = "CategoryEditorFragment.CATEGORY_NAME"
         const val CATEGORY_ID = "CategoryEditorFragment.CATEGORY_ID"
+        const val CATEGORY_POSITION = "CategoryEditorFragment.CATEGORY_POSITION"
 
         fun getInstanceWithArg(category: Category) = CategoryEditorFragment().apply {
             arguments = bundleOf(ARG_CATEGORY to category)

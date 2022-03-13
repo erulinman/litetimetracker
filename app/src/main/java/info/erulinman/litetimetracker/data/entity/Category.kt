@@ -9,5 +9,6 @@ import kotlinx.parcelize.Parcelize
 @Entity(tableName = "categories")
 data class Category(
     @PrimaryKey override val id: Long,
+    val position: Int,
     val name: String
 ) : Identifiable, Parcelable
