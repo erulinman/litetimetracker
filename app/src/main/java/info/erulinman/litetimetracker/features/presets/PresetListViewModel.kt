@@ -41,4 +41,24 @@ class PresetListViewModel(
     fun updateCategory(category: Category) = viewModelScope.launch(Dispatchers.IO) {
         repository.updateCategory(category)
     }
+
+    fun onChangePositions(from: Int, to: Int) = viewModelScope.launch(Dispatchers.IO) {
+        if (from == to) return@launch
+        val currentPresets = presets.value!!
+        val updatedPresets = mutableListOf<Preset>().apply {
+            add(currentPresets[from].copy(position = to))
+        }
+        if (from < to) {
+            for (i in (from + 1)..to) {
+                val preset = currentPresets[i]
+                updatedPresets.add(preset.copy(position = preset.position - 1))
+            }
+        } else {
+            for (i in (to until from)) {
+                val preset = currentPresets[i]
+                updatedPresets.add(preset.copy(position = preset.position + 1))
+            }
+        }
+        repository.updatePresets(updatedPresets)
+    }
 }

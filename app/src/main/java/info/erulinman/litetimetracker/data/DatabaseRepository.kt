@@ -26,5 +26,9 @@ interface DatabaseRepository {
 
     suspend fun updatePreset(preset: Preset)
 
+    suspend fun updatePresets(presets: List<Preset>)
+
     suspend fun updateCategory(category: Category)
+
+    suspend fun updateCategories(categories: List<Category>)
 }

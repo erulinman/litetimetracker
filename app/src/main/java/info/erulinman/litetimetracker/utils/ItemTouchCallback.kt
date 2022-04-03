@@ -15,7 +15,7 @@ class ItemTouchCallback<T : ItemTouchCallback.Adapter>(private val adapter: T) :
         if (viewHolder is AddButtonAdapter.AddButtonViewHolder) {
             return makeMovementFlags(ACTION_STATE_IDLE, ACTION_STATE_IDLE)
         }
-        val dragFlags = ACTION_STATE_IDLE
+        val dragFlags = UP or DOWN
         val swipeFlags = LEFT or RIGHT
         return makeMovementFlags(dragFlags, swipeFlags)
     }
@@ -25,16 +25,33 @@ class ItemTouchCallback<T : ItemTouchCallback.Adapter>(private val adapter: T) :
         viewHolder: RecyclerView.ViewHolder,
         target: RecyclerView.ViewHolder
     ): Boolean {
-        // TODO("Not yet implemented")
-        return false
+        adapter.onItemMove(viewHolder.absoluteAdapterPosition, target.absoluteAdapterPosition)
+        return true
     }
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
         adapter.onItemSwipe(viewHolder.bindingAdapterPosition)
     }
 
+    override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
+        super.clearView(recyclerView, viewHolder)
+        adapter.onClearView(viewHolder)
+    }
+
+    override fun canDropOver(
+        recyclerView: RecyclerView,
+        current: RecyclerView.ViewHolder,
+        target: RecyclerView.ViewHolder
+    ): Boolean {
+        return target !is AddButtonAdapter.AddButtonViewHolder
+    }
+
     interface Adapter {
 
         fun onItemSwipe(position: Int)
+
+        fun onItemMove(from: Int, to: Int)
+
+        fun onClearView(targetViewHolder: RecyclerView.ViewHolder)
     }
 }

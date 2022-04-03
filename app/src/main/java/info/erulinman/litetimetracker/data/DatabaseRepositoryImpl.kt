@@ -60,4 +60,12 @@ class DatabaseRepositoryImpl @Inject constructor(
 
     override suspend fun updateCategory(category: Category) =
         database.categoryDao().update(category)
+
+    override suspend fun updatePresets(presets: List<Preset>) {
+        database.presetDao().update(presets)
+    }
+
+    override suspend fun updateCategories(categories: List<Category>) {
+        database.categoryDao().update(categories)
+    }
 }
