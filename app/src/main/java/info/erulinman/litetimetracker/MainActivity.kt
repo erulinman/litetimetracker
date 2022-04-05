@@ -10,7 +10,7 @@ import info.erulinman.litetimetracker.base.BaseFragment
 import info.erulinman.litetimetracker.databinding.ActivityMainBinding
 import info.erulinman.litetimetracker.features.categories.CategoryListFragment
 
-class MainActivity : AppCompatActivity(), Toolbar, Navigator {
+class MainActivity : AppCompatActivity(), Navigator {
 
     private lateinit var binding: ActivityMainBinding
 
@@ -26,28 +26,6 @@ class MainActivity : AppCompatActivity(), Toolbar, Navigator {
         val fragment = supportFragmentManager
             .findFragmentById(R.id.mainFragmentContainer) as BaseFragment<*>
         if (fragment.onBackPressed()) super.onBackPressed()
-    }
-
-    override fun updateToolbar(title: String, actionIconRes: Int, action: () -> Unit) {
-        binding.title.text = title
-        binding.btnAction.setImageResource(actionIconRes)
-        binding.btnAction.setOnClickListener { action() }
-    }
-
-    override fun setActionVisibility(visibility: Boolean) {
-        binding.btnAction.isVisible = visibility
-    }
-
-    override fun updateTitle(title: String) {
-        binding.title.text = title
-    }
-
-    override fun updateTitle(stringResId: Int) {
-        binding.title.setText(stringResId)
-    }
-
-    override fun updateTitle(visibility: Boolean) {
-        binding.title.isVisible = visibility
     }
 
     override fun navigateTo(fragment: Fragment, addToBackStack: Boolean) {
