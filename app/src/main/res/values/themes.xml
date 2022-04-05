@@ -4,9 +4,11 @@
         <item name="colorOnBackground">@color/black_hole</item>
         <item name="colorPrimary">@color/black_night</item>
         <item name="colorOnPrimary">@color/white</item>
+        <item name="rippleOnPrimary">@color/ripple_light</item>
         <item name="colorPrimaryVariant">@color/gray</item>
         <item name="colorSecondary">@color/gray</item>
         <item name="colorOnSecondary">@color/black_night</item>
+        <item name="rippleOnSecondary">@color/ripple_dark</item>
         <item name="android:statusBarColor">?attr/colorPrimary</item>
     </style>
 </resources>

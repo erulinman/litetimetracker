@@ -37,9 +37,9 @@ class CategoryListFragment : BaseFragment<FragmentCategoryListBinding>() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        toolbar.setActionVisibility(false)
-        toolbar.updateToolbar(getString(R.string.app_name), R.drawable.ic_edit) {
-            // TODO("Feature not implemented yet")
+        with(binding.toolbar) {
+            setActionVisibility(false)
+            setTitle(R.string.app_name)
         }
 
         val adapter = CategoryAdapter(viewModel) { category ->

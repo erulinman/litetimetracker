@@ -40,7 +40,10 @@ class PresetListFragment : BaseFragment<FragmentPresetListBinding>() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        toolbar.setActionVisibility(true)
+        with(binding.toolbar) {
+            setActionVisibility(true)
+            setActionIcon(R.drawable.ic_edit)
+        }
 
         val presetAdapter = PresetAdapter(viewModel) { preset ->
             navigator.showDialog(
@@ -123,7 +126,8 @@ class PresetListFragment : BaseFragment<FragmentPresetListBinding>() {
         }
         category.observe(viewLifecycleOwner) { category ->
             if (category == null) return@observe
-            toolbar.updateToolbar(category.name, R.drawable.ic_edit) {
+            binding.toolbar.setTitle(category.name)
+            binding.toolbar.setOnActionClickListener {
                 navigator.showDialog(
                     CategoryEditorFragment.getInstanceWithArg(category),
                     CategoryEditorFragment.TAG

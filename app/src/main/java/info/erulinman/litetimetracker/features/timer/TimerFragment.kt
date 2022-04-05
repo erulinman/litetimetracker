@@ -44,10 +44,6 @@ class TimerFragment : BaseFragment<FragmentTimerBinding>() {
         enableBroadcast()
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        toolbar.setActionVisibility(false)
-    }
-
     override fun onStart() {
         bindTimerService()
         setExitFragmentListener()
@@ -55,6 +51,10 @@ class TimerFragment : BaseFragment<FragmentTimerBinding>() {
             parentFragmentManager.popBackStack()
         }
         super.onStart()
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        binding.toolbar.setActionVisibility(false)
     }
 
     override fun onStop() {
@@ -84,7 +84,7 @@ class TimerFragment : BaseFragment<FragmentTimerBinding>() {
             service.restartCurrentPreset()
         }
         service.presetName.observe(viewLifecycleOwner) { presetName ->
-            toolbar.updateTitle(presetName)
+            binding.toolbar.setTitle(presetName)
         }
         service.time.observe(viewLifecycleOwner) { time ->
             binding.timer.text = time
@@ -96,19 +96,17 @@ class TimerFragment : BaseFragment<FragmentTimerBinding>() {
                     binding.fabMain.setImageResource(R.drawable.ic_play)
                     binding.fabMain.setOnClickListener { service.startTimer() }
                     binding.fabRestartCurrent.isVisible = true
-                    toolbar.updateTitle(true)
                 }
                 TimerService.STARTED -> {
                     binding.fabMain.setImageResource(R.drawable.ic_pause)
                     binding.fabMain.setOnClickListener { service.stopTimer() }
                     binding.fabRestartCurrent.isVisible = true
-                    toolbar.updateTitle(true)
                 }
                 TimerService.FINISHED -> {
                     binding.fabMain.setImageResource(R.drawable.ic_restart)
                     binding.fabMain.setOnClickListener { service.restartPresets() }
                     binding.fabRestartCurrent.isVisible = false
-                    toolbar.updateTitle(false)
+                    binding.toolbar.setTitle("")
                 }
             }
         }
