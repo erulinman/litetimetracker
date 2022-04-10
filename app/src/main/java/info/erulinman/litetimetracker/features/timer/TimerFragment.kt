@@ -97,16 +97,19 @@ class TimerFragment : BaseFragment<FragmentTimerBinding>() {
                     binding.fabMiddle.setImageResource(R.drawable.ic_play_72)
                     binding.fabMiddle.setOnClickListener { service.startTimer() }
                     binding.fabRestart.isVisible = true
+                    binding.tvPresetName.isVisible = true
                 }
                 TimerService.STARTED -> {
                     binding.fabMiddle.setImageResource(R.drawable.ic_pause_72)
                     binding.fabMiddle.setOnClickListener { service.stopTimer() }
                     binding.fabRestart.isVisible = true
+                    binding.tvPresetName.isVisible = true
                 }
                 TimerService.FINISHED -> {
                     binding.fabMiddle.setImageResource(R.drawable.ic_restart_72)
                     binding.fabMiddle.setOnClickListener { service.restartPresets() }
                     binding.fabRestart.isVisible = false
+                    binding.tvPresetName.isVisible = false
                     binding.tvPresetName.text = EMPTY_STRING
                 }
             }
