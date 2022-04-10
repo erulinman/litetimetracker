@@ -10,5 +10,6 @@
         <item name="colorOnSecondary">@color/black_night</item>
         <item name="rippleOnSecondary">@color/ripple_dark</item>
         <item name="android:statusBarColor">?attr/colorPrimary</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
     </style>
 </resources>

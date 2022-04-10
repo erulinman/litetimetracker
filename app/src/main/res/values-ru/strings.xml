@@ -33,4 +33,7 @@
     <string name="tv_timer_base">00:00:00</string>
     <string name="tv_timer_finish">Финиш</string>
     <string name="tv_toolbar_selection">"Выделено:"</string>
+    <string name="content_description_left_timer_button">Левая кнопка таймера</string>
+    <string name="content_description_middle_timer_button">Центральная кнопка таймера</string>
+    <string name="content_description_right_timer_button">Правая кнопка таймера</string>
 </resources>

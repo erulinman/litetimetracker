@@ -1,74 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tool="http://schemas.android.com/tools"
     android:id="@+id/timerFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/backgroundColor">
 
-    <info.erulinman.litetimetracker.features.common.view.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
-
     <TextView
-        android:id="@+id/timer"
+        android:id="@+id/tvPresetName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="?attr/backgroundColor"
-        android:textColor="?attr/colorOnBackground"
-        android:textSize="@dimen/text_size_timer"
-        android:text="@string/tv_timer_base"
-        app:layout_constraintVertical_chainStyle="spread"
-        app:layout_constraintBottom_toTopOf="@id/fabMain"
+        android:textColor="?attr/colorPrimary"
+        android:textSize="40sp"
+        app:layout_constraintBottom_toTopOf="@id/tvTimer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"/>
+        app:layout_constraintTop_toTopOf="parent"
+        tool:text="Preset" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabMain"
+    <TextView
+        android:id="@+id/tvTimer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:contentDescription="@string/btn_pause"
-        android:backgroundTint="?attr/colorPrimary"
-        android:src="@drawable/ic_pause"
-        app:fabCustomSize="72dp"
-        app:maxImageSize="42dp"
-        app:tint="?attr/colorOnPrimary"
-        app:layout_constraintTop_toBottomOf="@id/timer"
+        android:text="@string/tv_timer_base"
+        android:textColor="?attr/colorPrimary"
+        android:textSize="@dimen/text_size_timer"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+    <ImageButton
+        android:id="@+id/fabRestart"
+        android:layout_width="62dp"
+        android:layout_height="62dp"
+        android:layout_marginEnd="38dp"
+        android:background="@drawable/ripple_fab_transparent"
+        android:contentDescription="@string/content_description_right_timer_button"
+        android:src="@drawable/ic_restart_42"
+        android:tint="?attr/colorPrimary"
+        app:layout_constraintBottom_toBottomOf="@id/fabMiddle"
+        app:layout_constraintEnd_toStartOf="@id/fabMiddle"
+        app:layout_constraintHorizontal_bias="1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/fabMiddle"
+        tool:src="@drawable/ic_restart_42" />
+
+    <ImageButton
+        android:id="@+id/fabMiddle"
+        android:layout_width="92dp"
+        android:layout_height="92dp"
+        android:background="@drawable/ripple_fab_transparent"
+        android:contentDescription="@string/content_description_middle_timer_button"
+        android:tint="?attr/colorPrimary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvTimer"
+        tool:src="@drawable/ic_play_72" />
+
+    <ImageButton
         android:id="@+id/fabSkip"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_skip"
-        android:contentDescription="@string/btn_skip"
-        android:backgroundTint="?attr/colorPrimary"
-        app:tint="?attr/colorOnPrimary"
-        app:layout_constraintTop_toTopOf="@id/fabMain"
-        app:layout_constraintBottom_toBottomOf="@id/fabMain"
-        app:layout_constraintStart_toEndOf="@id/fabMain"
-        app:layout_constraintEnd_toEndOf="parent"/>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabRestartCurrent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_restart"
-        android:contentDescription="@string/btn_restart"
-        android:backgroundTint="?attr/colorPrimary"
-        app:tint="?attr/colorOnPrimary"
-        app:layout_constraintTop_toTopOf="@id/fabMain"
-        app:layout_constraintBottom_toBottomOf="@id/fabMain"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/fabMain"/>
+        android:layout_width="62dp"
+        android:layout_height="62dp"
+        android:layout_marginStart="38dp"
+        android:background="@drawable/ripple_fab_transparent"
+        android:contentDescription="@string/content_description_left_timer_button"
+        android:src="@drawable/ic_skip_42"
+        android:tint="?attr/colorPrimary"
+        app:layout_constraintBottom_toBottomOf="@id/fabMiddle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toEndOf="@id/fabMiddle"
+        app:layout_constraintTop_toTopOf="@id/fabMiddle"
+        tool:src="@drawable/ic_skip_42" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

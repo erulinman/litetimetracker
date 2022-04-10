@@ -92,7 +92,7 @@ class NotificationHelper @Inject constructor(context: Context) : ContextWrapper(
         )
         val title = getString(R.string.btn_stop)
         return NotificationCompat.Action.Builder(
-            R.drawable.ic_pause,
+            R.drawable.ic_pause_24,
             title,
             pendingIntent
         ).build()
@@ -107,7 +107,7 @@ class NotificationHelper @Inject constructor(context: Context) : ContextWrapper(
         )
         val title = getString(R.string.btn_start)
         return NotificationCompat.Action.Builder(
-            R.drawable.ic_play,
+            R.drawable.ic_play_24,
             title,
             pendingIntent
         ).build()
@@ -122,7 +122,7 @@ class NotificationHelper @Inject constructor(context: Context) : ContextWrapper(
         )
         val title = getString(R.string.btn_restart)
         return NotificationCompat.Action.Builder(
-            R.drawable.ic_restart,
+            R.drawable.ic_restart_24,
             title,
             pendingIntent
         ).build()
@@ -137,7 +137,7 @@ class NotificationHelper @Inject constructor(context: Context) : ContextWrapper(
         )
         val title = getString(R.string.btn_skip)
         return NotificationCompat.Action.Builder(
-            R.drawable.ic_skip,
+            R.drawable.ic_skip_24,
             title,
             pendingIntent
         ).build()
