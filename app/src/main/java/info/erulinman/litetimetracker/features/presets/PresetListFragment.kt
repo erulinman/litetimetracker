@@ -20,6 +20,7 @@ import info.erulinman.litetimetracker.di.appComponent
 import info.erulinman.litetimetracker.features.categories.CategoryEditorFragment
 import info.erulinman.litetimetracker.features.timer.TimerFragment
 import info.erulinman.litetimetracker.utils.ItemTouchCallback
+import info.erulinman.litetimetracker.utils.setDarkStatusBar
 import javax.inject.Inject
 
 class PresetListFragment : BaseFragment<FragmentPresetListBinding>() {
@@ -40,6 +41,8 @@ class PresetListFragment : BaseFragment<FragmentPresetListBinding>() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        setDarkStatusBar()
+
         with(binding.toolbar) {
             setActionVisibility(true)
             setActionIcon(R.drawable.ic_edit)

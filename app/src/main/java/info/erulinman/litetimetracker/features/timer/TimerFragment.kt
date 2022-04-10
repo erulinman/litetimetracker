@@ -4,6 +4,7 @@ import android.content.*
 import android.os.Bundle
 import android.os.IBinder
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
@@ -13,6 +14,7 @@ import info.erulinman.litetimetracker.R
 import info.erulinman.litetimetracker.base.BaseFragment
 import info.erulinman.litetimetracker.data.entity.Preset
 import info.erulinman.litetimetracker.databinding.FragmentTimerBinding
+import info.erulinman.litetimetracker.utils.setLightStatusBar
 
 class TimerFragment : BaseFragment<FragmentTimerBinding>() {
 
@@ -41,6 +43,10 @@ class TimerFragment : BaseFragment<FragmentTimerBinding>() {
             setServiceConnection(presets)
         }
         enableBroadcast()
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        setLightStatusBar()
     }
 
     override fun onStart() {

@@ -16,6 +16,7 @@ import info.erulinman.litetimetracker.databinding.FragmentCategoryListBinding
 import info.erulinman.litetimetracker.di.appComponent
 import info.erulinman.litetimetracker.features.presets.PresetListFragment
 import info.erulinman.litetimetracker.utils.ItemTouchCallback
+import info.erulinman.litetimetracker.utils.setDarkStatusBar
 import javax.inject.Inject
 
 class CategoryListFragment : BaseFragment<FragmentCategoryListBinding>() {
@@ -37,6 +38,8 @@ class CategoryListFragment : BaseFragment<FragmentCategoryListBinding>() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        setDarkStatusBar()
+
         with(binding.toolbar) {
             setActionVisibility(false)
             setTitle(R.string.app_name)
