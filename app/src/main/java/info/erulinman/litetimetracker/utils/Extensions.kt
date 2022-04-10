@@ -3,7 +3,6 @@ package info.erulinman.litetimetracker.utils
 import android.os.Build
 import android.view.View
 import android.view.WindowInsetsController
-import android.view.WindowManager
 import androidx.fragment.app.Fragment
 import info.erulinman.litetimetracker.R
 import java.util.concurrent.TimeUnit
@@ -29,32 +28,28 @@ fun Long.toListHHMMSS(): List<String> {
 
 fun List<String>.toStringHHMMSS(): String = "${this[0]}:${this[1]}:${this[2]}"
 
-fun Fragment.setLightStatusBar() {
-    val window = requireActivity().window
-    window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-    window.statusBarColor = resources.getColor(R.color.white, context?.theme)
+fun Fragment.setLightStatusBar() = with(requireActivity().window) {
+    statusBarColor = resources.getColor(R.color.white, context?.theme)
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-        window.decorView.windowInsetsController?.setSystemBarsAppearance(
+        decorView.windowInsetsController?.setSystemBarsAppearance(
             WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS,
             WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
         )
     } else {
         @Suppress("DEPRECATION")
-        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+        decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
     }
 }
 
-fun Fragment.setDarkStatusBar() {
-    val window = requireActivity().window
-    window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-    window.statusBarColor = resources.getColor(R.color.black_night, context?.theme)
+fun Fragment.setDarkStatusBar() = with(requireActivity().window) {
+    statusBarColor = resources.getColor(R.color.black_night, context?.theme)
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-        window.decorView.windowInsetsController?.setSystemBarsAppearance(
+        decorView.windowInsetsController?.setSystemBarsAppearance(
             0,
             WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
         )
     } else {
         @Suppress("DEPRECATION")
-        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+        decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE
     }
 }
