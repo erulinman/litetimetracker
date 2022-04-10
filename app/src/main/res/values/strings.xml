@@ -33,4 +33,7 @@
     <string name="tv_timer_base">00:00:00</string>
     <string name="tv_timer_finish">Finished</string>
     <string name="tv_toolbar_selection">"Selected:"</string>
+    <string name="content_description_left_timer_button">Left timer button</string>
+    <string name="content_description_middle_timer_button">Middle timer button</string>
+    <string name="content_description_right_timer_button">Right timer button</string>
 </resources>

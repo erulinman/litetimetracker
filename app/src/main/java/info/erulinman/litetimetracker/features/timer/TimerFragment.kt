@@ -4,7 +4,6 @@ import android.content.*
 import android.os.Bundle
 import android.os.IBinder
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
@@ -53,10 +52,6 @@ class TimerFragment : BaseFragment<FragmentTimerBinding>() {
         super.onStart()
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        binding.toolbar.setActionVisibility(false)
-    }
-
     override fun onStop() {
         super.onStop()
         unbindTimerService()
@@ -80,33 +75,33 @@ class TimerFragment : BaseFragment<FragmentTimerBinding>() {
 
     private fun observeTimerService() {
         binding.fabSkip.setOnClickListener { service.skipPreset() }
-        binding.fabRestartCurrent.setOnClickListener {
+        binding.fabRestart.setOnClickListener {
             service.restartCurrentPreset()
         }
         service.presetName.observe(viewLifecycleOwner) { presetName ->
-            binding.toolbar.setTitle(presetName)
+            binding.tvPresetName.text = presetName
         }
         service.time.observe(viewLifecycleOwner) { time ->
-            binding.timer.text = time
+            binding.tvTimer.text = time
         }
         service.state.observe(viewLifecycleOwner) { state ->
             when (state) {
                 TimerService.INITIALIZED -> service.startTimer()
                 TimerService.STOPPED -> {
-                    binding.fabMain.setImageResource(R.drawable.ic_play)
+                    binding.fabMain.setImageResource(R.drawable.ic_play_72)
                     binding.fabMain.setOnClickListener { service.startTimer() }
-                    binding.fabRestartCurrent.isVisible = true
+                    binding.fabRestart.isVisible = true
                 }
                 TimerService.STARTED -> {
-                    binding.fabMain.setImageResource(R.drawable.ic_pause)
+                    binding.fabMain.setImageResource(R.drawable.ic_pause_72)
                     binding.fabMain.setOnClickListener { service.stopTimer() }
-                    binding.fabRestartCurrent.isVisible = true
+                    binding.fabRestart.isVisible = true
                 }
                 TimerService.FINISHED -> {
-                    binding.fabMain.setImageResource(R.drawable.ic_restart)
+                    binding.fabMain.setImageResource(R.drawable.ic_restart_72)
                     binding.fabMain.setOnClickListener { service.restartPresets() }
-                    binding.fabRestartCurrent.isVisible = false
-                    binding.toolbar.setTitle("")
+                    binding.fabRestart.isVisible = false
+                    binding.tvPresetName.text = EMPTY_STRING
                 }
             }
         }
@@ -177,6 +172,8 @@ class TimerFragment : BaseFragment<FragmentTimerBinding>() {
 
     companion object {
         const val ARG_PRESET_LIST = "ARG_PRESET_LIST"
+
+        private const val EMPTY_STRING = ""
 
         fun getInstanceWithArg(presets: List<Preset>) = TimerFragment().apply {
             arguments = bundleOf(

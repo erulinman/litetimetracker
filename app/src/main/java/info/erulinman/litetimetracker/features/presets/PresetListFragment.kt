@@ -59,7 +59,7 @@ class PresetListFragment : BaseFragment<FragmentPresetListBinding>() {
         setupRecyclerView(concatAdapter, presetAdapter)
         observeViewModel(presetAdapter)
 
-        binding.fab.setImageResource(R.drawable.ic_play)
+        binding.fab.setImageResource(R.drawable.ic_play_24)
         binding.fab.setOnClickListener {
             val fragment = TimerFragment.getInstanceWithArg(viewModel.presets.value!!)
             navigator.navigateTo(fragment, true)
