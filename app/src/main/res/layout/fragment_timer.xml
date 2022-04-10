@@ -40,15 +40,15 @@
         android:contentDescription="@string/content_description_right_timer_button"
         android:src="@drawable/ic_restart_42"
         android:tint="?attr/colorPrimary"
-        app:layout_constraintBottom_toBottomOf="@id/fabMain"
-        app:layout_constraintEnd_toStartOf="@id/fabMain"
+        app:layout_constraintBottom_toBottomOf="@id/fabMiddle"
+        app:layout_constraintEnd_toStartOf="@id/fabMiddle"
         app:layout_constraintHorizontal_bias="1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/fabMain"
+        app:layout_constraintTop_toTopOf="@id/fabMiddle"
         tool:src="@drawable/ic_restart_42" />
 
     <ImageButton
-        android:id="@+id/fabMain"
+        android:id="@+id/fabMiddle"
         android:layout_width="92dp"
         android:layout_height="92dp"
         android:background="@drawable/ripple_fab_transparent"
@@ -69,11 +69,11 @@
         android:contentDescription="@string/content_description_left_timer_button"
         android:src="@drawable/ic_skip_42"
         android:tint="?attr/colorPrimary"
-        app:layout_constraintBottom_toBottomOf="@id/fabMain"
+        app:layout_constraintBottom_toBottomOf="@id/fabMiddle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0"
-        app:layout_constraintStart_toEndOf="@id/fabMain"
-        app:layout_constraintTop_toTopOf="@id/fabMain"
+        app:layout_constraintStart_toEndOf="@id/fabMiddle"
+        app:layout_constraintTop_toTopOf="@id/fabMiddle"
         tool:src="@drawable/ic_skip_42" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

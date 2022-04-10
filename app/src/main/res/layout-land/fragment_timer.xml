@@ -27,7 +27,7 @@
         android:textColor="?attr/colorPrimary"
         android:textSize="@dimen/text_size_timer"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/fabMain"
+        app:layout_constraintEnd_toStartOf="@id/fabMiddle"
         app:layout_constraintHorizontal_chainStyle="spread"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvPresetName" />
@@ -41,14 +41,14 @@
         android:contentDescription="@string/content_description_right_timer_button"
         android:src="@drawable/ic_restart_42"
         android:tint="?attr/colorPrimary"
-        app:layout_constraintBottom_toTopOf="@+id/fabMain"
-        app:layout_constraintEnd_toEndOf="@+id/fabMain"
-        app:layout_constraintStart_toStartOf="@+id/fabMain"
+        app:layout_constraintBottom_toTopOf="@+id/fabMiddle"
+        app:layout_constraintEnd_toEndOf="@+id/fabMiddle"
+        app:layout_constraintStart_toStartOf="@+id/fabMiddle"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1" />
 
     <ImageButton
-        android:id="@+id/fabMain"
+        android:id="@+id/fabMiddle"
         android:layout_width="92dp"
         android:layout_height="92dp"
         android:background="@drawable/ripple_fab_transparent"
@@ -71,9 +71,9 @@
         android:src="@drawable/ic_skip_42"
         android:tint="?attr/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/fabMain"
-        app:layout_constraintStart_toStartOf="@+id/fabMain"
-        app:layout_constraintTop_toBottomOf="@+id/fabMain"
+        app:layout_constraintEnd_toEndOf="@+id/fabMiddle"
+        app:layout_constraintStart_toStartOf="@+id/fabMiddle"
+        app:layout_constraintTop_toBottomOf="@+id/fabMiddle"
         app:layout_constraintVertical_bias="0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
