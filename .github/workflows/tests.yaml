@@ -52,7 +52,7 @@ jobs:
 
   instrumented_tests_job:
     needs: assemble_job
-    name: Instrumentation tests
+    name: Instrumented tests
     runs-on: ubuntu-latest
     steps:
       - name: Get artifacts
