@@ -64,10 +64,10 @@ class CategoryListFragment : BaseFragment<FragmentCategoryListBinding>() {
     }
 
     private fun setupRecyclerView(adapter: CategoryAdapter) {
-        binding.recyclerView.adapter = adapter
+        binding.rvCategories.adapter = adapter
         val callback = ItemTouchCallback(adapter)
         val itemTouchHelper = ItemTouchHelper(callback)
-        itemTouchHelper.attachToRecyclerView(binding.recyclerView)
+        itemTouchHelper.attachToRecyclerView(binding.rvCategories)
     }
 
     private fun setCategoryEditorFragmentListener() {
