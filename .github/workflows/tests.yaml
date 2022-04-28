@@ -1,0 +1,50 @@
+name: Run tests
+
+on: pull_request
+
+jobs:
+  unit_test_job:
+    name: Unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Git checkout
+        uses: action/checkout@v3
+
+      - name: Set up Java 11
+        uses: action/setup-java@v3
+        with:
+          distibution: 'zulu'
+          version: '11'
+          cache: 'gradle'
+
+      - name: Run tests
+        run: ./gradlew test
+
+  assemble_job:
+    name: Assemble artifacts
+    runs-on: ubuntu-latest
+    steps:
+      - name: Git checkout
+        uses: action/checkout@v3
+
+      - name: Set up Java 11
+        uses: action/setup-java@v3
+        with:
+          distribution: 'zulu'
+          version: '11'
+          cache: 'gradle'
+
+      - name: Assemble artifacts
+        run: ./gradlew assembleDebug assembleDebugAndroidTest
+
+      - name: Upload debug apk
+        uses: actions/upload-artifact@v3
+        with:
+          name: app-debug
+          path: app/build/outputs/apk/debug/app-debug.apk
+
+      - name: Upload androidTest apk
+        uses: actions/upload-artifact@v3
+        with:
+          name: app-debug-androidTest
+          path: app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk
