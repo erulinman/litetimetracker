@@ -35,7 +35,7 @@ jobs:
           java-version: '11'
           cache: 'gradle'
 
-      - name: Assemble artifacts
+      - name: Build
         run: ./gradlew assembleDebug assembleDebugAndroidTest
 
       - name: Upload debug apk
@@ -52,7 +52,7 @@ jobs:
 
   instrumented_tests_job:
     needs: assemble_job
-    name: Run instrumentation tests
+    name: Instrumentation tests
     runs-on: ubuntu-latest
     steps:
       - name: Get artifacts
