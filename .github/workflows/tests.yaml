@@ -58,9 +58,6 @@ jobs:
       - name: Get artifacts
         uses: actions/download-artifact@v3
 
-      - name: Display structure of downloaded files
-        run: ls -R
-
       - name: Run instrumented tests on Firebase Test Lab
         uses: actions-hub/gcloud@master
         env:
@@ -72,8 +69,8 @@ jobs:
             --type instrumentation \
             --use-orchestrator \
             --results-history-name='LTT tests' \
-            --app app-debug.apk \
-            --test app-debug-androidTest.apk \
+            --app app-debug/app-debug.apk \
+            --test app-debug-androidTest/app-debug-androidTest.apk \
             --device model=Pixel2,version=27,locale=ru_RU,orientation=portrait \
             --no-performance-metrics \
             --num-flaky-test-attempts=2
