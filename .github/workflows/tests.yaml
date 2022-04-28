@@ -50,7 +50,7 @@ jobs:
           name: app-debug-androidTest
           path: app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk
 
-  instrumentation_tests_job:
+  instrumented_tests_job:
     needs: assemble_job
     name: Run instrumentation tests
     runs-on: ubuntu-latest
@@ -58,7 +58,10 @@ jobs:
       - name: Get artifacts
         uses: actions/download-artifact@v3
 
-      - name: Run instrumentation tests on Firebase Test Lab
+      - name: Display structure of downloaded files
+        run: ls -R
+
+      - name: Run instrumented tests on Firebase Test Lab
         uses: actions-hub/gcloud@master
         env:
           PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
