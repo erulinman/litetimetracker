@@ -49,3 +49,29 @@ jobs:
         with:
           name: app-debug-androidTest
           path: app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk
+
+  instrumentation_tests_job:
+    needs: assemble_job
+    name: Run instrumentation tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get artifacts
+        uses: actions/download-artifact@v3
+
+      - name: Run instrumentation tests on Firebase Test Lab
+        uses: actions-hub/gcloud@master
+        env:
+          PROJECT_ID: ${{ FIREBASE_PROJECT_ID }}
+          APPLICATION_CREDENTIALS: ${{ secrets.FIREBASE_KEY }}
+        with:
+          args: |
+            --quiet beta firebase test android run \
+            --type instrumentation \
+            --use-orchestrator \
+            --results-history-name='LTT tests' \
+            --app app-debug.apk \
+            --test app-debug-androidTest.apk \
+            --device model=Pixel2,version=27,locale=ru_RU,orientation=portrait \
+            --no-performance-metrics \
+            --num-flaky-test-attempts=2
+          cli: gcloud
