@@ -19,11 +19,9 @@ jobs:
           distribution: 'zulu'
           java-version: '11'
 
-      - name: Setup Gradle
-        uses: gradle/gradle-build-action@v2
-
       - name: Run tests
-        run: ./gradlew test
+        uses: gradle/gradle-build-action@v2
+        arguments: test
 
   assemble_job:
     needs: unit_test_job
@@ -39,11 +37,9 @@ jobs:
           distribution: 'zulu'
           java-version: '11'
 
-      - name: Setup Gradle
-        uses: gradle/gradle-build-action@v2
-
       - name: Build
-        run: ./gradlew assembleDebug assembleDebugAndroidTest
+        uses: gradle/gradle-build-action@v2
+        arguments: assembleDebug assembleDebugAndroidTest
 
       - name: Upload debug apk
         uses: actions/upload-artifact@v3
