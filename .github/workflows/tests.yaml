@@ -9,7 +9,7 @@ env:
 
 
 jobs:
-  unit_test_job:
+  unit_tests_job:
     name: Unit tests
     runs-on: ubuntu-latest
     steps:
@@ -31,7 +31,7 @@ jobs:
           arguments: test
 
   assemble_job:
-    needs: unit_test_job
+    needs: unit_tests_job
     name: Assemble artifacts
     runs-on: ubuntu-latest
     steps:
@@ -52,14 +52,14 @@ jobs:
       - name: Upload debug apk
         uses: actions/upload-artifact@v3
         with:
-          name: $DEBUG_APK_NAME
-          path: app/build/outputs/apk/debug/$DEBUG_APK_NAME.apk
+          name: app-debug
+          path: app/build/outputs/apk/debug/app-debug.apk
 
       - name: Upload androidTest apk
         uses: actions/upload-artifact@v3
         with:
-          name: $DEBUG_ANDROID_TEST_NAME
-          path: app/build/outputs/apk/androidTest/debug/$DEBUG_ANDROID_TEST_NAME.apk
+          name: app-debug-androidTest
+          path: app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk
 
   instrumented_tests_job:
     needs: assemble_job
@@ -80,8 +80,8 @@ jobs:
             --type instrumentation \
             --use-orchestrator \
             --results-history-name='LTT tests' \
-            --app app-debug/$DEBUG_APK_NAME.apk \
-            --test app-debug-androidTest/$DEBUG_ANDROID_TEST_NAME.apk \
+            --app app-debug/app-debug.apk \
+            --test app-debug-androidTest/app-debug-androidTest.apk \
             --device model=Pixel2,version=27,locale=ru_RU,orientation=portrait \
             --no-performance-metrics \
             --num-flaky-test-attempts=2
