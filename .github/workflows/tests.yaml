@@ -1,0 +1,88 @@
+name: Run tests
+
+on: pull_request
+
+env:
+  GRADLE_BUILD_ACTION_CACHE_DEBUG_ENABLED: true
+  DEBUG_APK_NAME: app-debug
+  DEBUG_ANDROID_TEST_NAME: app-debug-androidTest
+
+
+jobs:
+  unit_tests_job:
+    name: Unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Java 11
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '11'
+
+      - name: Validate Gradle wrapper
+        uses: gradle/wrapper-validation-action@v1
+
+      - name: Run tests
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: test --no-daemon
+
+  assemble_job:
+    needs: unit_tests_job
+    name: Assemble artifacts
+    runs-on: ubuntu-latest
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Java 11
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '11'
+
+      - name: Build
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: assembleDebug assembleDebugAndroidTest
+
+      - name: Upload debug apk
+        uses: actions/upload-artifact@v3
+        with:
+          name: app-debug
+          path: app/build/outputs/apk/debug/app-debug.apk
+
+      - name: Upload androidTest apk
+        uses: actions/upload-artifact@v3
+        with:
+          name: app-debug-androidTest
+          path: app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk
+
+  instrumented_tests_job:
+    needs: assemble_job
+    name: Instrumented tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get artifacts
+        uses: actions/download-artifact@v3
+
+      - name: Run instrumented tests on Firebase Test Lab
+        uses: actions-hub/gcloud@master
+        env:
+          PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+          APPLICATION_CREDENTIALS: ${{ secrets.FIREBASE_KEY }}
+        with:
+          args: |
+            --quiet beta firebase test android run \
+            --type instrumentation \
+            --use-orchestrator \
+            --results-history-name='LTT tests' \
+            --app app-debug/app-debug.apk \
+            --test app-debug-androidTest/app-debug-androidTest.apk \
+            --device model=Pixel2,version=27,locale=ru_RU,orientation=portrait \
+            --no-performance-metrics \
+            --num-flaky-test-attempts=2
+          cli: gcloud

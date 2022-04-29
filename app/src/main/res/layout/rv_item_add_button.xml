@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ImageButton
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ImageButton xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/addNewPresetButton"
+    style="?android:attr/borderlessButtonStyle"
     android:layout_width="match_parent"
     android:layout_height="50dp"
     android:layout_marginHorizontal="5dp"
     android:layout_marginVertical="5dp"
     android:background="@drawable/ripple_btn_new_preset"
-    android:id="@+id/addNewPresetButton"
-    android:src="@drawable/ic_plus"
-    android:tint="?attr/colorPrimaryVariant"
     android:contentDescription="@string/btn_add"
-    style="?android:attr/borderlessButtonStyle"/>
+    android:src="@drawable/ic_plus"
+    android:tint="?attr/colorPrimaryVariant" />
