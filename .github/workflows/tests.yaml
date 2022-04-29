@@ -2,7 +2,7 @@ name: Run tests
 
 on: pull_request
 
-ENV:
+env:
   GRADLE_BUILD_ACTION_CACHE_DEBUG_ENABLED: true
 
 jobs:
