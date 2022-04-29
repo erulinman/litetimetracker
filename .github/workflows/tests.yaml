@@ -2,6 +2,9 @@ name: Run tests
 
 on: pull_request
 
+ENV:
+  GRADLE_BUILD_ACTION_CACHE_DEBUG_ENABLED: true
+
 jobs:
   unit_test_job:
     name: Unit tests
@@ -15,7 +18,9 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: '11'
-          cache: 'gradle'
+
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
 
       - name: Run tests
         run: ./gradlew test
@@ -33,7 +38,9 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: '11'
-          cache: 'gradle'
+
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
 
       - name: Build
         run: ./gradlew assembleDebug assembleDebugAndroidTest
